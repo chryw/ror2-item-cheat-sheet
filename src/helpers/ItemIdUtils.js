@@ -1,4 +1,4 @@
-import { items } from "../data/items";
+// import { items } from "../data/items";
 import { SortType, ItemRaritySortValue as rarityValues } from '../data/constants';
 
 /**
@@ -57,7 +57,7 @@ const filterOperation = (itemIds, itemList, filterBy) => {
   if (category == null) {
     category = [];
   }
-  
+
   if (rarity == null) {
     rarity = [];
   }
@@ -70,7 +70,7 @@ const filterOperation = (itemIds, itemList, filterBy) => {
       });
 
     // Check if the rarity is one to show
-    const rarityMatches = (rarity.length === 0) 
+    const rarityMatches = (rarity.length === 0)
       || rarity.includes(itemList[id].itemRarity);
 
     return categoryMatches && rarityMatches;
