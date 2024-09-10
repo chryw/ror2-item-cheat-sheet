@@ -1,5 +1,5 @@
-[
-  {
+{
+  "Repulsion Armor Plate": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Repulsion_Armor_Plate",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Repulsion Armor Plate",
@@ -17,7 +17,7 @@
       }
     ]
   },
-  {
+  "Mocha": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Mocha",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -41,7 +41,7 @@
       }
     ]
   },
-  {
+  "Topaz Brooch": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Topaz_Brooch",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c5/Topaz_Brooch.png/revision/latest?cb=20200129193209",
     "name": "Topaz Brooch",
@@ -59,7 +59,7 @@
       }
     ]
   },
-  {
+  "Tougher Times": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Tougher_Times",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/39/Tougher_Times.png/revision/latest?cb=20200129193210",
     "name": "Tougher Times",
@@ -83,7 +83,7 @@
       }
     ]
   },
-  {
+  "Tri-Tip Dagger": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Tri-Tip_Dagger",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/1/17/Tri-Tip_Dagger.png/revision/latest?cb=20200129193212",
     "name": "Tri-Tip Dagger",
@@ -102,7 +102,7 @@
       }
     ]
   },
-  {
+  "Armor-Piercing Rounds": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Armor-Piercing_Rounds",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f0/Armor-Piercing_Rounds.png/revision/latest?cb=20200129193018",
     "name": "Armor-Piercing Rounds",
@@ -125,7 +125,7 @@
       }
     ]
   },
-  {
+  "Lens-Maker's Glasses": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Lens-Maker%27s_Glasses",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/23/Lens-Maker%27s_Glasses.png/revision/latest?cb=20200129193116",
     "name": "Lens-Maker's Glasses",
@@ -144,7 +144,7 @@
       }
     ]
   },
-  {
+  "Crowbar": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Crowbar",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c0/Crowbar.png/revision/latest?cb=20200129193046",
     "name": "Crowbar",
@@ -167,7 +167,7 @@
       }
     ]
   },
-  {
+  "Warped Echo": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Warped_Echo",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -185,7 +185,7 @@
       }
     ]
   },
-  {
+  "Bundle of Fireworks": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Bundle_of_Fireworks",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/3d/Bundle_of_Fireworks.png/revision/latest?cb=20200129193032",
     "name": "Bundle of Fireworks",
@@ -208,7 +208,7 @@
       }
     ]
   },
-  {
+  "Bison Steak": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Bison_Steak",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/9f/Bison_Steak.png/revision/latest?cb=20210326093605",
     "name": "Bison Steak",
@@ -226,7 +226,7 @@
       }
     ]
   },
-  {
+  "Delicate Watch": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Delicate_Watch",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -244,7 +244,7 @@
       }
     ]
   },
-  {
+  "Roll of Pennies": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Roll_of_Pennies",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -262,7 +262,7 @@
       }
     ]
   },
-  {
+  "Cautious Slug": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Cautious_Slug",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c6/Cautious_Slug.png/revision/latest?cb=20210329070118",
     "name": "Cautious Slug",
@@ -280,7 +280,7 @@
       }
     ]
   },
-  {
+  "Power Elixir": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Power_Elixir",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -290,7 +290,7 @@
     "itemRarity": "Common",
     "category": ["Healing", "LowHealth", "AIBlacklist"]
   },
-  {
+  "Paul's Goat Hoof": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Paul%27s_Goat_Hoof",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/4a/Paul%27s_Goat_Hoof.png/revision/latest?cb=20210329070130",
     "name": "Paul's Goat Hoof",
@@ -313,7 +313,7 @@
       }
     ]
   },
-  {
+  "Gasoline": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Gasoline",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/6e/Gasoline.png/revision/latest?cb=20200129193059",
     "name": "Gasoline",
@@ -337,7 +337,7 @@
       }
     ]
   },
-  {
+  "Chronic Expansion": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Chronic_Expansion",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -355,7 +355,7 @@
       }
     ]
   },
-  {
+  "Knockback Fin": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Knockback_Fin",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -374,7 +374,7 @@
       { "stat": "Height", "value": "?", "stackType": "?", "stackValue": "?" }
     ]
   },
-  {
+  "Bolstering Lantern": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Bolstering_Lantern",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -392,7 +392,7 @@
       }
     ]
   },
-  {
+  "Medkit": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Medkit",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/0f/Medkit.png/revision/latest?cb=20200129193118",
     "name": "Medkit",
@@ -415,7 +415,7 @@
       }
     ]
   },
-  {
+  "Bustling Fungus": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Bustling_Fungus",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/33/Bustling_Fungus.png/revision/latest?cb=20210329070041",
     "name": "Bustling Fungus",
@@ -440,7 +440,7 @@
       }
     ]
   },
-  {
+  "Focus Crystal": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Focus_Crystal",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/5/59/Focus_Crystal.png/revision/latest?cb=20200129235331",
     "name": "Focus Crystal",
@@ -458,7 +458,7 @@
       }
     ]
   },
-  {
+  "Antler Shield": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Antler_Shield",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -482,7 +482,7 @@
       }
     ]
   },
-  {
+  "Oddly-shaped Opal": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Oddly-shaped_Opal",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -500,7 +500,7 @@
       }
     ]
   },
-  {
+  "Personal Shield Generator": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Personal_Shield_Generator",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e0/Personal_Shield_Generator.png/revision/latest?cb=20200129193129",
     "name": "Personal Shield Generator",
@@ -518,7 +518,7 @@
       }
     ]
   },
-  {
+  "Item Scrap, White": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Item_Scrap,_White",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/99/Item_Scrap%2C_White.png/revision/latest?cb=20200811165018",
     "name": "Item Scrap, White",
@@ -527,7 +527,7 @@
     "itemRarity": "Common",
     "category": ["WorldUnique", "Scrap"]
   },
-  {
+  "Backup Magazine": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Backup_Magazine",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f3/Backup_Magazine.png/revision/latest?cb=20200129193022",
     "name": "Backup Magazine",
@@ -550,7 +550,7 @@
       }
     ]
   },
-  {
+  "Energy Drink": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Energy_Drink",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/7e/Energy_Drink.png/revision/latest?cb=20200129193054",
     "name": "Energy Drink",
@@ -568,7 +568,7 @@
       }
     ]
   },
-  {
+  "Sticky Bomb": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Sticky_Bomb",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/74/Sticky_Bomb.png/revision/latest?cb=20200129193204",
     "name": "Sticky Bomb",
@@ -586,7 +586,7 @@
       }
     ]
   },
-  {
+  "Stun Grenade": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Stun_Grenade",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/27/Stun_Grenade.png/revision/latest?cb=20200129193205",
     "name": "Stun Grenade",
@@ -604,7 +604,7 @@
       }
     ]
   },
-  {
+  "Soldier's Syringe": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Soldier%27s_Syringe",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f2/Soldier%27s_Syringe.png/revision/latest?cb=20210329065946",
     "name": "Soldier's Syringe",
@@ -622,7 +622,7 @@
       }
     ]
   },
-  {
+  "Monster Tooth": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Monster_Tooth",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/3b/Monster_Tooth.png/revision/latest?cb=20200129193120",
     "name": "Monster Tooth",
@@ -640,7 +640,7 @@
       }
     ]
   },
-  {
+  "Rusted Key": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Rusted_Key",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/9b/Rusted_Key.png/revision/latest?cb=20210326082529",
     "name": "Rusted Key",
@@ -656,7 +656,7 @@
     "corrupted": "Encrusted Key",
     "id": "60"
   },
-  {
+  "Warbanner": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Warbanner",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f0/Warbanner.png/revision/latest?cb=20200306005854",
     "name": "Warbanner",
@@ -674,7 +674,7 @@
       }
     ]
   },
-  {
+  "Predatory Instincts": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Predatory_Instincts",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/39/Predatory_Instincts.png/revision/latest?cb=20200129193131",
     "name": "Predatory Instincts",
@@ -703,7 +703,7 @@
       }
     ]
   },
-  {
+  "Bandolier": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Bandolier",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/62/Bandolier.png/revision/latest?cb=20200129193024",
     "name": "Bandolier",
@@ -721,7 +721,7 @@
       }
     ]
   },
-  {
+  "Ghor's Tome": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ghor%27s_Tome",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/9a/Ghor%27s_Tome.png/revision/latest?cb=20200129235334",
     "name": "Ghor's Tome",
@@ -739,7 +739,7 @@
       }
     ]
   },
-  {
+  "Ukulele": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ukulele",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/98/Ukulele.png/revision/latest?cb=20200129193213",
     "name": "Ukulele",
@@ -764,7 +764,7 @@
       }
     ]
   },
-  {
+  "Death Mark": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Death_Mark",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Death Mark",
@@ -782,7 +782,7 @@
       }
     ]
   },
-  {
+  "War Horn": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/War_Horn",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/9c/War_Horn.png/revision/latest?cb=20200129193217",
     "name": "War Horn",
@@ -805,7 +805,7 @@
       }
     ]
   },
-  {
+  "Fuel Cell": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Fuel_Cell",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/4d/Fuel_Cell.png/revision/latest?cb=20200129193058",
     "name": "Fuel Cell",
@@ -835,7 +835,7 @@
       }
     ]
   },
-  {
+  "Old Guillotine": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Old_Guillotine",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/8/8d/Old_Guillotine.png/revision/latest?cb=20200201131530",
     "name": "Old Guillotine",
@@ -858,7 +858,7 @@
       }
     ]
   },
-  {
+  "Will-o'-the-wisp": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Will-o%27-the-wisp",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c4/Will-o%27-the-wisp.png/revision/latest?cb=20200129193219",
     "name": "Will-o'-the-wisp",
@@ -883,7 +883,7 @@
       }
     ]
   },
-  {
+  "Chance Doll": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Chance_Doll",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -901,7 +901,7 @@
       }
     ]
   },
-  {
+  "Prayer Beads": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Prayer_Beads",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -919,7 +919,7 @@
       }
     ]
   },
-  {
+  "Hopoo Feather": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Hopoo_Feather",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/3a/Hopoo_Feather.png/revision/latest?cb=20200129193111",
     "name": "Hopoo Feather",
@@ -937,7 +937,7 @@
       }
     ]
   },
-  {
+  "Kjaro's Band": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Kjaro%27s_Band",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Kjaro's Band",
@@ -961,7 +961,7 @@
       }
     ]
   },
-  {
+  "Shipping Request Form": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Shipping_Request_Form",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -979,7 +979,7 @@
       }
     ]
   },
-  {
+  "Harvester's Scythe": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Harvester%27s_Scythe",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e1/Harvester%27s_Scythe.png/revision/latest?cb=20200129193108",
     "name": "Harvester's Scythe",
@@ -1008,7 +1008,7 @@
       }
     ]
   },
-  {
+  "Runald's Band": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Runald%27s_Band",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/05/Runald%27s_Band.png/revision/latest?cb=20200129193147",
     "name": "Runald's Band",
@@ -1038,7 +1038,7 @@
       }
     ]
   },
-  {
+  "Luminous Shot": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Luminous_Shot",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1061,7 +1061,7 @@
       }
     ]
   },
-  {
+  "Infusion": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Infusion",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/7d/Infusion.png/revision/latest?cb=20200129193113",
     "name": "Infusion",
@@ -1090,7 +1090,7 @@
       }
     ]
   },
-  {
+  "Wax Quail": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Wax_Quail",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/6c/Wax_Quail.png/revision/latest?cb=20200129193218",
     "name": "Wax Quail",
@@ -1113,7 +1113,7 @@
       }
     ]
   },
-  {
+  "Sale Star": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Sale_Star",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1131,7 +1131,7 @@
       }
     ]
   },
-  {
+  "AtG Missile Mk. 1": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/AtG_Missile_Mk._1",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/6a/AtG_Missile_Mk._1.png/revision/latest?cb=20200129193020",
     "name": "AtG Missile Mk. 1",
@@ -1150,7 +1150,7 @@
       }
     ]
   },
-  {
+  "Hunter's Harpoon": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Hunter%27s_Harpoon",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1168,7 +1168,7 @@
       }
     ]
   },
-  {
+  "Old War Stealthkit": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Old_War_Stealthkit",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/2c/Old_War_Stealthkit.png/revision/latest?cb=20200129193125",
     "name": "Old War Stealthkit",
@@ -1186,7 +1186,7 @@
       }
     ]
   },
-  {
+  "Shuriken": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Shuriken",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1210,17 +1210,17 @@
       }
     ]
   },
-  {
+  "Regenerating Scrap": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Regenerating_Scrap",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Regenerating Scrap",
-    "shortDescription": "Prioritized when used with",
+    "shortDescription": "Prioritized when used with Uncommon 3D Printers. Usable once per stage.",
     "description": "Does nothing. Prioritized when used with Uncommon 3D Printers. At the start of each stage, it regenerates.",
     "itemRarity": "Uncommon",
     "category": ["Utility", "OnStageBeginEffect"]
   },
-  {
+  "Item Scrap, Green": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Item_Scrap,_Green",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/01/Item_Scrap%2C_Green.png/revision/latest?cb=20200811165016",
     "name": "Item Scrap, Green",
@@ -1229,7 +1229,7 @@
     "itemRarity": "Uncommon",
     "category": ["WorldUnique", "Scrap"]
   },
-  {
+  "Leeching Seed": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Leeching_Seed",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/a/a0/Leeching_Seed.png/revision/latest?cb=20210329070001",
     "name": "Leeching Seed",
@@ -1247,7 +1247,7 @@
       }
     ]
   },
-  {
+  "Chronobauble": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Chronobauble",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/38/Chronobauble.png/revision/latest?cb=20200129193040",
     "name": "Chronobauble",
@@ -1266,7 +1266,7 @@
       }
     ]
   },
-  {
+  "Rose Buckler": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Rose_Buckler",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/2f/Rose_Buckler.png/revision/latest?cb=20200129193143",
     "name": "Rose Buckler",
@@ -1284,7 +1284,7 @@
       }
     ]
   },
-  {
+  "Red Whip": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Red_Whip",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/2a/Red_Whip.png/revision/latest?cb=20200201131611",
     "name": "Red Whip",
@@ -1302,7 +1302,7 @@
       }
     ]
   },
-  {
+  "Squid Polyp": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Squid_Polyp",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/de/Squid_Polyp.png/revision/latest?cb=20210329071113",
     "name": "Squid Polyp",
@@ -1325,7 +1325,7 @@
       }
     ]
   },
-  {
+  "Ignition Tank": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ignition_Tank",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1343,7 +1343,7 @@
       }
     ]
   },
-  {
+  "Lepton Daisy": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Lepton_Daisy",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/73/Lepton_Daisy.png/revision/latest?cb=20200129235338",
     "name": "Lepton Daisy",
@@ -1366,7 +1366,7 @@
       }
     ]
   },
-  {
+  "Unstable Transmitter": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Unstable_Transmitter",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1390,7 +1390,7 @@
       }
     ]
   },
-  {
+  "Razorwire": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Razorwire",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/a/ac/Razorwire.png/revision/latest?cb=20200129235340",
     "name": "Razorwire",
@@ -1414,7 +1414,7 @@
       }
     ]
   },
-  {
+  "Noxious Thorn": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Noxious_Thorn",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1438,7 +1438,7 @@
       }
     ]
   },
-  {
+  "Berzerker's Pauldron": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Berzerker%27s_Pauldron",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/a/a6/Berzerker%27s_Pauldron.png/revision/latest?cb=20200129193026",
     "name": "Berzerker's Pauldron",
@@ -1461,7 +1461,7 @@
       }
     ]
   },
-  {
+  "Alien Head": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Alien_Head",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/25/Alien_Head.png/revision/latest?cb=20200129193016",
     "name": "Alien Head",
@@ -1479,7 +1479,7 @@
       }
     ]
   },
-  {
+  "Shattering Justice": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Shattering_Justice",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/2d/Shattering_Justice.png/revision/latest?cb=20200129235342",
     "name": "Shattering Justice",
@@ -1497,7 +1497,7 @@
       }
     ]
   },
-  {
+  "Aegis": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Aegis",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e5/Aegis.png/revision/latest?cb=20200129193000",
     "name": "Aegis",
@@ -1515,7 +1515,7 @@
       }
     ]
   },
-  {
+  "Brilliant Behemoth": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Brilliant_Behemoth",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/fa/Brilliant_Behemoth.png/revision/latest?cb=20200129193029",
     "name": "Brilliant Behemoth",
@@ -1533,7 +1533,7 @@
       }
     ]
   },
-  {
+  "Growth Nectar": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Growth_Nectar",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1587,7 +1587,7 @@
       }
     ]
   },
-  {
+  "Sentient Meat Hook": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Sentient_Meat_Hook",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e7/Sentient_Meat_Hook.png/revision/latest?cb=20200129193151",
     "name": "Sentient Meat Hook",
@@ -1616,7 +1616,7 @@
       }
     ]
   },
-  {
+  "Defensive Microbots": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Defensive_Microbots",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/dd/Defensive_Microbots.png/revision/latest?cb=20200811174752",
     "name": "Defensive Microbots",
@@ -1633,7 +1633,7 @@
       }
     ]
   },
-  {
+  "57 Leaf Clover": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/57_Leaf_Clover",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e5/57_Leaf_Clover.png/revision/latest?cb=20200129192959",
     "name": "57 Leaf Clover",
@@ -1657,7 +1657,7 @@
       }
     ]
   },
-  {
+  "Laser Scope": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Laser_Scope",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1675,7 +1675,7 @@
       }
     ]
   },
-  {
+  "Ceremonial Dagger": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ceremonial_Dagger",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/76/Ceremonial_Dagger.png/revision/latest?cb=20200129193038",
     "name": "Ceremonial Dagger",
@@ -1693,7 +1693,7 @@
       }
     ]
   },
-  {
+  "Spare Drone Parts": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Spare_Drone_Parts",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1716,7 +1716,7 @@
       }
     ]
   },
-  {
+  "Dio's Best Friend": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Dio%27s_Best_Friend",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/dc/Dio%27s_Best_Friend.png/revision/latest?cb=20200129193050",
     "name": "Dio's Best Friend",
@@ -1740,7 +1740,7 @@
       }
     ]
   },
-  {
+  "H3AD-5T v2": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/H3AD-5T_v2",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/36/H3AD-5T_v2.png/revision/latest?cb=20200129193104",
     "name": "H3AD-5T v2",
@@ -1758,7 +1758,7 @@
       }
     ]
   },
-  {
+  "Happiest Mask": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Happiest_Mask",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/d4/Happiest_Mask.png/revision/latest?cb=20200129193106",
     "name": "Happiest Mask",
@@ -1776,7 +1776,7 @@
       }
     ]
   },
-  {
+  "War Bonds": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/War_Bonds",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1794,7 +1794,7 @@
       }
     ]
   },
-  {
+  "Wake of Vultures": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Wake_of_Vultures",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f8/Wake_of_Vultures.png/revision/latest?cb=20200129193215",
     "name": "Wake of Vultures",
@@ -1812,7 +1812,7 @@
       }
     ]
   },
-  {
+  "Frost Relic": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Frost_Relic",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Frost Relic",
@@ -1830,7 +1830,7 @@
       }
     ]
   },
-  {
+  "Ben's Raincoat": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ben%27s_Raincoat",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1854,7 +1854,7 @@
       }
     ]
   },
-  {
+  "Rejuvenation Rack": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Rejuvenation_Rack",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/0a/Rejuvenation_Rack.png/revision/latest?cb=20200129193141",
     "name": "Rejuvenation Rack",
@@ -1877,7 +1877,7 @@
       }
     ]
   },
-  {
+  "Brainstalks": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Brainstalks",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c0/Brainstalks.png/revision/latest?cb=20200129193028",
     "name": "Brainstalks",
@@ -1900,7 +1900,7 @@
       }
     ]
   },
-  {
+  "Resonance Disc": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Resonance_Disc",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/8/8d/Resonance_Disc.png/revision/latest?cb=20200129235341",
     "name": "Resonance Disc",
@@ -1924,7 +1924,7 @@
       }
     ]
   },
-  {
+  "Runic Lens": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Runic_Lens",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -1948,7 +1948,7 @@
       }
     ]
   },
-  {
+  "Pocket I.C.B.M.": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Pocket_I.C.B.M.",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -1972,7 +1972,7 @@
       }
     ]
   },
-  {
+  "N'kuhana's Opinion": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/N%27kuhana%27s_Opinion",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "N'kuhana's Opinion",
@@ -1995,7 +1995,7 @@
       }
     ]
   },
-  {
+  "Symbiotic Scorpion": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Symbiotic_Scorpion",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -2013,7 +2013,7 @@
       }
     ]
   },
-  {
+  "Interstellar Desk Plant": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Interstellar_Desk_Plant",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Interstellar Desk Plant",
@@ -2031,7 +2031,7 @@
       }
     ]
   },
-  {
+  "Bottled Chaos": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Bottled_Chaos",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -2049,7 +2049,7 @@
       }
     ]
   },
-  {
+  "Sonorous Whispers": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Sonorous_Whispers",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -2067,7 +2067,7 @@
       }
     ]
   },
-  {
+  "Item Scrap, Red": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Item_Scrap,_Red",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/48/Item_Scrap%2C_Red.png/revision/latest?cb=20200811165017",
     "name": "Item Scrap, Red",
@@ -2076,7 +2076,7 @@
     "itemRarity": "Legendary",
     "category": ["WorldUnique", "Scrap"]
   },
-  {
+  "Unstable Tesla Coil": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Unstable_Tesla_Coil",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e4/Unstable_Tesla_Coil.png/revision/latest?cb=20200129193214",
     "name": "Unstable Tesla Coil",
@@ -2099,7 +2099,7 @@
       }
     ]
   },
-  {
+  "Electric Boomerang": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Electric_Boomerang",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -2117,7 +2117,7 @@
       }
     ]
   },
-  {
+  "Soulbound Catalyst": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Soulbound_Catalyst",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f1/Soulbound_Catalyst.png/revision/latest?cb=20200129193159",
     "name": "Soulbound Catalyst",
@@ -2140,7 +2140,7 @@
       }
     ]
   },
-  {
+  "Hardlight Afterburner": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Hardlight_Afterburner",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/20/Hardlight_Afterburner.png/revision/latest?cb=20200129193107",
     "name": "Hardlight Afterburner",
@@ -2158,7 +2158,7 @@
       }
     ]
   },
-  {
+  "Artifact Key": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Artifact_Key",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/1/17/Artifact_Key.png/revision/latest?cb=20200331153432",
     "name": "Artifact Key",
@@ -2172,7 +2172,7 @@
     "category": ["WorldUnique"],
     "id": "101"
   },
-  {
+  "Queen's Gland": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Queen%27s_Gland",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/0b/Queen%27s_Gland.png/revision/latest?cb=20200129193137",
     "name": "Queen's Gland",
@@ -2195,7 +2195,7 @@
       }
     ]
   },
-  {
+  "Shatterspleen": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Shatterspleen",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Shatterspleen",
@@ -2229,7 +2229,7 @@
       }
     ]
   },
-  {
+  "Molten Perforator": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Molten_Perforator",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Molten Perforator",
@@ -2251,7 +2251,7 @@
       }
     ]
   },
-  {
+  "Titanic Knurl": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Titanic_Knurl",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/9/9f/Titanic_Knurl.png/revision/latest?cb=20200129193208",
     "name": "Titanic Knurl",
@@ -2280,7 +2280,7 @@
       }
     ]
   },
-  {
+  "Charged Perforator": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Charged_Perforator",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/cc/Charged_Perforator.png/revision/latest?cb=20210326044120",
     "name": "Charged Perforator",
@@ -2302,7 +2302,7 @@
       }
     ]
   },
-  {
+  "Defense Nucleus": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Defense_Nucleus",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -2325,7 +2325,7 @@
       }
     ]
   },
-  {
+  "Genesis Loop": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Genesis_Loop",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c8/Genesis_Loop.png/revision/latest?cb=20200129235333",
     "name": "Genesis Loop",
@@ -2348,7 +2348,7 @@
       }
     ]
   },
-  {
+  "Planula": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Planula",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/a/a9/Planula.png/revision/latest?cb=20210326044119",
     "name": "Planula",
@@ -2370,7 +2370,7 @@
       }
     ]
   },
-  {
+  "Pearl": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Pearl",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/73/Pearl.png/revision/latest?cb=20200129235340",
     "name": "Pearl",
@@ -2393,7 +2393,7 @@
       }
     ]
   },
-  {
+  "Empathy Cores": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Empathy_Cores",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/5/51/Empathy_Cores.png/revision/latest?cb=20210326044118",
     "name": "Empathy Cores",
@@ -2415,7 +2415,7 @@
       }
     ]
   },
-  {
+  "Item Scrap, Yellow": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Item_Scrap,_Yellow",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/7f/Item_Scrap%2C_Yellow.png/revision/latest?cb=20200811165019",
     "name": "Item Scrap, Yellow",
@@ -2425,7 +2425,7 @@
     "category": ["WorldUnique", "Scrap"],
     "corrupted": "Newly Hatched Zoea"
   },
-  {
+  "Irradiant Pearl": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Irradiant_Pearl",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/ef/Irradiant_Pearl.png/revision/latest?cb=20200129235334",
     "name": "Irradiant Pearl",
@@ -2484,7 +2484,7 @@
       }
     ]
   },
-  {
+  "Mired Urn": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Mired_Urn",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Mired Urn",
@@ -2506,7 +2506,7 @@
       }
     ]
   },
-  {
+  "Little Disciple": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Little_Disciple",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/08/Little_Disciple.png/revision/latest?cb=20200129193117",
     "name": "Little Disciple",
@@ -2529,7 +2529,7 @@
       }
     ]
   },
-  {
+  "Halcyon Seed": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Halcyon_Seed",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e6/Halcyon_Seed.png/revision/latest?cb=20200129193105",
     "name": "Halcyon Seed",
@@ -2564,12 +2564,12 @@
       }
     ]
   },
-  {
+  "Safer Spaces": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Safer_Spaces",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Safer Spaces",
-    "shortDescription": "Block the next source of damage.",
+    "shortDescription": "Block the next source of damage. Corrupts all Tougher Times.",
     "description": "Blocks incoming damage once. Recharges after 15 seconds (-10% per stack) Corrupts all Tougher Times.",
     "itemRarity": "Void",
     "category": ["Utility", "BrotherBlacklist"],
@@ -2582,12 +2582,12 @@
       }
     ]
   },
-  {
+  "Needletick": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Needletick",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Needletick",
-    "shortDescription": "Chance to collapse enemies on hit.",
+    "shortDescription": "Chance to collapse enemies on hit. Corrupts all Tri-Tip Daggers.",
     "description": "10% (+10% per stack) chance to collapse an enemy for 400% base damage. Corrupts all Tri-Tip Daggers.",
     "itemRarity": "Void",
     "category": ["Damage"],
@@ -2600,12 +2600,12 @@
       }
     ]
   },
-  {
+  "Lost Seer's Lenses": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Lost_Seer%27s_Lenses",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Lost Seer's Lenses",
-    "shortDescription": "Gain a 0.5% chance to instantly kill a non-boss enemy.",
+    "shortDescription": "Gain a 0.5% chance to instantly kill a non-boss enemy. Corrupts all Lens-Maker's Glasses.",
     "description": "Your attacks have a 0.5% (+0.5% per stack) chance to instantly kill a non-Boss enemy. Corrupts all Lens-Maker's Glasses.",
     "itemRarity": "Void",
     "category": ["Damage"],
@@ -2618,12 +2618,12 @@
       }
     ]
   },
-  {
+  "Weeping Fungus": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Weeping_Fungus",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Weeping Fungus",
-    "shortDescription": "Heal while sprinting.",
+    "shortDescription": "Heal while sprinting. Corrupts all Bustling Fungi.",
     "description": "Heals for 2% (+2% per stack) of your health every second while sprinting. Corrupts all Bustling Fungi.",
     "itemRarity": "Void",
     "category": ["Healing", "SprintRelated"],
@@ -2636,22 +2636,22 @@
       }
     ]
   },
-  {
+  "Encrusted Key": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Encrusted_Key",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Encrusted Key",
-    "shortDescription": "Gain access to an Encrusted Cache that contains a void item.",
+    "shortDescription": "Gain access to an Encrusted Cache that contains a void item. Corrupts all Rusted Keys.",
     "description": "A hidden cache containing an item (60%/30%/10%) will appear in a random location on each stage. Opening the cache consumes this item. Corrupts all Rusted Keys.",
     "itemRarity": "Void",
     "category": ["Utility", "AIBlacklist", "OnStageBeginEffect"]
   },
-  {
+  "Polylute": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Polylute",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Polylute",
-    "shortDescription": "Chance to repeatedly strike a single enemy with lightning.",
+    "shortDescription": "Chance to repeatedly strike a single enemy with lightning. Corrupts all Ukuleles.",
     "description": "25% chance to fire lightning for 60% TOTAL damage up to 3 (+3 per stack) times. Corrupts all Ukuleles.",
     "itemRarity": "Void",
     "category": ["Damage"],
@@ -2664,12 +2664,12 @@
       }
     ]
   },
-  {
+  "Singularity Band": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Singularity_Band",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Singularity Band",
-    "shortDescription": "High damage hits also create unstable black holes. Recharges over time.",
+    "shortDescription": "High damage hits also create unstable black holes. Recharges over time. Corrupts all Runald's and Kjaro's Bands.",
     "description": "Hits that deal more than 400% damage also fire a black hole that draws enemies within 15m into its center. Lasts 5 seconds before collapsing, dealing 100% (+100% per stack) TOTAL damage. Recharges every 20 seconds. Corrupts all Runald's and Kjaro's Bands.",
     "itemRarity": "Void",
     "category": ["Damage", "Utility"],
@@ -2682,12 +2682,12 @@
       }
     ]
   },
-  {
+  "Lysate Cell": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Lysate_Cell",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Lysate Cell",
-    "shortDescription": "Add an extra charge of your Special skill.",
+    "shortDescription": "Add an extra charge of your Special skill. Corrupts all Fuel Cells.",
     "description": "Add +1 (+1 per stack) charge of your Special skill. Reduces Special skill cooldown by 33%. Corrupts all Fuel Cells.",
     "itemRarity": "Void",
     "category": ["Utility"],
@@ -2700,12 +2700,12 @@
       }
     ]
   },
-  {
+  "Voidsent Flame": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Voidsent_Flame",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Voidsent Flame",
-    "shortDescription": "Full health enemies also detonate on hit.",
+    "shortDescription": "Full health enemies also detonate on hit. Corrupts all Will-o'-the-wisps.",
     "description": "Upon hitting an enemy at full health, spawn a lava pillar in a 12m (+2.4m per stack) radius for 260% (+156% per stack) base damage. Corrupts all Will-o'-the-wisps.",
     "itemRarity": "Void",
     "category": ["Damage"],
@@ -2724,12 +2724,12 @@
       }
     ]
   },
-  {
+  "Plasma Shrimp": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Plasma_Shrimp",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Plasma Shrimp",
-    "shortDescription": "While you have shield, fire missiles on every hit.",
+    "shortDescription": "While you have shield, fire missiles on every hit. Corrupts all AtG Missile Mk. 1s.",
     "description": "Gain a shield equal to 10% of your maximum health. While you have a shield, hitting an enemy fires a missile that deals 40% (+40% per stack) TOTAL damage. Corrupts all AtG Missile Mk. 1s.",
     "itemRarity": "Void",
     "category": ["Damage"],
@@ -2742,12 +2742,12 @@
       }
     ]
   },
-  {
+  "Tentabauble": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Tentabauble",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Tentabauble",
-    "shortDescription": "Chance to root enemies on hit.",
+    "shortDescription": "Chance to root enemies on hit. Corrupts all Chronobaubles.",
     "description": "5% (+5% per stack) chance on hit to root enemies for 1s (+1s per stack). Corrupts all Chronobaubles.",
     "itemRarity": "Void",
     "category": ["Utility"],
@@ -2766,12 +2766,12 @@
       }
     ]
   },
-  {
+  "Benthic Bloom": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Benthic_Bloom",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Benthic Bloom",
-    "shortDescription": "Upgrades your items at the start of each stage.",
+    "shortDescription": "Upgrades your items at the start of each stage. Corrupts all 57 Leaf Clovers.",
     "description": "Upgrades 3 (+3 per stack) random items to items of the next higher rarity at the start of each stage. Corrupts all 57 Leaf Clovers.",
     "itemRarity": "Void",
     "category": ["Utility", "OnStageBeginEffect"],
@@ -2784,12 +2784,12 @@
       }
     ]
   },
-  {
+  "Pluripotent Larva": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Pluripotent_Larva",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Pluripotent Larva",
-    "shortDescription": "Get a",
+    "shortDescription": "Get a corrupted extra life. Consumed on use. Corrupts all Dio's Best Friends.",
     "description": "Upon death, this item will be consumed and you will return to life with 3 seconds of invulnerability, and all of your items that can be corrupted will be. Corrupts all Dio's Best Friends.",
     "itemRarity": "Void",
     "category": ["Utility"],
@@ -2802,12 +2802,12 @@
       }
     ]
   },
-  {
+  "Newly Hatched Zoea": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Newly_Hatched_Zoea",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Newly Hatched Zoea",
-    "shortDescription": "Periodically recruit allies from the",
+    "shortDescription": "Periodically recruit allies from the Void. Corrupts all yellow items.",
     "description": "Every 60 (-50% per stack) seconds, gain a random Void ally. Can have up to 1 (+1 per stack) allies at a time. Corrupts all yellow items.",
     "itemRarity": "Void",
     "category": ["Damage", "TurretBlacklist"],
@@ -2826,11 +2826,11 @@
       }
     ]
   },
-  {
+  "Gesture of the Drowned": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Gesture_of_the_Drowned",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/c9/Gesture_of_the_Drowned.png/revision/latest?cb=20200129193100",
     "name": "Gesture of the Drowned",
-    "shortDescription": "Dramatically reduce Equipment cooldown...",
+    "shortDescription": "Dramatically reduce Equipment cooldown... BUT it automatically activates.",
     "description": "Reduce Equipment cooldown by 50% (+15% per stack). Forces your Equipment to activate whenever it is off cooldown.",
     "itemRarity": "Lunar",
     "category": ["Utility", "EquipmentRelated"],
@@ -2849,11 +2849,11 @@
       }
     ]
   },
-  {
+  "Focused Convergence": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Focused_Convergence",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Focused Convergence",
-    "shortDescription": "Increase the speed of Teleporter charging...",
+    "shortDescription": "Increase the speed of Teleporter charging... BUT reduce the size of the zone.",
     "description": "Teleporters charge 30% (+30% per stack) faster, but the size of the Teleporter zone is 50% (-50% per stack) smaller.",
     "itemRarity": "Lunar",
     "category": [
@@ -2883,11 +2883,11 @@
       }
     ]
   },
-  {
+  "Brittle Crown": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Brittle_Crown",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/a/ae/Brittle_Crown.png/revision/latest?cb=20200129193030",
     "name": "Brittle Crown",
-    "shortDescription": "Gain gold on hit...",
+    "shortDescription": "Gain gold on hit... BUT surrender gold on getting hit.",
     "description": "30% chance on hit to gain 2 (+2 per stack) gold. Scales over time.Lose gold on taking damage equal to 100% (+100% per stack) of the maximum health percentage you lost.",
     "itemRarity": "Lunar",
     "category": ["Utility"],
@@ -2907,12 +2907,12 @@
       }
     ]
   },
-  {
+  "Light Flux Pauldron": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Light_Flux_Pauldron",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Light Flux Pauldron",
-    "shortDescription": "Halve your cooldowns..",
+    "shortDescription": "Halve your cooldowns.. BUT halve your attack speed.",
     "description": "Decrease skill cooldowns by 50% (+50% per stack). Decrease attack speed by 50% (+50% per stack).",
     "itemRarity": "Lunar",
     "category": ["Utility"],
@@ -2931,12 +2931,12 @@
       }
     ]
   },
-  {
+  "Stone Flux Pauldron": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Stone_Flux_Pauldron",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Stone Flux Pauldron",
-    "shortDescription": "Double your health...",
+    "shortDescription": "Double your health... BUT halve your speed.",
     "description": "Increase max health by 100% (+100% per stack). Reduce movement speed by 50% (+50% per stack).",
     "itemRarity": "Lunar",
     "category": ["Utility"],
@@ -2955,11 +2955,11 @@
       }
     ]
   },
-  {
+  "Purity": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Purity",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Purity",
-    "shortDescription": "Reduce your skill cooldowns by 2 seconds.",
+    "shortDescription": "Reduce your skill cooldowns by 2 seconds. You are unlucky.",
     "description": "All skill cooldowns are reduced by 2 (+1 per stack) seconds. All random effects are rolled +1 (+1 per stack) times for an unfavorable outcome.",
     "itemRarity": "Lunar",
     "category": ["Utility"],
@@ -2983,11 +2983,11 @@
       }
     ]
   },
-  {
+  "Shaped Glass": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Shaped_Glass",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/ff/Shaped_Glass.png/revision/latest?cb=20200129193153",
     "name": "Shaped Glass",
-    "shortDescription": "Double your damage...",
+    "shortDescription": "Double your damage... BUT halve your health.",
     "description": "Increase base damage by 100% (+100% per stack). Reduce maximum health by 50% (+50% per stack).",
     "itemRarity": "Lunar",
     "category": ["Damage"],
@@ -3007,7 +3007,7 @@
       }
     ]
   },
-  {
+  "Visions of Heresy": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Visions_of_Heresy",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/31/Visions_of_Heresy.png/revision/latest?cb=20200129235347",
     "name": "Visions of Heresy",
@@ -3036,7 +3036,7 @@
       }
     ]
   },
-  {
+  "Hooks of Heresy": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Hooks_of_Heresy",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/66/Hooks_of_Heresy.png/revision/latest?cb=20210326043944",
     "name": "Hooks of Heresy",
@@ -3064,7 +3064,7 @@
       }
     ]
   },
-  {
+  "Essence of Heresy": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Essence_of_Heresy",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/3e/Essence_of_Heresy.png/revision/latest?cb=20210326043943",
     "name": "Essence of Heresy",
@@ -3092,12 +3092,12 @@
       }
     ]
   },
-  {
+  "Egocentrism": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Egocentrism",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Egocentrism",
-    "shortDescription": "Gain multiple orbiting bombs.",
+    "shortDescription": "Gain multiple orbiting bombs. Every minute, assimilate another item into Egocentrism.",
     "description": "Every 3 (-50% per stack) seconds, gain an orbiting bomb that detonates on impact for 360% damage, up to a maximum of 3 bombs (+1 per stack). Every 60 seconds, a random item is converted into this item.",
     "itemRarity": "Lunar",
     "category": ["Damage", "Utility"],
@@ -3116,16 +3116,16 @@
       }
     ]
   },
-  {
+  "Beads of Fealty": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Beads_of_Fealty",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/0/07/Beads_of_Fealty.png/revision/latest?cb=20200129235330",
     "name": "Beads of Fealty",
-    "shortDescription": "Seems to do nothing...",
+    "shortDescription": "Seems to do nothing... but...",
     "description": "Seems to do nothing... but...",
     "itemRarity": "Lunar",
     "id": "98"
   },
-  {
+  "Strides of Heresy": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Strides_of_Heresy",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/1/1a/Strides_of_Heresy.png/revision/latest?cb=20200129235345",
     "name": "Strides of Heresy",
@@ -3154,7 +3154,7 @@
       }
     ]
   },
-  {
+  "Defiant Gouge": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Defiant_Gouge",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Defiant Gouge",
@@ -3171,12 +3171,12 @@
       }
     ]
   },
-  {
+  "Longstanding Solitude": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Longstanding_Solitude",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
     "name": "Longstanding Solitude",
-    "shortDescription": "Free purchases on Level Up.",
+    "shortDescription": "Free purchases on Level Up. Gold converts to Experience.",
     "description": "On level up gain a free unlock for the next purchase (+1 free unlock per item stack) but all gold is converted to experience. Anything that costs gold is increased by 100% (+100% per item stack)",
     "itemRarity": "Lunar",
     "category": ["Utility", "Damage"],
@@ -3195,7 +3195,7 @@
       }
     ]
   },
-  {
+  "Mercurial Rachis": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Mercurial_Rachis",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Mercurial Rachis",
@@ -3212,7 +3212,7 @@
       }
     ]
   },
-  {
+  "Eulogy Zero": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Eulogy_Zero",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -3230,11 +3230,11 @@
       }
     ]
   },
-  {
+  "Corpsebloom": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Corpsebloom",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/3/31/Corpsebloom.png/revision/latest?cb=20200129193042",
     "name": "Corpsebloom",
-    "shortDescription": "Double your healing...",
+    "shortDescription": "Double your healing... BUT it's applied over time.",
     "description": "Heal +100% (+100% per stack) more. All healing is applied over time. Can heal for a maximum of 10% (-50% per stack) of your health per second.",
     "itemRarity": "Lunar",
     "category": ["Healing"],
@@ -3254,7 +3254,7 @@
       }
     ]
   },
-  {
+  "Transcendence": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Transcendence",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/8/85/Transcendence.png/revision/latest?cb=20200129193211",
     "name": "Transcendence",
@@ -3272,11 +3272,11 @@
       }
     ]
   },
-  {
+  "Helfire Tincture": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Helfire_Tincture",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/4d/Helfire_Tincture.png/revision/latest?cb=20200129193109",
     "name": "Helfire Tincture",
-    "shortDescription": "Burn everything nearby...",
+    "shortDescription": "Burn everything nearby... including you and allies.",
     "description": "Ignite ALL characters within 15m for 12s. Deal 5% of your maximum health/second as burning as damage. The burn is 0.5x stronger on yourself, 0.25x stronger on allies, and 24x stronger on enemies.",
     "itemRarity": "Lunar Equipment",
     "cooldown": "45s",
@@ -3286,7 +3286,7 @@
       "description": "Ignite ALL characters within 15m for 12s. Deal 5% of your maximum health/second as burning as damage. The burn is 0.5x stronger on yourself, 0.25x stronger on allies, and 24x stronger on enemies."
     }
   },
-  {
+  "Effigy of Grief": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Effigy_of_Grief",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/45/Effigy_of_Grief.png/revision/latest?cb=20200129193053",
     "name": "Effigy of Grief",
@@ -3295,11 +3295,11 @@
     "itemRarity": "Lunar Equipment",
     "cooldown": "15s"
   },
-  {
+  "Glowing Meteorite": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Glowing_Meteorite",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/f4/Glowing_Meteorite.png/revision/latest?cb=20200129193102",
     "name": "Glowing Meteorite",
-    "shortDescription": "Rain meteors from the sky,",
+    "shortDescription": "Rain meteors from the sky, hurting both enemies and allies.",
     "description": "Rain meteors from the sky, damaging ALL characters for 600% damage per blast. Lasts 20 seconds.",
     "itemRarity": "Lunar Equipment",
     "cooldown": "140s",
@@ -3309,11 +3309,11 @@
       "description": "Rain meteors from the sky, damaging ALL characters for 600% damage per blast. Lasts 20 seconds."
     }
   },
-  {
+  "Spinel Tonic": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Spinel_Tonic",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/29/Spinel_Tonic.png/revision/latest?cb=20200129193202",
     "name": "Spinel Tonic",
-    "shortDescription": "Gain a massive boost to ALL stats.",
+    "shortDescription": "Gain a massive boost to ALL stats. Chance to gain an affliction that reduces ALL stats.",
     "description": "Drink the Tonic, gaining a boost for 20 seconds. Increases damage by +100%. Increases attack speed by +70%. Increases armor by +20. Increases maximum health by +50%. Increases passive health regeneration by +300%. Increases movespeed by +30%.When the Tonic wears off, you have a 20% chance to gain a Tonic Affliction, reducing all of your stats by -5% (-5% per stack).",
     "itemRarity": "Lunar Equipment",
     "cooldown": "60s",
@@ -3323,7 +3323,7 @@
       "description": "Drink the Tonic, gaining a boost for 20 seconds. Increases damage by +100%. Increases attack speed by +70%. Increases armor by +20. Increases maximum health by +50%. Increases passive health regeneration by +300%. Increases movespeed by +30%.When the Tonic wears off, you have a 20% chance to gain a Tonic Affliction, reducing all of your stats by -5% (-5% per stack)."
     }
   },
-  {
+  "Preon Accumulator": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Preon_Accumulator",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/fe/Preon_Accumulator.png/revision/latest?cb=20200129193133",
     "name": "Preon Accumulator",
@@ -3337,7 +3337,7 @@
       "description": "Fires preon tendrils, zapping enemies within 35m for up to 600% damage/second. On contact, detonate in an enormous 20m explosion for 4000% damage."
     }
   },
-  {
+  "Primordial Cube": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Primordial_Cube",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/d9/Primordial_Cube.png/revision/latest?cb=20200129193135",
     "name": "Primordial Cube",
@@ -3346,17 +3346,17 @@
     "itemRarity": "Equipment",
     "cooldown": "60s"
   },
-  {
+  "Trophy Hunter's Tricorn": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Trophy_Hunter%27s_Tricorn",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
     "name": "Trophy Hunter's Tricorn",
-    "shortDescription": "Execute a large monster and claim its",
+    "shortDescription": "Execute a large monster and claim its trophy. Consumed on use.",
     "description": "Execute any enemy capable of spawning a unique reward, and it will drop that item. Equipment is consumed on use.",
     "itemRarity": "Equipment",
     "cooldown": "0s"
   },
-  {
+  "Blast Shower": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Blast_Shower",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/4f/Blast_Shower.png/revision/latest?cb=20200129235330",
     "name": "Blast Shower",
@@ -3370,7 +3370,7 @@
       "description": "Cleanse all negative effects. Includes debuffs, damage over time, and nearby projectiles."
     }
   },
-  {
+  "Disposable Missile Launcher": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Disposable_Missile_Launcher",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/78/Disposable_Missile_Launcher.png/revision/latest?cb=20200129193051",
     "name": "Disposable Missile Launcher",
@@ -3379,7 +3379,7 @@
     "itemRarity": "Equipment",
     "cooldown": "45s"
   },
-  {
+  "Ocular HUD": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ocular_HUD",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/68/Ocular_HUD.png/revision/latest?cb=20200129193123",
     "name": "Ocular HUD",
@@ -3388,7 +3388,7 @@
     "itemRarity": "Equipment",
     "cooldown": "60s"
   },
-  {
+  "Forgive Me Please": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Forgive_Me_Please",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Forgive Me Please",
@@ -3402,7 +3402,7 @@
       "description": "Throw a cursed doll out that triggers any On-Kill effects you have every 1 second for 8 seconds."
     }
   },
-  {
+  "The Back-up": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/The_Back-up",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "The Back-up",
@@ -3416,7 +3416,7 @@
       "description": "Call 4 Strike Drones to fight for you. Lasts 25 seconds."
     }
   },
-  {
+  "Volcanic Egg": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Volcanic_Egg",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/2/2e/Volcanic_Egg.png/revision/latest?cb=20200129235350",
     "name": "Volcanic Egg",
@@ -3425,7 +3425,7 @@
     "itemRarity": "Equipment",
     "cooldown": "30s"
   },
-  {
+  "Foreign Fruit": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Foreign_Fruit",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/d0/Foreign_Fruit.png/revision/latest?cb=20200129193055",
     "name": "Foreign Fruit",
@@ -3435,7 +3435,7 @@
     "cooldown": "45s",
     "id": "2"
   },
-  {
+  "Jade Elephant": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Jade_Elephant",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/4/41/Jade_Elephant.png/revision/latest?cb=20200129235337",
     "name": "Jade Elephant",
@@ -3444,7 +3444,7 @@
     "itemRarity": "Equipment",
     "cooldown": "45s"
   },
-  {
+  "Eccentric Vase": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Eccentric_Vase",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/c/ce/Eccentric_Vase.png/revision/latest?cb=20200129193052",
     "name": "Eccentric Vase",
@@ -3458,7 +3458,7 @@
       "description": "Create a quantum tunnel of up to 1000m in length. Lasts 30 seconds."
     }
   },
-  {
+  "The Crowdfunder": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/The_Crowdfunder",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/d4/The_Crowdfunder.png/revision/latest?cb=20200129193207",
     "name": "The Crowdfunder",
@@ -3471,7 +3471,7 @@
       "description": "Fires a continuous barrage that deals 100% damage per bullet. Costs $1 per bullet. Cost increases over time."
     }
   },
-  {
+  "Goobo Jr.": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Goobo_Jr.",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -3481,7 +3481,7 @@
     "itemRarity": "Equipment",
     "cooldown": "100s"
   },
-  {
+  "Seed of Life": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Seed_of_Life",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Seekers of the Storm",
@@ -3491,7 +3491,7 @@
     "itemRarity": "Equipment",
     "cooldown": "0s"
   },
-  {
+  "Milky Chrysalis": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Milky_Chrysalis",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/e3/Milky_Chrysalis.png/revision/latest?cb=20200129193119",
     "name": "Milky Chrysalis",
@@ -3500,7 +3500,7 @@
     "itemRarity": "Equipment",
     "cooldown": "60s"
   },
-  {
+  "Super Massive Leech": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Super_Massive_Leech",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Super Massive Leech",
@@ -3509,7 +3509,7 @@
     "itemRarity": "Equipment",
     "cooldown": "60s"
   },
-  {
+  "Royal Capacitor": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Royal_Capacitor",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/e/ef/Royal_Capacitor.png/revision/latest?cb=20200129193145",
     "name": "Royal Capacitor",
@@ -3523,7 +3523,7 @@
       "description": "Call down a lightning strike on a targeted monster, dealing 3000% damage and stunning nearby monsters."
     }
   },
-  {
+  "Molotov (6-Pack)": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Molotov_(6-Pack)",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -3533,7 +3533,7 @@
     "itemRarity": "Equipment",
     "cooldown": "45s"
   },
-  {
+  "Executive Card": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Executive_Card",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -3543,7 +3543,7 @@
     "itemRarity": "Equipment",
     "cooldown": "0.1s"
   },
-  {
+  "Gnarled Woodsprite": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Gnarled_Woodsprite",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/d/d8/Gnarled_Woodsprite.png/revision/latest?cb=20200129193103",
     "name": "Gnarled Woodsprite",
@@ -3557,7 +3557,7 @@
       "description": "Gain a Woodsprite follower that heals for 1.5% of your maximum health/second. Can be sent to an ally to heal them for 10% of their maximum health."
     }
   },
-  {
+  "Recycler": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Recycler",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/6/67/Recycler.png/revision/latest?cb=20200331153330",
     "name": "Recycler",
@@ -3571,7 +3571,7 @@
       "description": "Transform an Item or Equipment into a different one. Can only be converted into the same tier one time."
     }
   },
-  {
+  "Sawmerang": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Sawmerang",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Sawmerang",
@@ -3580,7 +3580,7 @@
     "itemRarity": "Equipment",
     "cooldown": "45s"
   },
-  {
+  "Radar Scanner": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Radar_Scanner",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/7/7f/Radar_Scanner.png/revision/latest?cb=20200129193139",
     "name": "Radar Scanner",
@@ -3594,7 +3594,7 @@
       "description": "Reveal all interactables within 500m for 10 seconds."
     }
   },
-  {
+  "Gorag's Opus": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Gorag%27s_Opus",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Gorag's Opus",
@@ -3603,7 +3603,7 @@
     "itemRarity": "Equipment",
     "cooldown": "45s"
   },
-  {
+  "Remote Caffeinator": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Remote_Caffeinator",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -3613,7 +3613,7 @@
     "itemRarity": "Equipment",
     "cooldown": "60s"
   },
-  {
+  "Ifrit's Distinction": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Ifrit%27s_Distinction",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Ifrit's Distinction",
@@ -3621,7 +3621,7 @@
     "description": "Become an aspect of fire.",
     "itemRarity": "Elite Equipment"
   },
-  {
+  "His Reassurance": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/His_Reassurance",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "dlc": "Survivors of the Void",
@@ -3630,7 +3630,7 @@
     "description": "Become an aspect of earth.",
     "itemRarity": "Elite Equipment"
   },
-  {
+  "Silence Between Two Strikes": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Silence_Between_Two_Strikes",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Silence Between Two Strikes",
@@ -3639,7 +3639,7 @@
     "itemRarity": "Elite Equipment",
     "id": "6"
   },
-  {
+  "Her Biting Embrace": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Her_Biting_Embrace",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Her Biting Embrace",
@@ -3647,7 +3647,7 @@
     "description": "Become an aspect of ice.",
     "itemRarity": "Elite Equipment"
   },
-  {
+  "N'kuhana's Retort": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/N%27kuhana%27s_Retort",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "N'kuhana's Retort",
@@ -3655,7 +3655,7 @@
     "description": "Become an aspect of corruption.",
     "itemRarity": "Elite Equipment"
   },
-  {
+  "Spectral Circlet": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Spectral_Circlet",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Spectral Circlet",
@@ -3663,7 +3663,7 @@
     "description": "Become an aspect of incorporeality.",
     "itemRarity": "Elite Equipment"
   },
-  {
+  "Shared Design": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Shared_Design",
     "image": "data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw%3D%3D",
     "name": "Shared Design",
@@ -3671,12 +3671,12 @@
     "description": "Become an aspect of perfection.",
     "itemRarity": "Elite Equipment"
   },
-  {
+  "Fuel Array": {
     "wikiLink": "https://riskofrain2.fandom.com/wiki/Fuel_Array",
     "image": "https://static.wikia.nocookie.net/riskofrain2_gamepedia_en/images/f/fe/Fuel_Array.png/revision/latest?cb=20200129193057",
     "name": "Fuel Array",
-    "shortDescription": "Looks like it could power something.",
+    "shortDescription": "Looks like it could power something. EXTREMELY unstable...",
     "description": "Looks like it could power something. EXTREMELY unstable...",
     "itemRarity": "Equipment"
   }
-]
+}
