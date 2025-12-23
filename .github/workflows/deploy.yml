@@ -33,6 +33,16 @@ jobs:
         node-version: 20.x
         cache: 'npm'
     - run: npm ci
+    - name: Set Vue publicPath for GitHub Pages
+      run: |
+        REPO_NAME=${GITHUB_REPOSITORY#*/}
+        if [[ "$REPO_NAME" == *.github.io ]]; then
+          PUBLIC_PATH='/'
+        else
+          PUBLIC_PATH="/$REPO_NAME/"
+        fi
+        echo "module.exports = { publicPath: '$PUBLIC_PATH' }" > vue.config.js
+      shell: bash
     - run: npm run build
     - name: Upload GitHub Pages artifact
       # Only upload artifact on push to main
