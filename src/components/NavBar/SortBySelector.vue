@@ -19,7 +19,7 @@ export default {
   name: 'SortBySelector',
   computed: {
     sortOptions() {
-      return [SortType.RARITY, SortType.NAME, SortType.ID].concat(
+      return [SortType.RARITY, SortType.NAME].concat(
         this.$store.state.selectedRole ? [SortType.RECOMMENDED] : [],
       );
     },

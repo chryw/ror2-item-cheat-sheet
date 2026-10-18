@@ -11,7 +11,7 @@ const sourceRoot = path.resolve(__dirname, '..', 'src');
 // Compile application ES modules with the project's existing Babel tooling.
 function loadSource(filename) {
   const resolved = require.resolve(filename);
-  if (resolved.endsWith('.webp')) return resolved;
+  if (/\.(webp|png)$/.test(resolved)) return resolved;
   if (!resolved.endsWith('.js') || !resolved.startsWith(sourceRoot + path.sep)) {
     return require(resolved);
   }
@@ -108,7 +108,10 @@ test('survivor recommendations intersect with category, rarity, search and list 
 });
 
 test('category filtering handles uncategorized items and legacy category spelling', () => {
-  assert(ids.some(id => !items[id].category));
+  assert.deepStrictEqual(utils.filterOperation(
+    ['uncategorized'], { uncategorized: { itemRarity: ItemRarity.COMMON } },
+    { category: ['Damage'] },
+  ), []);
   const allCategorized = utils.filterOperation(ids, items, { category: ['Damage'] });
   assert(allCategorized.length > 0);
   assert(allCategorized.every(id => (items[id].category || []).includes('Damage')));
@@ -119,18 +122,13 @@ test('category filtering handles uncategorized items and legacy category spellin
   assert.deepStrictEqual(utils.filterOperation(ids, items, { category: [], rarity: [] }), ids);
 });
 
-test('existing name, rarity and ID sorts are still available', () => {
+test('existing name and rarity sorts are still available', () => {
   assert.deepStrictEqual(utils.sortOperation(
     ['Ukulele', 'Crowbar'], items, SortType.NAME,
   ), ['Crowbar', 'Ukulele']);
   assert.deepStrictEqual(utils.sortOperation(
     ['Spare Drone Parts', 'Crowbar', 'Ukulele'], items, SortType.RARITY,
   ), ['Crowbar', 'Ukulele', 'Spare Drone Parts']);
-  const withIds = ids.filter(id => items[id].id);
-  const sorted = utils.sortOperation(withIds, items, SortType.ID);
-  sorted.forEach((id, index) => {
-    assert(index === 0 || Number(items[id].id) >= Number(items[sorted[index - 1]].id));
-  });
 });
 
 test('role selection chooses build sorting, survives role switches, and resets safely', () => {

@@ -1,10 +1,10 @@
 # ror2-item-cheat-sheet
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/c3090a9d-f0f9-422e-adc0-63e3df90c77d/deploy-status)](https://app.netlify.com/sites/ror2-item-cheat-sheet/deploys)
+[![Deploy to GitHub Pages](https://github.com/chryw/ror2-item-cheat-sheet/actions/workflows/deploy.yml/badge.svg)](https://github.com/chryw/ror2-item-cheat-sheet/actions/workflows/deploy.yml)
 
-[Click here for the Risk of Rain 2 Item Cheat Sheet](https://ror2-item-cheat-sheet.netlify.app/)
+[Click here for the Risk of Rain 2 Item Cheat Sheet](https://chryw.github.io/ror2-item-cheat-sheet/)
 
-This website is an item cheat sheet for the game Risk of Rain 2 (RoR2). In RoR2, progressing through levels gives the player the ability to gain many items. Each item has a different stat it boosts and a different ability. With nearly unique 100 items in the game, it can get difficult to determine if you want to pick up each item. This website gives an easy way to see what items do at a glance. Clicking on an item gives a more in depth view of the item, along with links to the relevant wiki page. 
+This website is an item cheat sheet for the game Risk of Rain 2 (RoR2). In RoR2, progressing through levels gives the player the ability to gain many items. Each item has a different stat it boosts and a different ability. With 248 catalog entries, it can get difficult to determine if you want to pick up each item. This website gives an easy way to see what items do at a glance. Clicking on an item gives a more in depth view of the item, along with links to the relevant wiki page.
 
 The technology used for this project was Vue and Vuex. 
 
@@ -45,3 +45,38 @@ npm run build
 ```
 
 The regression tests use Node's assertions and the Babel compiler already supplied by Vue CLI, without an additional test framework. For newer Node versions with OpenSSL 3, this legacy Vue CLI / webpack build may need `NODE_OPTIONS=--openssl-legacy-provider` (PowerShell: `$env:NODE_OPTIONS='--openssl-legacy-provider'`).
+
+### Catalog coverage and sources
+
+The catalog includes Survivors of the Void, Seekers of the Storm, Alloyed Collective,
+and Hallowed Concepts. On October 18, 2026, the original
+[stefanuros/develop catalog](https://github.com/stefanuros/ror2-item-cheat-sheet/tree/develop)
+and this fork both had 210 entries, with no Hallowed Concepts coverage.
+
+The 38 Hallowed Concepts additions were checked against the
+[wiki item tables](https://riskofrain2.wiki.gg/wiki/Items) and
+[DLC overview](https://riskofrain2.wiki.gg/wiki/Hallowed_Concepts):
+3 Boss items, 11 Hallowed items, 14 Hexes, 8 N'tormat Pages, 1 Lunar Equipment,
+and 1 Elite Equipment. Descriptions summarize the documented mechanics and stacking;
+each entry links to its source page. Item images and the DLC badge are hosted locally
+and sourced from the wiki; game artwork belongs to its respective owners.
+
+Hallowed items are primarily obtained by cleansing Hexes at a Hallowed Shrine.
+Hexes are harmful until cleansed. N'tormat Pages unlock key-item rituals rather than
+occupying the equipment slot; consumed Pages regenerate at the next stage.
+All three new tiers can be filtered by rarity.
+
+### Validate and publish
+
+Use Node.js 20 (as in CI), then run:
+
+```sh
+npm ci
+npm test
+npm run test:catalog
+npm run build
+```
+
+The existing [deployment workflow](.github/workflows/deploy.yml) builds pull requests
+and publishes pushes to `main` to this fork's GitHub Pages site. It sets Vue's
+public path to `/ror2-item-cheat-sheet/` so bundled assets work under the project URL.

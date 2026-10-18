@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "node tests/buildFilters.test.js"
+    "test": "node tests/buildFilters.test.js",
+    "test:catalog": "node --test tests/catalog.test.cjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.28",

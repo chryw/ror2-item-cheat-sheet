@@ -29,7 +29,7 @@
         <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
         <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
       </div>
-      <SideBar/>
+      <SideBar />
     </div>
   </div>
 </template>
@@ -42,7 +42,7 @@ import { SelectionType } from '../data/constants';
 import { getSurvivorBuild } from '../data/survivorBuilds';
 
 export default {
-  name: 'HomePage',
+  name: "HomePage",
   components: {
     ItemList,
     TopBar,

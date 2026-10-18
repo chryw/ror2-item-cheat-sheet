@@ -202,6 +202,18 @@ export default {
   --item-card-colour: #a92964;
   --item-card-colour-opaque: rgba(169, 41, 100, var(--background-opacity));
 }
+.item-colour-hallowed {
+  --item-card-colour: #9368f9;
+  --item-card-colour-opaque: rgba(147, 104, 249, var(--background-opacity));
+}
+.item-colour-hex {
+  --item-card-colour: #b14b76;
+  --item-card-colour-opaque: rgba(177, 75, 118, var(--background-opacity));
+}
+.item-colour-page {
+  --item-card-colour: #d2bd8b;
+  --item-card-colour-opaque: rgba(210, 189, 139, var(--background-opacity));
+}
 .item-colour-legendary {
   --item-card-colour: #df4d39;
   --item-card-colour-opaque: rgba(223, 77, 57, var(--background-opacity));
