@@ -37,7 +37,7 @@ import items from '../../data/items.json';
 import ItemIdUtils from '../../helpers/ItemIdUtils';
 
 const options = [...new Set(Object.values(items).reduce((categories, item) => {
-  return categories.concat((item.category || []).map(ItemIdUtils.categoryLabel));
+  return categories.concat(ItemIdUtils.getItemCategories(item));
 }, []))].sort();
 
 export default {
@@ -46,7 +46,9 @@ export default {
   computed: {
     options() { return options; },
     selected: {
-      get() { return this.$store.state.filterBy.category.map(ItemIdUtils.categoryLabel); },
+      get() {
+        return ItemIdUtils.getItemCategories({ category: this.$store.state.filterBy.category });
+      },
       set(value) { this.$store.commit('setFilterByState', { category: value }); },
     },
   },

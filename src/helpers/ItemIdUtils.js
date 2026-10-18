@@ -1,4 +1,6 @@
-import { SortType, ItemRaritySortValue as rarityValues, EquipmentItemRarities } from '../data/constants';
+import {
+  Category, SortType, ItemRaritySortValue as rarityValues, EquipmentItemRarities,
+} from '../data/constants';
 import { buildTierOrder, getBuildTier } from '../data/survivorBuilds';
 
 /**
@@ -63,6 +65,10 @@ const roleFilterOperation = (itemIds, itemList, role, recommendedOnly) => {
 };
 
 const categoryLabel = category => category.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+const getItemCategories = item => [...new Set((item.category || [])
+  .map(categoryLabel)
+  .filter(category => Object.values(Category).includes(category)))];
 
 /**
  * Filters out items that do not match the given filter values. Filtering in the
@@ -157,6 +163,7 @@ const filterByItemListType = (itemIds, itemList, isEquipment) => {
 };
 
 export default {
+  getItemCategories,
   categoryLabel,
   roleFilterOperation,
   sortOperation,

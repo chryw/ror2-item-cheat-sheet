@@ -5,7 +5,7 @@
     v-on:mouseup="itemCardClick()"
   >
     <div class="image-div">
-      <img class="item-icon" :src="this.itemImageUrl" />
+      <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
     </div>
     <div class="item-details" :class="{ 'has-build-tier': buildTier }">
       <h4 class="item-name">
@@ -31,7 +31,7 @@
 import { mapState, mapMutations } from "vuex";
 
 import items from "../data/items.json";
-import itemImages from "../data/itemImages.json";
+import getItemImageUrl from "../helpers/ItemImageUtils";
 import { ItemRarityClass, DlcIconUrl } from "../data/constants";
 import { getBuildTier } from "../data/survivorBuilds";
 
@@ -66,10 +66,7 @@ export default {
       return "";
     },
     itemImageUrl() {
-      if (itemImages[this.itemId]) {
-        return `items/${itemImages[this.itemId]}`;
-      }
-      return "";
+      return getItemImageUrl(this.itemId, process.env.BASE_URL);
     },
   },
   methods: {

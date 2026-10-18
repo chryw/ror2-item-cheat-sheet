@@ -17,7 +17,7 @@
           <p class="item-short-description item-dlc" v-if="itemData.dlc">{{ itemData.dlc }}</p>
         </span>
         <hr />
-        <img class="item-icon" :src="this.itemImageUrl" />
+        <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
         <p class="item-short-description">{{ itemData.shortDescription }}</p>
         <hr />
         <p class="item-description">{{ itemData.description }}</p>
@@ -62,7 +62,7 @@
         <div class="item-category-list">
           <p
             class="item-category"
-            v-for="category in itemData.category"
+            v-for="category in itemCategories"
             v-bind:key="category"
             v-on:mouseup="clickCategoryPill(category)"
           >
@@ -97,7 +97,8 @@ import { mapState, mapMutations } from "vuex";
 
 import CloseIcon from "./Icons/CloseIcon.vue";
 import items from "../data/items.json";
-import itemImages from "../data/itemImages.json";
+import getItemImageUrl from "../helpers/ItemImageUtils";
+import ItemIdUtils from "../helpers/ItemIdUtils";
 
 import { ItemRarityClass, SelectionType, DlcIconUrl } from "../data/constants";
 import { bus } from "../main";
@@ -116,6 +117,9 @@ export default {
       const { id } = this.selectedItem;
       return items[id];
     },
+    itemCategories() {
+      return ItemIdUtils.getItemCategories(this.itemData);
+    },
     rarityClass() {
       return ItemRarityClass[this.itemData.itemRarity];
     },
@@ -132,10 +136,7 @@ export default {
       return "";
     },
     itemImageUrl() {
-      if (itemImages[this.selectedItem.id]) {
-        return `items/${itemImages[this.selectedItem.id]}`;
-      }
-      return "";
+      return getItemImageUrl(this.selectedItem.id, process.env.BASE_URL);
     },
   },
   methods: {

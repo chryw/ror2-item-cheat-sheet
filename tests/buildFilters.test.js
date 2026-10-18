@@ -2,6 +2,7 @@
 const assert = require('assert');
 const path = require('path');
 const vm = require('vm');
+const fs = require('fs');
 const { transformFileSync } = require('@babel/core');
 const items = require('../src/data/items.json');
 
@@ -37,6 +38,7 @@ const { survivorBuilds, getBuildTier, buildTierOrder } = loadSource(
   path.join(sourceRoot, 'data', 'survivorBuilds.js'),
 );
 const utils = loadSource(path.join(sourceRoot, 'helpers', 'ItemIdUtils.js')).default;
+const getItemImageUrl = loadSource(path.join(sourceRoot, 'helpers', 'ItemImageUtils.js')).default;
 const { SortType, ItemRarity } = loadSource(path.join(sourceRoot, 'data', 'constants.js'));
 const store = loadSource(path.join(sourceRoot, 'store.js')).default;
 const ids = Object.keys(items);
@@ -122,6 +124,33 @@ test('category filtering handles uncategorized items and legacy category spellin
   assert.deepStrictEqual(utils.filterOperation(ids, items, { category: [], rarity: [] }), ids);
 });
 
+test('only gameplay categories appear, with legacy spellings normalized', () => {
+  assert.deepStrictEqual(utils.getItemCategories({
+    category: ['AIBlacklist', 'BrotherBlacklist', 'TurretBlacklist', 'CannotSteal',
+      'WorldUnique', 'Damage', 'OnKillEffect', 'On Kill Effect', 'EquipmentRelated'],
+  }), ['Damage', 'On Kill Effect', 'Equipment Related']);
+  assert.deepStrictEqual(utils.getItemCategories({}), []);
+  const categories = [...new Set(Object.values(items).flatMap(utils.getItemCategories))];
+  assert(categories.includes('Damage'));
+  assert(!categories.some(category => /blacklist|cannot|world ?unique/i.test(category)));
+});
+
+test('all catalogue images are local image files with deployment-safe URLs', () => {
+  ids.forEach(id => {
+    const url = getItemImageUrl(id, '/ror2-item-cheat-sheet/');
+    assert(url.startsWith('/ror2-item-cheat-sheet/items/'));
+    const filename = decodeURIComponent(url.split('/').pop());
+    const image = fs.readFileSync(path.join(sourceRoot, '..', 'public', 'items', filename));
+    const png = image.subarray(0, 8).toString('hex') === '89504e470d0a1a0a';
+    const webp = image.subarray(0, 4).toString() === 'RIFF'
+      && image.subarray(8, 12).toString() === 'WEBP';
+    assert(png || webp, `Invalid image for ${id}`);
+    assert.strictEqual(getItemImageUrl(id, '/'), `/items/${encodeURIComponent(filename)}`);
+    assert.strictEqual(getItemImageUrl(id, '/ror2-item-cheat-sheet'), url);
+  });
+  assert.throws(() => getItemImageUrl('Missing item', '/'), /Missing catalogue image/);
+});
+
 test('existing name and rarity sorts are still available', () => {
   assert.deepStrictEqual(utils.sortOperation(
     ['Ukulele', 'Crowbar'], items, SortType.NAME,
@@ -148,8 +177,8 @@ test('role selection chooses build sorting, survives role switches, and resets s
 test('changing one filter preserves the other and toggling recommendations is reactive', () => {
   store.commit('setFilterByState', { category: ['Damage'], rarity: [ItemRarity.COMMON] });
   store.commit('setFilterByState', { rarity: [] });
-  assert.deepStrictEqual(store.state.filterBy.category, ['Damage']);
-  assert.deepStrictEqual(store.state.filterBy.rarity, []);
+  assert.deepStrictEqual(Array.from(store.state.filterBy.category), ['Damage']);
+  assert.deepStrictEqual(Array.from(store.state.filterBy.rarity), []);
   store.commit('setRecommendedOnly', false);
   assert.strictEqual(store.state.recommendedOnly, false);
 });
