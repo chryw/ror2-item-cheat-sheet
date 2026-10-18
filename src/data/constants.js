@@ -106,6 +106,7 @@ export const SortType = {
   ID: "Id",
   NAME: "Name",
   RARITY: "Rarity",
+  RECOMMENDED: "Build tier (S / A / B)",
 };
 
 export const Theme = {

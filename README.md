@@ -12,6 +12,14 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
+On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, category and rarity controls share the same filters as the item-detail pills; **Reset filters** restores the full catalogue.
+
+Navigation uses the catalogue's neutral surfaces, compact controls and rarity accents. Control icons come from the existing open-source Font Awesome package, importing only the individual icons used by the app; no custom SVG paths or extra icon package are needed.
+
+Choose a **Survivor / role** to filter items and equipment to a starter build. This also selects **Build tier (S / A / B)** sorting: S is core, A is synergy, and B is general support. Ties are alphabetical. Compact letter badges use gold (S), teal (A), and blue (B), matching the build legend; these colours are independent of item rarity. Uncheck **Recommended items only** to browse everything while keeping build priorities visible (unranked items sort last). Search, category and rarity filters still apply, and clearing the survivor restores the full catalogue subject to those filters.
+
+Operator's named item recommendations follow the [Rogue Ranker Operator guide](https://rogueranker.com/operator-ror2/), with Spare Drone Parts given core priority. Support items and equipment are supplemental starter suggestions. Other survivors use curated starter presets, not rankings sourced from that guide or a universal tier list. Skill variants, difficulty, item stacks and DLC ownership can change the best pickup; selecting a survivor does not hide DLC items. Presets are maintained in [survivorBuilds.js](src/data/survivorBuilds.js).
+
 Next is the item list. This is the list of all the items. This view gives the user a quick overview of all of the items at a glance. The colours signify the items rarity. Some items have an effective max, (I.E. if item X has an effective max of 5, it is useless to pick up more than 5 of item X) and this value is displayed in the bottom right of the item card. When an item is clicked on, it opens the sidebar.
 
 The sidebar shows an in depth overview of the item, including the stats it changes, a full description, how to unlock it, as well as the link to the wiki page for the item. 
@@ -27,3 +35,13 @@ To run the project (assuming you have already installed dependencies before), ru
 npm run serve
 ```
 Once if runs, you can go to localhost:8080 to see the website.
+
+### Validate changes
+
+```
+npm test
+npm run lint -- --no-fix
+npm run build
+```
+
+The regression tests use Node's assertions and the Babel compiler already supplied by Vue CLI, without an additional test framework. For newer Node versions with OpenSSL 3, this legacy Vue CLI / webpack build may need `NODE_OPTIONS=--openssl-legacy-provider` (PowerShell: `$env:NODE_OPTIONS='--openssl-legacy-provider'`).

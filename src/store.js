@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { SortType, Theme } from './data/constants';
+import { getSurvivorBuild } from './data/survivorBuilds';
 
 Vue.use(Vuex);
 
@@ -13,8 +14,25 @@ export default new Vuex.Store({
     filterBy: { category: [], rarity: [] },
     searchTerm: "",
     selectedItem: null,
+    selectedRole: "",
+    recommendedOnly: true,
   },
   mutations: {
+    setSelectedRole(state, role) {
+      if (role && !getSurvivorBuild(role)) {
+        throw new Error(`Unknown survivor: ${role}`);
+      }
+      const previousRole = state.selectedRole;
+      state.selectedRole = role;
+      if (role && !previousRole) {
+        state.sortBy = SortType.RECOMMENDED;
+      } else if (!role && state.sortBy === SortType.RECOMMENDED) {
+        state.sortBy = SortType.RARITY;
+      }
+    },
+    setRecommendedOnly(state, value) {
+      state.recommendedOnly = value;
+    },
     updateSortByState(state, sortBy) {
       state.sortBy = sortBy || SortType.RARITY;
     },

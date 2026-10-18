@@ -8,7 +8,7 @@
       <img class="dlc-icon" v-if="itemData.dlc" v-bind:src="this.dlcIconUrl" />
       <img class="item-icon" :src="this.itemImageUrl" />
     </div>
-    <div class="item-details">
+    <div class="item-details" :class="{ 'has-build-tier': buildTier }">
       <h4 class="item-name">
         {{ itemData.name }}
         <span class="item-id" v-if="itemData.id" unselectable="on">#{{ itemData.id }}</span>
@@ -17,6 +17,12 @@
         </span>
       </h4>
       <p class="item-short-description">{{ itemData.shortDescription }}</p>
+      <span v-if="buildTier" class="build-tier build-badge"
+        :class="`build-badge--${buildTier}`"
+        :aria-label="`${buildTier} tier for this survivor's build`"
+        :title="`${buildTier} tier for this survivor's build`">
+        {{ buildTier }}
+      </span>
     </div>
   </div>
 </template>
@@ -27,6 +33,7 @@ import { mapState, mapMutations } from "vuex";
 import items from "../data/items.json";
 import itemImages from "../data/itemImages.json";
 import { ItemRarityClass, DlcIconUrl } from "../data/constants";
+import { getBuildTier } from "../data/survivorBuilds";
 
 export default {
   name: "ItemCard",
@@ -38,6 +45,9 @@ export default {
   },
   computed: {
     ...mapState(["cardSize"]),
+    buildTier() {
+      return getBuildTier(this.itemData.name, this.$store.state.selectedRole);
+    },
     effectiveMax() {
       return (this.itemData.stats || []).reduce((tot, val) => {
         return Math.max(tot, val.effectiveMax || 0);
@@ -173,10 +183,20 @@ export default {
 }
 
 .item-details {
+  min-width: 0;
+  position: relative;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   background: var(--item-card-colour-opaque);
+}
+
+.item-details.has-build-tier { padding-right: 34px; }
+.build-tier {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .item-name {

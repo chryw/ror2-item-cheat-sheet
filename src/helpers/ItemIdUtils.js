@@ -1,4 +1,5 @@
-import { ItemRarity, SortType, ItemRaritySortValue as rarityValues, EquipmentItemRarities } from '../data/constants';
+import { SortType, ItemRaritySortValue as rarityValues, EquipmentItemRarities } from '../data/constants';
+import { buildTierOrder, getBuildTier } from '../data/survivorBuilds';
 
 /**
  * Sorts a list of item ids, given a sort type
@@ -6,13 +7,20 @@ import { ItemRarity, SortType, ItemRaritySortValue as rarityValues, EquipmentIte
  * @param {[int]} itemIds - A list of item Ids
  * @param {Enum} sortBy - An enum specifying the type of sort to be done
  */
-const sortOperation = (itemIds, itemList, sortBy) => {
+const sortOperation = (itemIds, itemList, sortBy, role = '') => {
   if (sortBy == null) {
     return itemIds;
   }
 
   // Sort the item ids based on the sortBy state value
   return itemIds.sort((a, b) => {
+    if (sortBy === SortType.RECOMMENDED) {
+      const priority = id => {
+        const tier = getBuildTier(itemList[id].name, role);
+        return tier ? buildTierOrder.indexOf(tier) : buildTierOrder.length;
+      };
+      return priority(a) - priority(b) || itemList[a].name.localeCompare(itemList[b].name);
+    }
     // Sort by rarity
     if (sortBy === SortType.RARITY) {
       const aRarity = itemList[a].itemRarity;
@@ -47,6 +55,15 @@ const sortOperation = (itemIds, itemList, sortBy) => {
   });
 };
 
+const roleFilterOperation = (itemIds, itemList, role, recommendedOnly) => {
+  if (!role || !recommendedOnly) {
+    return itemIds;
+  }
+  return itemIds.filter(id => getBuildTier(itemList[id].name, role));
+};
+
+const categoryLabel = category => category.replace(/([a-z])([A-Z])/g, '$1 $2');
+
 /**
  * Filters out items that do not match the given filter values. Filtering in the
  * same key is an OR operation and filtering between keys is an AND operation.
@@ -78,8 +95,8 @@ const filterOperation = (itemIds, itemList, filterBy) => {
   return itemIds.filter(id => {
     // Check if a category matches if it has some filter values
     const categoryMatches = (category.length === 0)
-      || itemList[id].category.some(val => {
-        return category.includes(val);
+      || (itemList[id].category || []).some(val => {
+        return category.some(selected => categoryLabel(selected) === categoryLabel(val));
       });
 
     // Check if the rarity is one to show
@@ -140,6 +157,8 @@ const filterByItemListType = (itemIds, itemList, isEquipment) => {
 };
 
 export default {
+  categoryLabel,
+  roleFilterOperation,
   sortOperation,
   filterOperation,
   searchOperation,

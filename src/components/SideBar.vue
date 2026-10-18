@@ -157,6 +157,7 @@ export default {
 
 <style scoped>
 .side-bar-wrapper {
+  flex-shrink: 0;
   --side-bar-width: 300px;
   --side-bar-background-colour: #444444;
 
@@ -175,6 +176,17 @@ export default {
   --top-bar-height: 60px;
 
   overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .side-bar-wrapper {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    max-width: 100%;
+  }
 }
 
 /* Setting colours for different rarities */

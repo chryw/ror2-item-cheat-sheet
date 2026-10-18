@@ -12,7 +12,7 @@
       />
     </div>
     <div class="no-items-message" v-show="isItemIdListEmpty">
-      No Matching {{ itemListType.description }} Found
+      No Matching {{ itemListType }} Found
     </div>
   </div>
 </template>
@@ -37,7 +37,9 @@ export default {
     ItemCard,
   },
   computed: {
-    ...mapState(["showHidden", "sortBy", "filterBy", "searchTerm", "cardSize"]),
+    ...mapState([
+      "showHidden", "sortBy", "filterBy", "searchTerm", "cardSize", "selectedRole", "recommendedOnly",
+    ]),
     itemIdList() {
       // Set a list of operations that will be done to the item id list
       // * Note: Order matters in this list
@@ -48,11 +50,16 @@ export default {
           ItemIdUtils.filterByItemListType(
             itemIds,
             itemList,
-            this.itemListType === SelectionType.EQUIPMENT
+            this.itemListType === SelectionType.EQUIPMENT,
           ),
         (itemIds, itemList) => ItemIdUtils.filterOperation(itemIds, itemList, this.filterBy),
+        (itemIds, itemList) => ItemIdUtils.roleFilterOperation(
+          itemIds, itemList, this.selectedRole, this.recommendedOnly,
+        ),
         (itemIds, itemList) => ItemIdUtils.searchOperation(itemIds, itemList, this.searchTerm),
-        (itemIds, itemList) => ItemIdUtils.sortOperation(itemIds, itemList, this.sortBy),
+        (itemIds, itemList) => ItemIdUtils.sortOperation(
+          itemIds, itemList, this.sortBy, this.selectedRole,
+        ),
       ];
 
       // Go through the operations and apply each operation to the output of the
@@ -84,7 +91,7 @@ export default {
 
 .item-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-card-width), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--item-card-width)), 1fr));
   height: fit-content;
 }
 
