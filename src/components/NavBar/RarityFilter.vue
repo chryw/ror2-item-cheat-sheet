@@ -31,7 +31,7 @@ const clear = {
 const rarities = [clear].concat(
   Object.values(ItemRarity).map((rarity) => {
     return {
-      name: rarity.description,
+      name: rarity,
       code: rarity,
     };
   })
@@ -50,7 +50,7 @@ export default {
     bus.$on("filterRarity", (filter) => {
       this.filterByRarity = [
         {
-          name: filter.description,
+          name: filter,
           code: filter,
         },
       ];

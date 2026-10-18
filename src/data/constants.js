@@ -1,6 +1,7 @@
 import SotVIcon from "../assets/SotV_Icon.webp";
 import SotSIcon from "../assets/SotS_Icon.webp";
 import ACIcon from "../assets/AC_Icon.webp";
+import HCIcon from "../assets/HC_Icon.png";
 
 export const StackType = {
   LINEAR: "Linear",
@@ -20,6 +21,9 @@ export const ItemRarity = {
   ELITE_EQUIPMENT: "Elite Equipment",
   LUNAR_EQUIPMENT: "Lunar Equipment",
   VOID: "Void",
+  HALLOWED: "Hallowed",
+  HEX: "Hex",
+  NTORMAT_PAGE: "N'tormat Pages",
 };
 
 export const EquipmentItemRarities = [
@@ -36,6 +40,9 @@ export const ItemRaritySortValue = {
   [ItemRarity.BOSS]: 3,
   [ItemRarity.VOID]: 4,
   [ItemRarity.LUNAR]: 5,
+  [ItemRarity.HALLOWED]: 6,
+  [ItemRarity.HEX]: 7,
+  [ItemRarity.NTORMAT_PAGE]: 8,
   [ItemRarity.LUNAR_EQUIPMENT]: 0,
   [ItemRarity.EQUIPMENT]: 1,
   [ItemRarity.ELITE_EQUIPMENT]: 2,
@@ -49,6 +56,9 @@ export const ItemRarityClass = {
   [ItemRarity.LEGENDARY]: "item-colour-legendary",
   [ItemRarity.BOSS]: "item-colour-boss",
   [ItemRarity.LUNAR]: "item-colour-lunar",
+  [ItemRarity.HALLOWED]: "item-colour-hallowed",
+  [ItemRarity.HEX]: "item-colour-hex",
+  [ItemRarity.NTORMAT_PAGE]: "item-colour-page",
   [ItemRarity.EQUIPMENT]: "equipment-colour-normal",
   [ItemRarity.ELITE_EQUIPMENT]: "equipment-colour-elite",
   [ItemRarity.LUNAR_EQUIPMENT]: "equipment-colour-lunar",
@@ -103,7 +113,7 @@ export const SelectionTypePluralization = {
 };
 
 export const SortType = {
-  ID: "Id",
+  // ID: "Id",
   NAME: "Name",
   RARITY: "Rarity",
 };
@@ -119,4 +129,5 @@ export const DlcIconUrl = {
   "Survivors of the Void": SotVIcon,
   "Seekers of the Storm": SotSIcon,
   "Alloyed Collective": ACIcon,
+  "Hallowed Concepts": HCIcon,
 };
