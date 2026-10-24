@@ -23,6 +23,7 @@
       <SortBySelector />
       <CategoryFilter />
       <RarityFilter />
+      <DlcFilter />
       <button class="nav-reset" type="button" @click="resetFilters">
         <font-awesome-icon icon="undo-alt" aria-hidden="true" />
         Reset filters
@@ -39,18 +40,19 @@ import RoleFilter from './NavBar/RoleFilter.vue';
 import SortBySelector from './NavBar/SortBySelector.vue';
 import CategoryFilter from './NavBar/CategoryFilter.vue';
 import RarityFilter from './NavBar/RarityFilter.vue';
+import DlcFilter from './NavBar/DlcFilter.vue';
 import { SortType } from '../data/constants';
 
 export default {
   name: 'TopBar',
-  components: { SearchBar, RoleFilter, SortBySelector, CategoryFilter, RarityFilter },
+  components: { SearchBar, RoleFilter, SortBySelector, CategoryFilter, RarityFilter, DlcFilter },
   data() { return { collapsed: false }; },
   methods: {
     resetFilters() {
       this.$store.commit('setSelectedRole', '');
       this.$store.commit('setRecommendedOnly', true);
       this.$store.commit('updateSortByState', SortType.RARITY);
-      this.$store.commit('setFilterByState', { category: [], rarity: [] });
+      this.$store.commit('setFilterByState', { category: [], rarity: [], dlc: [] });
       this.$store.commit('updateSearchTermState', '');
     },
   },
@@ -111,7 +113,7 @@ export default {
   font-weight: 600;
 }
 
-.nav-field select, .nav-field input[type="search"] {
+.nav-field select, .nav-field input[type="search"], .nav-field input[type="text"] {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;

@@ -2,7 +2,12 @@
   <div
     class="item-card"
     v-bind:class="[this.rarityClass, this.cardSize]"
-    v-on:mouseup="itemCardClick()"
+    role="button"
+    tabindex="0"
+    :aria-label="`View ${itemData.name} details`"
+    @click="itemCardClick"
+    @keydown.enter="itemCardClick"
+    @keydown.space.prevent="itemCardClick"
   >
     <div class="image-div">
       <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
@@ -46,7 +51,9 @@ export default {
   computed: {
     ...mapState(["cardSize"]),
     buildTier() {
-      return getBuildTier(this.itemData.name, this.$store.state.selectedRole);
+      const { selectedBuild, builds } = this.$store.getters;
+      if (selectedBuild && selectedBuild.custom) return null;
+      return getBuildTier(this.itemData.name, this.$store.state.selectedRole, builds);
     },
     effectiveMax() {
       return (this.itemData.stats || []).reduce((tot, val) => {

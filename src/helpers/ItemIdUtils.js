@@ -9,7 +9,7 @@ import { buildTierOrder, getBuildTier } from '../data/survivorBuilds';
  * @param {[int]} itemIds - A list of item Ids
  * @param {Enum} sortBy - An enum specifying the type of sort to be done
  */
-const sortOperation = (itemIds, itemList, sortBy, role = '') => {
+const sortOperation = (itemIds, itemList, sortBy, role = '', builds) => {
   if (sortBy == null) {
     return itemIds;
   }
@@ -18,7 +18,7 @@ const sortOperation = (itemIds, itemList, sortBy, role = '') => {
   return itemIds.sort((a, b) => {
     if (sortBy === SortType.RECOMMENDED) {
       const priority = id => {
-        const tier = getBuildTier(itemList[id].name, role);
+        const tier = getBuildTier(itemList[id].name, role, builds);
         return tier ? buildTierOrder.indexOf(tier) : buildTierOrder.length;
       };
       return priority(a) - priority(b) || itemList[a].name.localeCompare(itemList[b].name);
@@ -57,11 +57,11 @@ const sortOperation = (itemIds, itemList, sortBy, role = '') => {
   });
 };
 
-const roleFilterOperation = (itemIds, itemList, role, recommendedOnly) => {
+const roleFilterOperation = (itemIds, itemList, role, recommendedOnly, builds) => {
   if (!role || !recommendedOnly) {
     return itemIds;
   }
-  return itemIds.filter(id => getBuildTier(itemList[id].name, role));
+  return itemIds.filter(id => getBuildTier(itemList[id].name, role, builds));
 };
 
 const categoryLabel = category => category.replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -80,7 +80,7 @@ const getItemCategories = item => [...new Set((item.category || [])
  * rarity that give damage and only items in COMMON rarity that give attack speed
  * 
  * @param {[int]} itemIds - A list of itemIds
- * @param {Object} filterBy  - An object with 2 keys, category and rarity. The 
+ * @param {Object} filterBy  - An object with category, rarity and dlc keys. The
  *                             values of the keys should be lists of filter values
  */
 const filterOperation = (itemIds, itemList, filterBy) => {
@@ -89,6 +89,7 @@ const filterOperation = (itemIds, itemList, filterBy) => {
   }
 
   let { category, rarity } = filterBy;
+  const dlc = filterBy.dlc || [];
 
   if (category == null) {
     category = [];
@@ -109,7 +110,9 @@ const filterOperation = (itemIds, itemList, filterBy) => {
     const rarityMatches = (rarity.length === 0)
       || rarity.includes(itemList[id].itemRarity);
 
-    return categoryMatches && rarityMatches;
+    const dlcMatches = dlc.length === 0 || dlc.includes(itemList[id].dlc || 'Base game');
+
+    return categoryMatches && rarityMatches && dlcMatches;
   });
 };
 

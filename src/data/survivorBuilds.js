@@ -76,13 +76,29 @@ export const survivorBuilds = [
   preset('heretic', 'Heretic', 'Skill damage and regeneration',
     ["Rejuvenation Rack", "Alien Head", "Lysate Cell", "Purity"],
     ["Backup Magazine", "Hardlight Afterburner", "AtG Missile Mk. 1", "Ukulele"]),
+  {
+    ...preset('enforcer', 'Enforcer', 'Shielded close-range damage and barrier support',
+      ["Focus Crystal", "Soldier's Syringe", "Tri-Tip Dagger", "AtG Missile Mk. 1"],
+      ["Ukulele", "Topaz Brooch", "Backup Magazine", "Hardlight Afterburner"]),
+    dlc: 'Hallowed Concepts',
+    source: 'https://riskofrain2.wiki.gg/wiki/Enforcer',
+  },
+  {
+    ...preset('acolyte', 'Acolyte', 'Melee damage and healing converted into attack speed',
+      ["Focus Crystal", "Harvester's Scythe", "Leeching Seed", "Rejuvenation Rack"],
+      ["Lens-Maker's Glasses", "Predatory Instincts", "Ukulele", "Alien Head"]),
+    dlc: 'Hallowed Concepts',
+    source: 'https://riskofrain2.wiki.gg/wiki/Acolyte',
+  },
 ];
 
 export const buildTierOrder = ['S', 'A', 'B'];
 
-export const getSurvivorBuild = role => survivorBuilds.find(build => build.id === role);
+export const getSurvivorBuild = (role, builds = survivorBuilds) => {
+  return builds.find(build => build.id === role);
+};
 
-export const getBuildTier = (itemName, role) => {
-  const build = getSurvivorBuild(role);
+export const getBuildTier = (itemName, role, builds = survivorBuilds) => {
+  const build = getSurvivorBuild(role, builds);
   return build ? buildTierOrder.find(tier => build.tiers[tier].includes(itemName)) || null : null;
 };

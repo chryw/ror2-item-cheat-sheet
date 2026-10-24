@@ -19,6 +19,34 @@
         <hr />
         <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
         <p class="item-short-description">{{ itemData.shortDescription }}</p>
+        <div class="custom-build-actions">
+          <label for="custom-build-target">Custom build</label>
+          <select id="custom-build-target" v-model="customBuildTarget"
+            :disabled="!$store.state.customBuildsLoaded">
+            <option value="">New custom build</option>
+            <option v-for="profile in $store.state.customBuilds"
+              :key="profile.id" :value="profile.id">
+              {{ profile.name }}
+            </option>
+          </select>
+          <button type="button" :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
+            @click="$store.dispatch('addCustomBuildItem', selectedItem.id)">
+            {{ itemIsSaved ? 'Item already in build' : 'Add to custom build' }}
+          </button>
+          <template v-if="targetBuild">
+            <p v-if="itemIsSaved" role="status">
+              {{ itemData.name }} is in {{ targetBuild.name }}.
+            </p>
+            <button v-if="itemIsSaved" type="button"
+              @click="$store.dispatch('removeCustomBuildItem',
+                { id: targetBuild.id, itemId: selectedItem.id })">
+              Remove from custom build
+            </button>
+            <button type="button" @click="viewCustomBuild">
+              View {{ targetBuild.name }}
+            </button>
+          </template>
+        </div>
         <hr />
         <p class="item-description">{{ itemData.description }}</p>
 
@@ -113,6 +141,16 @@ export default {
   },
   computed: {
     ...mapState(["selectedItem"]),
+    customBuildTarget: {
+      get() { return this.$store.state.customBuildTarget; },
+      set(value) { this.$store.commit('setCustomBuildTarget', value); },
+    },
+    targetBuild() {
+      return this.$store.state.customBuilds.find(build => build.id === this.customBuildTarget);
+    },
+    itemIsSaved() {
+      return this.targetBuild && this.targetBuild.itemIds.includes(this.selectedItem.id);
+    },
     itemData() {
       const { id } = this.selectedItem;
       return items[id];
@@ -141,6 +179,10 @@ export default {
   },
   methods: {
     ...mapMutations(["setSelectedItem", "setFilterByState"]),
+    viewCustomBuild() {
+      this.$store.commit('setSelectedRole', this.targetBuild.id);
+      this.$store.commit('setRecommendedOnly', true);
+    },
     clickCloseButton() {
       this.setSelectedItem(null);
     },
@@ -157,6 +199,17 @@ export default {
 </script>
 
 <style scoped>
+.custom-build-actions {
+  display: flex; flex-direction: column; gap: 8px; margin: 16px 0; overflow-wrap: anywhere;
+}
+.custom-build-actions label, .custom-build-actions p { font-size: 13px; margin: 0; }
+.custom-build-actions select, .custom-build-actions button {
+  box-sizing: border-box; width: 100%; min-height: 36px; padding: 6px 8px;
+  border: 1px solid #bbb; border-radius: 4px; background: #f3f3f3; color: #333;
+  min-width: 0; overflow-wrap: anywhere;
+}
+.custom-build-actions button { cursor: pointer; }
+.custom-build-actions button:disabled { cursor: default; opacity: 0.65; }
 .side-bar-wrapper {
   flex-shrink: 0;
   --side-bar-width: 300px;

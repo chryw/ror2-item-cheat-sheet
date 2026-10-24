@@ -40,14 +40,16 @@ const { survivorBuilds, getBuildTier, buildTierOrder } = loadSource(
 const utils = loadSource(path.join(sourceRoot, 'helpers', 'ItemIdUtils.js')).default;
 const getItemImageUrl = loadSource(path.join(sourceRoot, 'helpers', 'ItemImageUtils.js')).default;
 const { SortType, ItemRarity } = loadSource(path.join(sourceRoot, 'data', 'constants.js'));
+const { parseCustomBuilds, customBuildStorageKey } = loadSource(
+  path.join(sourceRoot, 'helpers', 'CustomBuildUtils.js'),
+);
 const store = loadSource(path.join(sourceRoot, 'store.js')).default;
 const ids = Object.keys(items);
 let passed = 0;
+const tests = [];
 
 function test(name, run) {
-  run();
-  passed += 1;
-  process.stdout.write(`PASS ${name}\n`);
+  tests.push({ name, run });
 }
 
 test('every survivor preset references real, visible catalogue items', () => {
@@ -183,4 +185,197 @@ test('changing one filter preserves the other and toggling recommendations is re
   assert.strictEqual(store.state.recommendedOnly, false);
 });
 
-process.stdout.write(`\n${passed} regression tests passed.\n`);
+test('Hallowed Concepts survivors have distinct curated starter builds', () => {
+  ['enforcer', 'acolyte'].forEach(id => {
+    const build = survivorBuilds.find(candidate => candidate.id === id);
+    assert(build);
+    assert.strictEqual(build.dlc, 'Hallowed Concepts');
+    assert(build.source.endsWith(id === 'enforcer' ? '/Enforcer' : '/Acolyte'));
+  });
+  assert.strictEqual(getBuildTier('Tri-Tip Dagger', 'enforcer'), 'S');
+  assert.strictEqual(getBuildTier('Leeching Seed', 'acolyte'), 'S');
+});
+
+test('DLC filtering supports each expansion, base game, OR selections and intersections', () => {
+  const dlcs = ['Base game', 'Survivors of the Void', 'Seekers of the Storm',
+    'Alloyed Collective', 'Hallowed Concepts'];
+  dlcs.forEach(dlc => {
+    const result = utils.filterOperation(ids, items, { dlc: [dlc] });
+    assert(result.length > 0, `${dlc} is empty`);
+    assert(result.every(id => (items[id].dlc || 'Base game') === dlc));
+  });
+  const result = utils.filterOperation(ids, items, { dlc: ['Base game', 'Hallowed Concepts'] });
+  assert(result.some(id => !items[id].dlc));
+  assert(result.some(id => items[id].dlc === 'Hallowed Concepts'));
+  assert(result.every(id => !items[id].dlc || items[id].dlc === 'Hallowed Concepts'));
+  const filtered = utils.filterOperation(ids, items, {
+    dlc: ['Base game'], category: ['Damage'], rarity: ['Uncommon'],
+  });
+  assert.deepStrictEqual(utils.searchOperation(
+    utils.roleFilterOperation(filtered, items, 'enforcer', true), items, 'atg',
+  ), ['AtG Missile Mk. 1']);
+  assert.deepStrictEqual(utils.filterOperation(ids, items, { dlc: [] }), ids);
+});
+
+test('filter mutations preserve DLC and reset without touching saved data', () => {
+  store.commit('setFilterByState', { dlc: ['Hallowed Concepts'] });
+  store.commit('setFilterByState', { category: ['Damage'], rarity: ['Boss'] });
+  store.commit('updateFilterByState', { rarity: [] });
+  assert.deepStrictEqual(Array.from(store.state.filterBy.dlc), ['Hallowed Concepts']);
+  store.commit('setFilterByState', { dlc: [] });
+  assert.deepStrictEqual(Array.from(store.state.filterBy.category), ['Damage']);
+  store.commit('setFilterByState', { dlc: [], category: [], rarity: [] });
+});
+
+test('custom build parser rejects corrupt, unsafe and unsupported persisted data', () => {
+  assert.deepStrictEqual(parseCustomBuilds(null), { profiles: [], nextNumber: 1 });
+  const data = {
+    version: 1,
+    nextNumber: 2,
+    profiles: [{ id: 'custom-1', name: 'Custom 01', itemIds: ['Crowbar'] }],
+  };
+  assert.deepStrictEqual(parseCustomBuilds(JSON.stringify(data)).profiles, data.profiles);
+  assert.throws(() => parseCustomBuilds('{'), SyntaxError);
+  [null, {}, { ...data, version: 2 }, { ...data, nextNumber: 1 },
+    { ...data, profiles: [data.profiles[0], data.profiles[0]] }]
+    .forEach(value => assert.throws(() => parseCustomBuilds(JSON.stringify(value))));
+  [
+    { name: ' ' }, { name: 'a'.repeat(81) }, { id: 'operator' },
+    { itemIds: ['missing'] }, { itemIds: ['constructor'] },
+    { itemIds: ['Crowbar', 'Crowbar'] }, { itemIds: [null] },
+  ].forEach(overrides => {
+    assert.throws(() => parseCustomBuilds(JSON.stringify({
+      ...data, profiles: [{ ...data.profiles[0], ...overrides }],
+    })));
+  });
+});
+
+let stored = null;
+let failRead = false;
+let failWrite = false;
+const storage = {
+  getItem(key) {
+    assert.strictEqual(key, customBuildStorageKey);
+    if (failRead) throw new Error('Storage access blocked');
+    return stored;
+  },
+  setItem(key, value) {
+    assert.strictEqual(key, customBuildStorageKey);
+    if (failWrite) throw new Error('Storage quota exceeded');
+    stored = value;
+  },
+};
+
+test('custom profiles create, deduplicate, rename, save and restore with stable IDs', async () => {
+  global.window = { localStorage: storage };
+  await store.dispatch('loadCustomBuilds');
+  assert.strictEqual(store.state.customBuildsLoaded, true);
+  await store.dispatch('createCustomBuild');
+  assert.strictEqual(store.getters.selectedBuild.name, 'Custom 01');
+  assert.strictEqual(store.state.recommendedOnly, false);
+  await store.dispatch('addCustomBuildItem', 'Crowbar');
+  await store.dispatch('addCustomBuildItem', 'Crowbar');
+  await store.dispatch('addCustomBuildItem', 'Royal Capacitor');
+  await store.dispatch('renameCustomBuild', { id: 'custom-1', name: '  My loadout  ' });
+  assert.strictEqual(store.getters.selectedBuild.name, 'My loadout');
+  assert.deepStrictEqual(Array.from(store.getters.selectedBuild.itemIds),
+    ['Crowbar', 'Royal Capacitor']);
+  const saved = parseCustomBuilds(stored);
+  assert.strictEqual(saved.profiles[0].name, 'My loadout');
+  await store.dispatch('createCustomBuild');
+  assert.strictEqual(store.getters.selectedBuild.name, 'Custom 02');
+  assert.strictEqual(store.state.selectedRole, 'custom-2');
+  await store.dispatch('loadCustomBuilds');
+  assert.strictEqual(store.state.customBuilds.length, 2);
+  assert.strictEqual(store.state.nextCustomBuildNumber, 3);
+  store.commit('setSelectedRole', 'custom-1');
+  assert.strictEqual(store.state.customBuildTarget, 'custom-1');
+  assert.strictEqual(store.getters.selectedBuild.name, 'My loadout');
+  assert.throws(() => store.commit('renameCustomBuild', { id: 'custom-1', name: '  ' }));
+  assert.throws(() => store.commit('setCustomBuildTarget', 'missing'));
+  assert.throws(() => store.dispatch('addCustomBuildItem', 'missing'), /unknown item/);
+  assert.strictEqual(store.state.customBuilds.length, 2);
+});
+
+test('custom saved-only mode and sorting work for items and equipment without changing presets', () => {
+  const { builds } = store.getters;
+  const recommended = utils.roleFilterOperation(ids, items, 'custom-1', true, builds);
+  assert.deepStrictEqual(recommended.sort(), ['Crowbar', 'Royal Capacitor'].sort());
+  assert.deepStrictEqual(utils.filterByItemListType(recommended, items, true), ['Royal Capacitor']);
+  assert.deepStrictEqual(utils.filterByItemListType(recommended, items, false), ['Crowbar']);
+  assert.deepStrictEqual(utils.roleFilterOperation(ids, items, 'custom-1', false, builds), ids);
+  assert.deepStrictEqual(utils.roleFilterOperation(ids, items, 'custom-2', true, builds), []);
+  assert.deepStrictEqual(utils.sortOperation(
+    ['Ukulele', 'Royal Capacitor', 'Crowbar'], items, SortType.RECOMMENDED, 'custom-1', builds,
+  ), ['Crowbar', 'Royal Capacitor', 'Ukulele']);
+  assert.strictEqual(getBuildTier('Crowbar', 'operator', builds), 'A');
+  assert.deepStrictEqual(utils.filterOperation(recommended, items, {
+    dlc: ['Survivors of the Void'],
+  }), []);
+});
+
+test('removal updates custom lists immediately, persists, and permits an empty list', async () => {
+  await store.dispatch('removeCustomBuildItem', { id: 'custom-1', itemId: 'Crowbar' });
+  assert.deepStrictEqual(Array.from(store.getters.selectedBuild.itemIds), ['Royal Capacitor']);
+  await store.dispatch('removeCustomBuildItem', { id: 'custom-1', itemId: 'Royal Capacitor' });
+  assert.strictEqual(parseCustomBuilds(stored).profiles[0].itemIds.length, 0);
+  assert.strictEqual(utils.roleFilterOperation(
+    ids, items, 'custom-1', true, store.getters.builds,
+  ).length, 0);
+  store.commit('setSelectedRole', '');
+  assert.strictEqual(store.state.customBuilds.length, 2);
+});
+
+test('details can create a new list without replacing a survivor selection', async () => {
+  store.commit('setSelectedRole', 'enforcer');
+  store.commit('setCustomBuildTarget', '');
+  await store.dispatch('addCustomBuildItem', 'Crowbar');
+  assert.strictEqual(store.state.customBuildTarget, 'custom-3');
+  assert.strictEqual(store.state.customBuilds[2].name, 'Custom 03');
+  assert.strictEqual(store.state.selectedRole, 'enforcer');
+  assert.deepStrictEqual(parseCustomBuilds(stored).profiles[2].itemIds, ['Crowbar']);
+});
+
+test('storage failures are explicit, preserve stored data, and retry saves in-memory changes', async () => {
+  const beforeFailure = stored;
+  failWrite = true;
+  await store.dispatch('renameCustomBuild', { id: 'custom-3', name: 'Unsaved name' });
+  assert(store.state.customBuildError.includes('Could not save'));
+  assert(store.state.customBuildError.includes('only in memory'));
+  assert.strictEqual(stored, beforeFailure);
+  failWrite = false;
+  await store.dispatch('saveCustomBuilds');
+  assert.strictEqual(store.state.customBuildError, '');
+  assert.strictEqual(parseCustomBuilds(stored).profiles[2].name, 'Unsaved name');
+  failRead = true;
+  await store.dispatch('loadCustomBuilds');
+  assert(store.state.customBuildError.includes('Could not load'));
+  assert.strictEqual(store.state.customBuilds.length, 3);
+  failRead = false;
+  await store.dispatch('loadCustomBuilds');
+  assert.strictEqual(store.state.customBuildError, '');
+  const valid = stored;
+  stored = 'not JSON';
+  await store.dispatch('loadCustomBuilds');
+  assert(store.state.customBuildError.includes('not been overwritten'));
+  assert.strictEqual(stored, 'not JSON');
+  stored = valid;
+  await store.dispatch('loadCustomBuilds');
+});
+
+async function runTests() {
+  try {
+    await tests.reduce((previous, { name, run }) => previous.then(run).then(() => {
+      passed += 1;
+      process.stdout.write(`PASS ${name}\n`);
+    }), Promise.resolve());
+    process.stdout.write(`\n${passed} regression tests passed.\n`);
+  } finally {
+    delete global.window;
+  }
+}
+
+runTests().catch(error => {
+  process.stderr.write(`${error.stack}\n`);
+  process.exitCode = 1;
+});

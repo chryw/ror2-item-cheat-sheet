@@ -18,6 +18,8 @@ Vue.config.productionTip = false;
 // eslint-disable-next-line import/prefer-default-export
 export const bus = new Vue();
 
+store.dispatch('loadCustomBuilds');
+
 new Vue({
   store,
   render: (h) => h(App),

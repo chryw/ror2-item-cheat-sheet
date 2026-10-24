@@ -54,11 +54,11 @@ export default {
           ),
         (itemIds, itemList) => ItemIdUtils.filterOperation(itemIds, itemList, this.filterBy),
         (itemIds, itemList) => ItemIdUtils.roleFilterOperation(
-          itemIds, itemList, this.selectedRole, this.recommendedOnly,
+          itemIds, itemList, this.selectedRole, this.recommendedOnly, this.$store.getters.builds,
         ),
         (itemIds, itemList) => ItemIdUtils.searchOperation(itemIds, itemList, this.searchTerm),
         (itemIds, itemList) => ItemIdUtils.sortOperation(
-          itemIds, itemList, this.sortBy, this.selectedRole,
+          itemIds, itemList, this.sortBy, this.selectedRole, this.$store.getters.builds,
         ),
       ];
 

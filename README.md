@@ -22,6 +22,26 @@ Choose a **Survivor / role** to filter items and equipment to a starter build. T
 
 Operator's named item recommendations follow the [Rogue Ranker Operator guide](https://rogueranker.com/operator-ror2/), with Spare Drone Parts given core priority. Support items and equipment are supplemental starter suggestions. Other survivors use curated starter presets, not rankings sourced from that guide or a universal tier list. Skill variants, difficulty, item stacks and DLC ownership can change the best pickup; selecting a survivor does not hide DLC items. Presets are maintained in [survivorBuilds.js](src/data/survivorBuilds.js).
 
+**Hallowed Concepts builds:** Enforcer and Acolyte are available in the survivor selector.
+Their curated starter priorities reflect [Enforcer's shield and close-range kit](https://riskofrain2.wiki.gg/wiki/Enforcer)
+and [Acolyte's melee and healing-to-attack-speed mechanics](https://riskofrain2.wiki.gg/wiki/Acolyte),
+not a definitive ranking. Acolyte's healing items improve attack speed rather than restoring health.
+
+**Custom builds:** Choose **New custom build**, or click an item in the gallery and use
+**Add to custom build** in the right details panel. The destination selector lets you add
+items or equipment to an existing list or create another. Profiles appear alongside survivors,
+starting at **Custom 01**, **Custom 02**, and so on. Select a custom profile to rename it,
+open or remove saved pickups, or toggle **Saved items only** to return to the full gallery.
+Custom lists have no tier rankings. Names and item lists save automatically to this browser's
+local storage; they do not sync across browsers or devices, and clearing site data removes them.
+Storage failures show an explicit warning and retry button; unsaved changes remain in memory.
+Unreadable saved data is not overwritten.
+
+**DLC filtering:** Select one or more expansions (or **Base game**) in the DLC control.
+Selections within DLC are combined with OR; DLC, category, rarity, survivor and search filters
+intersect. An empty DLC selection includes everything. **Reset filters** clears all filters,
+including DLC, without deleting custom builds.
+
 Next is the item list. This is the list of all the items. This view gives the user a quick overview of all of the items at a glance. The colours signify the items rarity. Some items have an effective max, (I.E. if item X has an effective max of 5, it is useless to pick up more than 5 of item X) and this value is displayed in the bottom right of the item card. When an item is clicked on, it opens the sidebar.
 
 The sidebar shows an in depth overview of the item, including the stats it changes, a full description, how to unlock it, as well as the link to the wiki page for the item. 

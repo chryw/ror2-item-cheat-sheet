@@ -3,28 +3,40 @@
     <TopBar />
     <div class="info-section">
       <div class="item-list-section">
+        <div v-if="$store.state.customBuildError" class="build-error" role="alert">
+          <p>{{ $store.state.customBuildError }}</p>
+          <button class="nav-reset" type="button" @click="retryStorage">Retry storage</button>
+        </div>
         <div v-if="build" class="build-summary" aria-live="polite">
           <div>
-            <h1>{{ build.name }} build</h1>
-            <p>
+            <h1>{{ build.name }}{{ build.custom ? '' : ' build' }}</h1>
+            <p v-if="!build.custom">
               {{ build.focus }}.
               {{ recommendedOnly ? 'Recommended pickups only.' : 'Showing all pickups.' }}
             </p>
+            <p v-else>
+              {{ build.itemIds.length }} saved
+              {{ build.itemIds.length === 1 ? 'pickup' : 'pickups' }}.
+              {{ $store.state.customBuildError ? 'Not saved to this browser.' :
+                'Automatically saved in this browser.' }}
+              {{ recommendedOnly ? 'Showing saved items only.' : 'Browse the gallery to add.' }}
+            </p>
           </div>
-          <div class="build-legend">
+          <div v-if="!build.custom" class="build-legend">
             <p class="build-legend-ranks">
               <span><strong class="build-badge build-badge--S">S</strong> Core</span>
               <span><strong class="build-badge build-badge--A">A</strong> Synergy</span>
               <span><strong class="build-badge build-badge--B">B</strong> Support</span>
             </p>
             <a v-if="build.source" :href="build.source" target="_blank" rel="noopener noreferrer">
-              Operator guide
+              {{ build.id === 'operator' ? 'Operator guide' : 'Survivor mechanics' }}
               <font-awesome-icon icon="external-link-alt" aria-hidden="true" />
             </a>
-            <span v-else class="build-legend-note">
+            <span class="build-legend-note">
               Starter priorities, not a universal tier list.
             </span>
           </div>
+          <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build" />
         </div>
         <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
         <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
@@ -38,8 +50,8 @@
 import ItemList from './ItemList.vue';
 import TopBar from './TopBar.vue';
 import SideBar from './SideBar.vue';
+import CustomBuildEditor from './CustomBuildEditor.vue';
 import { SelectionType } from '../data/constants';
-import { getSurvivorBuild } from '../data/survivorBuilds';
 
 export default {
   name: "HomePage",
@@ -47,6 +59,7 @@ export default {
     ItemList,
     TopBar,
     SideBar,
+    CustomBuildEditor,
   },
   data() {
     return {
@@ -54,8 +67,14 @@ export default {
     };
   },
   computed: {
-    build() { return getSurvivorBuild(this.$store.state.selectedRole); },
+    build() { return this.$store.getters.selectedBuild; },
     recommendedOnly() { return this.$store.state.recommendedOnly; },
+  },
+  methods: {
+    retryStorage() {
+      this.$store.dispatch(this.$store.state.customBuildsLoaded
+        ? 'saveCustomBuilds' : 'loadCustomBuilds');
+    },
   },
 };
 </script>
@@ -111,7 +130,10 @@ export default {
   background: var(--panel-background);
   color: var(--text-colour);
 }
-.build-summary h1 { margin: 0 0 6px; font-size: 16px; }
+.build-summary > div { min-width: 0; max-width: 100%; }
+.build-summary h1 { margin: 0 0 6px; font-size: 16px; overflow-wrap: anywhere; }
+.build-error { padding: 12px; margin-bottom: 12px; border: 1px solid #a33; color: #822; }
+.build-error p { margin: 0 0 8px; font-size: 13px; }
 .build-summary p { margin: 0; font-size: 12px; line-height: 1.6; }
 .build-legend { font-size: 12px; line-height: 1.6; }
 .build-legend-ranks { display: flex; flex-wrap: wrap; gap: 12px; }
