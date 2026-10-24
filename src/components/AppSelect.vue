@@ -48,11 +48,29 @@ export default {
   components: {
     Multiselect: {
       extends: Multiselect,
+      watch: {
+        pointer() {
+          this.$nextTick(this.scrollToHighlightedOption);
+        },
+      },
       methods: {
         adjustPosition() {
           // In-flow menus scroll with their panel, so viewport overlay limits do not apply.
           this.preferredOpenDirection = 'below';
           this.optimizedHeight = this.maxHeight;
+        },
+        scrollToHighlightedOption() {
+          if (!this.isOpen) return;
+          const { list } = this.$refs;
+          const option = list.querySelector('.multiselect__option--highlight');
+          if (!option) return;
+          // Options can wrap, so use rendered bounds instead of the library's fixed row height.
+          const top = list.getBoundingClientRect().top + list.clientTop;
+          const bounds = option.getBoundingClientRect();
+          if (bounds.top < top) list.scrollTop += bounds.top - top;
+          else if (bounds.bottom > top + list.clientHeight) {
+            list.scrollTop += bounds.bottom - top - list.clientHeight;
+          }
         },
       },
     },

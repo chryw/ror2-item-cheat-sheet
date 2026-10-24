@@ -522,6 +522,30 @@ test('in-flow dropdown menus retain a usable height near panel edges', () => {
   });
 });
 
+test('keyboard dropdown scrolling uses actual bounds for wrapped options', () => {
+  const scroll = dropdown.components.Multiselect.methods.scrollToHighlightedOption;
+  [
+    { top: 370, bottom: 414, expected: 174 },
+    { top: 60, bottom: 148, expected: 60 },
+    { top: 120, bottom: 208, expected: 100 },
+  ].forEach(({ top, bottom, expected }) => {
+    const list = {
+      scrollTop: 100,
+      clientTop: 1,
+      clientHeight: 240,
+      getBoundingClientRect: () => ({ top: 99 }),
+      querySelector: () => ({ getBoundingClientRect: () => ({ top, bottom }) }),
+    };
+    scroll.call({ isOpen: true, $refs: { list } });
+    assert.strictEqual(list.scrollTop, expected);
+  });
+  const callback = () => {};
+  dropdown.components.Multiselect.watch.pointer.call({
+    scrollToHighlightedOption: callback,
+    $nextTick: received => assert.strictEqual(received, callback),
+  });
+});
+
 async function runTests() {
   try {
     await tests.reduce((previous, { name, run }) => previous.then(run).then(() => {
