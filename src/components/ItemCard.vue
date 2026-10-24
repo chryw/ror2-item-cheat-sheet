@@ -35,7 +35,7 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 
-import items from "../data/items.json";
+import items from "../data/catalog";
 import getItemImageUrl from "../helpers/ItemImageUtils";
 import { ItemRarityClass, DlcIconUrl } from "../data/constants";
 import { getBuildTier } from "../data/survivorBuilds";

@@ -1,17 +1,6 @@
 <template>
   <div class="role-filter">
-    <label class="nav-field" for="role-filter">
-      <span>Survivor / role</span>
-      <span class="nav-select">
-        <select id="role-filter" v-model="selectedRole">
-          <option value="">All survivors</option>
-          <option v-for="build in builds" :key="build.id" :value="build.id">
-            {{ build.name }}{{ build.dlc ? ` (${build.dlc})` : '' }}
-          </option>
-        </select>
-        <font-awesome-icon icon="chevron-down" aria-hidden="true" />
-      </span>
-    </label>
+    <AppSelect id="role-filter" v-model="selectedRole" label="Survivor / role" :options="options" />
     <label v-if="selectedRole" class="nav-checkbox">
       <input v-model="recommendedOnly" type="checkbox">
       {{ isCustom ? 'Saved items only' : 'Recommended items only' }}
@@ -25,10 +14,17 @@
 </template>
 
 <script>
+import AppSelect from '../AppSelect.vue';
+
 export default {
   name: 'RoleFilter',
+  components: { AppSelect },
   computed: {
-    builds() { return this.$store.getters.builds; },
+    options() {
+      return [{ value: '', label: 'All survivors' }, ...this.$store.getters.builds.map(build => ({
+        value: build.id, label: build.name,
+      }))];
+    },
     isCustom() {
       return this.$store.getters.selectedBuild && this.$store.getters.selectedBuild.custom;
     },

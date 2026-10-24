@@ -3,7 +3,8 @@ const assert = require('assert');
 const path = require('path');
 const vm = require('vm');
 const fs = require('fs');
-const { transformFileSync } = require('@babel/core');
+const { transformFileSync, transformSync } = require('@babel/core');
+const { parseComponent } = require('vue-template-compiler');
 const items = require('../src/data/items.json');
 
 const cache = new Map();
@@ -39,7 +40,11 @@ const { survivorBuilds, getBuildTier, buildTierOrder } = loadSource(
 );
 const utils = loadSource(path.join(sourceRoot, 'helpers', 'ItemIdUtils.js')).default;
 const getItemImageUrl = loadSource(path.join(sourceRoot, 'helpers', 'ItemImageUtils.js')).default;
-const { SortType, ItemRarity } = loadSource(path.join(sourceRoot, 'data', 'constants.js'));
+const { SortType, ItemRarity, SelectionType, SelectionTypePluralization } = loadSource(
+  path.join(sourceRoot, 'data', 'constants.js'),
+);
+const drones = loadSource(path.join(sourceRoot, 'data', 'drones.js')).default;
+const catalog = loadSource(path.join(sourceRoot, 'data', 'catalog.js')).default;
 const { parseCustomBuilds, customBuildStorageKey } = loadSource(
   path.join(sourceRoot, 'helpers', 'CustomBuildUtils.js'),
 );
@@ -361,6 +366,160 @@ test('storage failures are explicit, preserve stored data, and retry saves in-me
   assert.strictEqual(stored, 'not JSON');
   stored = valid;
   await store.dispatch('loadCustomBuilds');
+});
+
+test('drone catalogue includes exactly the 15 recruitable drones and turrets', () => {
+  const expected = [
+    'Gunner Drone', 'Healing Drone', 'Gunner Turret', 'Emergency Drone', 'Equipment Drone',
+    'Incinerator Drone', 'Missile Drone', 'TC-280 Prototype', 'Transport Drone', 'Junk Drone',
+    'Cleanup Drone', 'Jailer Drone', 'Barrier Drone', 'Bombardment Drone', 'Freeze Drone',
+  ];
+  assert.deepStrictEqual(Object.keys(drones).sort(), expected.sort());
+  assert.strictEqual(Object.keys(catalog).length, ids.length + expected.length);
+  expected.forEach(id => {
+    const drone = drones[id];
+    assert(!Object.prototype.hasOwnProperty.call(items, id), `Drone overlaps item: ${id}`);
+    assert.strictEqual(drone.name, id);
+    assert.strictEqual(utils.getSelectionType(drone), SelectionType.DRONE);
+    assert(Object.values(ItemRarity).includes(drone.itemRarity));
+    ['shortDescription', 'description', 'acquisition', 'health', 'damage', 'speed']
+      .forEach(key => assert.strictEqual(typeof drone[key], 'string'));
+    assert.strictEqual(typeof drone.armor, 'number');
+    assert(drone.wikiLink.startsWith('https://riskofrain2.wiki.gg/wiki/'));
+    assert(drone.imageSource.startsWith('https://riskofrain2.wiki.gg/images/'));
+    const image = fs.readFileSync(path.join(sourceRoot, '..', 'public', 'drones', drone.image));
+    assert.strictEqual(image.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', id);
+    assert(image.readUInt32BE(16) >= 60 && image.readUInt32BE(20) >= 60, `Tiny image: ${id}`);
+    assert.strictEqual(getItemImageUrl(id, '/ror2-item-cheat-sheet/'),
+      `/ror2-item-cheat-sheet/drones/${encodeURIComponent(drone.image)}`);
+    assert.strictEqual(getItemImageUrl(id, '/'), `/drones/${encodeURIComponent(drone.image)}`);
+  });
+  assert(drones['Equipment Drone'].acquisition.includes('equipment'));
+});
+
+test('all gallery sections use plural names and contain mutually exclusive entry types', () => {
+  const allIds = Object.keys(catalog);
+  const types = [SelectionType.ITEM, SelectionType.EQUIPMENT, SelectionType.DRONE];
+  assert.deepStrictEqual(types.map(type => SelectionTypePluralization[type]),
+    ['Items', 'Equipments', 'Drones']);
+  const groups = types.map(type => utils.filterBySelectionType(allIds, catalog, type));
+  assert.strictEqual(groups.flat().length, allIds.length);
+  assert.strictEqual(new Set(groups.flat()).size, allIds.length);
+  assert.deepStrictEqual(groups[2].sort(), Object.keys(drones).sort());
+  assert.deepStrictEqual(groups[0], utils.filterByItemListType(ids, items, false));
+  assert.deepStrictEqual(groups[1], utils.filterByItemListType(ids, items, true));
+});
+
+test('drone version, rarity, search and sort controls intersect correctly', () => {
+  const droneIds = Object.keys(drones);
+  const base = utils.filterOperation(droneIds, drones, { dlc: ['Base game'] });
+  const expansion = utils.filterOperation(droneIds, drones, { dlc: ['Alloyed Collective'] });
+  assert.strictEqual(base.length, 8);
+  assert.strictEqual(expansion.length, 7);
+  assert.deepStrictEqual(utils.filterOperation(droneIds, drones, { dlc: ['Hallowed Concepts'] }), []);
+  const rareExpansion = utils.filterOperation(droneIds, drones, {
+    dlc: ['Alloyed Collective'], rarity: [ItemRarity.LEGENDARY],
+  });
+  assert.deepStrictEqual(rareExpansion.sort(), ['Bombardment Drone', 'Freeze Drone']);
+  assert.deepStrictEqual(utils.searchOperation(rareExpansion, drones, 'freezes'), ['Freeze Drone']);
+  assert.deepStrictEqual(utils.sortOperation(droneIds.slice(), drones, SortType.NAME),
+    droneIds.slice().sort());
+  assert.deepStrictEqual(utils.sortOperation(
+    ['Healing Drone', 'Gunner Drone'], drones, SortType.RARITY,
+  ), ['Gunner Drone', 'Healing Drone']);
+  assert.deepStrictEqual(utils.roleFilterOperation(droneIds, drones, 'operator', true), droneIds);
+});
+
+test('drone picks persist alongside items and equipment in existing custom profiles', async () => {
+  store.commit('setSelectedRole', 'custom-3');
+  await store.dispatch('addCustomBuildItem', 'Healing Drone');
+  await store.dispatch('addCustomBuildItem', 'Healing Drone');
+  await store.dispatch('addCustomBuildItem', 'Royal Capacitor');
+  assert.deepStrictEqual(Array.from(store.getters.selectedBuild.itemIds),
+    ['Crowbar', 'Healing Drone', 'Royal Capacitor']);
+  await store.dispatch('loadCustomBuilds');
+  assert.deepStrictEqual(parseCustomBuilds(stored).profiles[2].itemIds,
+    ['Crowbar', 'Healing Drone', 'Royal Capacitor']);
+  const picks = utils.roleFilterOperation(
+    Object.keys(catalog), catalog, 'custom-3', true, store.getters.builds,
+  );
+  assert.deepStrictEqual(utils.filterBySelectionType(picks, catalog, SelectionType.DRONE),
+    ['Healing Drone']);
+  assert.deepStrictEqual(utils.filterBySelectionType(picks, catalog, SelectionType.ITEM),
+    ['Crowbar']);
+  assert.deepStrictEqual(utils.filterBySelectionType(picks, catalog, SelectionType.EQUIPMENT),
+    ['Royal Capacitor']);
+  assert.deepStrictEqual(utils.filterOperation(picks, catalog, {
+    dlc: ['Alloyed Collective'],
+  }), []);
+  await store.dispatch('removeCustomBuildItem', { id: 'custom-3', itemId: 'Healing Drone' });
+  assert(!parseCustomBuilds(stored).profiles[2].itemIds.includes('Healing Drone'));
+});
+
+test('all dropdown surfaces share AppSelect without competing native controls or category filters', () => {
+  ['NavBar/RoleFilter.vue', 'NavBar/SortBySelector.vue', 'NavBar/RarityFilter.vue',
+    'NavBar/VersionFilter.vue', 'SideBar.vue'].forEach(filename => {
+    const source = fs.readFileSync(path.join(sourceRoot, 'components', filename), 'utf8');
+    assert(source.includes('<AppSelect '), `${filename} does not use shared dropdown`);
+    assert(!/<select[\s>]/.test(source), `${filename} uses a native dropdown`);
+    assert(!source.includes('<multiselect'), `${filename} bypasses the shared dropdown`);
+  });
+  const nav = fs.readFileSync(path.join(sourceRoot, 'components', 'TopBar.vue'), 'utf8');
+  assert(!nav.includes('CategoryFilter'));
+  assert(!nav.includes('.multiselect'));
+  const role = fs.readFileSync(path.join(sourceRoot, 'components', 'NavBar', 'RoleFilter.vue'), 'utf8');
+  assert(!role.includes('build.dlc'));
+  const version = fs.readFileSync(
+    path.join(sourceRoot, 'components', 'NavBar', 'VersionFilter.vue'), 'utf8',
+  );
+  assert(version.includes('label="Version"'));
+  const sidebar = fs.readFileSync(path.join(sourceRoot, 'components', 'SideBar.vue'), 'utf8');
+  assert(!sidebar.includes('clickCategoryPill'));
+});
+
+const dropdownSource = fs.readFileSync(
+  path.join(sourceRoot, 'components', 'AppSelect.vue'), 'utf8',
+);
+const dropdownScript = parseComponent(dropdownSource).script.content;
+const dropdownCode = transformSync(dropdownScript, {
+  babelrc: false,
+  configFile: false,
+  plugins: ['@babel/plugin-transform-modules-commonjs'],
+}).code;
+const dropdownModule = { exports: {} };
+vm.runInThisContext(`(function(require, module, exports) { ${dropdownCode}\n})`)(
+  request => (request.endsWith('.css') ? {} : require(request)),
+  dropdownModule, dropdownModule.exports,
+);
+const dropdown = dropdownModule.exports.default;
+
+test('shared dropdown maps single and multiple choices to stable store values', () => {
+  const options = [{ value: '', label: 'All survivors' }, { value: 'enforcer', label: 'Enforcer' }];
+  const events = [];
+  const single = {
+    options,
+    value: '',
+    multiple: false,
+    $emit: (...args) => events.push(args),
+  };
+  assert.strictEqual(dropdown.computed.selected.get.call(single), options[0]);
+  dropdown.computed.selected.set.call(single, options[1]);
+  assert.deepStrictEqual(events.pop(), ['input', 'enforcer']);
+  const multiple = { ...single, multiple: true, value: ['enforcer'] };
+  assert.deepStrictEqual(dropdown.computed.selected.get.call(multiple), [options[1]]);
+  dropdown.computed.selected.set.call(multiple, options);
+  assert.deepStrictEqual(events.pop(), ['input', ['', 'enforcer']]);
+  dropdown.computed.selected.set.call(multiple, []);
+  assert.deepStrictEqual(events.pop(), ['input', []]);
+});
+
+test('in-flow dropdown menus retain a usable height near panel edges', () => {
+  [0, 28, -40, 240].forEach(previousHeight => {
+    const menu = { maxHeight: 240, optimizedHeight: previousHeight, preferredOpenDirection: 'above' };
+    dropdown.components.Multiselect.methods.adjustPosition.call(menu);
+    assert.strictEqual(menu.optimizedHeight, 240);
+    assert.strictEqual(menu.preferredOpenDirection, 'below');
+  });
 });
 
 async function runTests() {

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { SortType, Theme } from './data/constants';
 import { getSurvivorBuild, survivorBuilds } from './data/survivorBuilds';
-import items from './data/items.json';
+import items from './data/catalog';
 import { customBuildStorageKey, parseCustomBuilds } from './helpers/CustomBuildUtils';
 
 Vue.use(Vuex);

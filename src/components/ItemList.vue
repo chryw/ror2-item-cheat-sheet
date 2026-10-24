@@ -12,7 +12,7 @@
       />
     </div>
     <div class="no-items-message" v-show="isItemIdListEmpty">
-      No Matching {{ itemListType }} Found
+      No Matching {{ SelectionTypePluralization[itemListType] }} Found
     </div>
   </div>
 </template>
@@ -21,8 +21,8 @@
 import { mapState } from "vuex";
 import ItemCard from "./ItemCard.vue";
 
-import itemsV2 from "../data/items.json";
-import { SelectionType, SelectionTypePluralization } from "../data/constants";
+import itemsV2 from "../data/catalog";
+import { SelectionTypePluralization } from "../data/constants";
 import ItemIdUtils from "../helpers/ItemIdUtils";
 
 export default {
@@ -47,10 +47,10 @@ export default {
         (itemIds, itemList) => ItemIdUtils.showHiddenOperation(itemIds, itemList, this.showHidden),
         (itemIds, itemList) =>
           // eslint-disable-next-line implicit-arrow-linebreak
-          ItemIdUtils.filterByItemListType(
+          ItemIdUtils.filterBySelectionType(
             itemIds,
             itemList,
-            this.itemListType === SelectionType.EQUIPMENT,
+            this.itemListType,
           ),
         (itemIds, itemList) => ItemIdUtils.filterOperation(itemIds, itemList, this.filterBy),
         (itemIds, itemList) => ItemIdUtils.roleFilterOperation(

@@ -1,4 +1,4 @@
-import items from '../data/items.json';
+import items from '../data/catalog';
 
 export const customBuildStorageKey = 'ror2-custom-builds-v1';
 

@@ -1,7 +1,17 @@
 import {
-  Category, SortType, ItemRaritySortValue as rarityValues, EquipmentItemRarities,
+  Category, SortType, ItemRaritySortValue as rarityValues, EquipmentItemRarities, SelectionType,
 } from '../data/constants';
-import { buildTierOrder, getBuildTier } from '../data/survivorBuilds';
+import { buildTierOrder, getBuildTier, getSurvivorBuild } from '../data/survivorBuilds';
+
+const getSelectionType = item => {
+  if (item.selectionType === SelectionType.DRONE) return SelectionType.DRONE;
+  return EquipmentItemRarities.includes(item.itemRarity)
+    ? SelectionType.EQUIPMENT : SelectionType.ITEM;
+};
+
+const filterBySelectionType = (itemIds, itemList, type) => {
+  return itemIds.filter(id => getSelectionType(itemList[id]) === type);
+};
 
 /**
  * Sorts a list of item ids, given a sort type
@@ -52,6 +62,11 @@ const sortOperation = (itemIds, itemList, sortBy, role = '', builds) => {
       return (Number(itemList[a].id) < Number(itemList[b].id) ? -1 : 1);
     }
 
+    if (getSelectionType(itemList[a]) === SelectionType.DRONE
+      && getSelectionType(itemList[b]) === SelectionType.DRONE) {
+      return itemList[a].name.localeCompare(itemList[b].name);
+    }
+
     // default
     return a - b;
   });
@@ -61,7 +76,13 @@ const roleFilterOperation = (itemIds, itemList, role, recommendedOnly, builds) =
   if (!role || !recommendedOnly) {
     return itemIds;
   }
-  return itemIds.filter(id => getBuildTier(itemList[id].name, role, builds));
+  const build = getSurvivorBuild(role, builds);
+  return itemIds.filter(id => {
+    if (build && !build.custom && getSelectionType(itemList[id]) === SelectionType.DRONE) {
+      return true;
+    }
+    return getBuildTier(itemList[id].name, role, builds);
+  });
 };
 
 const categoryLabel = category => category.replace(/([a-z])([A-Z])/g, '$1 $2');
@@ -157,15 +178,14 @@ const showHiddenOperation = (itemIds, itemList, showHidden) => {
 };
 
 const filterByItemListType = (itemIds, itemList, isEquipment) => {
-  return itemIds.filter(id => {
-    if (isEquipment) {
-      return EquipmentItemRarities.includes(itemList[id].itemRarity);
-    }
-    return !EquipmentItemRarities.includes(itemList[id].itemRarity);
-  });
+  return filterBySelectionType(
+    itemIds, itemList, isEquipment ? SelectionType.EQUIPMENT : SelectionType.ITEM,
+  );
 };
 
 export default {
+  getSelectionType,
+  filterBySelectionType,
   getItemCategories,
   categoryLabel,
   roleFilterOperation,

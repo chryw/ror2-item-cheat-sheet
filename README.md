@@ -12,13 +12,13 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
-On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, category and rarity controls share the same filters as the item-detail pills; **Reset filters** restores the full catalogue.
+On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores the full catalogue.
 
-Navigation uses the catalogue's neutral surfaces, compact controls and rarity accents. Control icons come from the existing open-source Font Awesome package, importing only the individual icons used by the app; no custom SVG paths or extra icon package are needed.
+All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, neutral styling and in-flow option list. Role names are displayed without added suffixes. Control icons come from the existing open-source Font Awesome package.
 
-Category filters and item-detail pills show supported gameplay categories, not internal game flags such as `AIBlacklist`. Legacy category names are normalized. All item images are served from the site's local assets using the configured deployment base path; browsing does not fetch images or catalogue data from third-party wikis.
+Categories are informational labels in item details, not filter controls. Internal flags such as `AIBlacklist` are not displayed. All item and drone images are served from local assets using the configured deployment base path; browsing does not fetch images or catalogue data from third-party wikis.
 
-Choose a **Survivor / role** to filter items and equipment to a starter build. This also selects **Build tier (S / A / B)** sorting: S is core, A is synergy, and B is general support. Ties are alphabetical. Compact letter badges use gold (S), teal (A), and blue (B), matching the build legend; these colours are independent of item rarity. Uncheck **Recommended items only** to browse everything while keeping build priorities visible (unranked items sort last). Search, category and rarity filters still apply, and clearing the survivor restores the full catalogue subject to those filters.
+Choose a **Survivor / role** to filter items and equipment to a starter build. This also selects **Build tier (S / A / B)** sorting: S is core, A is synergy, and B is general support. Ties are alphabetical. Compact letter badges use gold (S), teal (A), and blue (B), matching the build legend; these colours are independent of item rarity. Uncheck **Recommended items only** to browse everything while keeping build priorities visible (unranked items sort last). Search, rarity and version filters still apply, and clearing the survivor restores the full catalogue subject to those filters. Drones remain visible for built-in survivor presets without invented tier rankings; custom profiles filter drones to the saved list.
 
 Operator's named item recommendations follow the [Rogue Ranker Operator guide](https://rogueranker.com/operator-ror2/), with Spare Drone Parts given core priority. Support items and equipment are supplemental starter suggestions. Other survivors use curated starter presets, not rankings sourced from that guide or a universal tier list. Skill variants, difficulty, item stacks and DLC ownership can change the best pickup; selecting a survivor does not hide DLC items. Presets are maintained in [survivorBuilds.js](src/data/survivorBuilds.js).
 
@@ -29,7 +29,7 @@ not a definitive ranking. Acolyte's healing items improve attack speed rather th
 
 **Custom builds:** Choose **New custom build**, or click an item in the gallery and use
 **Add to custom build** in the right details panel. The destination selector lets you add
-items or equipment to an existing list or create another. Profiles appear alongside survivors,
+items, equipment or drones to an existing list or create another. Profiles appear alongside survivors,
 starting at **Custom 01**, **Custom 02**, and so on. Select a custom profile to rename it,
 open or remove saved pickups, or toggle **Saved items only** to return to the full gallery.
 Custom lists have no tier rankings. Names and item lists save automatically to this browser's
@@ -37,10 +37,25 @@ local storage; they do not sync across browsers or devices, and clearing site da
 Storage failures show an explicit warning and retry button; unsaved changes remain in memory.
 Unreadable saved data is not overwritten.
 
-**DLC filtering:** Select one or more expansions (or **Base game**) in the DLC control.
-Selections within DLC are combined with OR; DLC, category, rarity, survivor and search filters
-intersect. An empty DLC selection includes everything. **Reset filters** clears all filters,
-including DLC, without deleting custom builds.
+**Version filtering:** Select one or more expansions (or **Base game**) in the Version control.
+Selections within Version are combined with OR; version, rarity, survivor and search filters
+intersect. An empty selection includes everything. **Reset filters** clears all filters
+without deleting custom builds.
+
+**Drones:** The gallery has **Items**, **Equipments** and **Drones** sections. The drone
+catalogue includes all 15 recruitable drones and turrets: 8 base-game entries and 7 from
+Alloyed Collective. Click a drone to see its behavior, recruitment method, base stats and
+source link, or add it to a custom profile. Summoned allies from survivor skills or items
+are outside this interactable-drone list.
+
+The requested [Fandom drone section](https://riskofrain2.fandom.com/wiki/Interactables#Drones)
+returned HTTP 403 during research. No access protection was bypassed. Information and images
+were instead checked against the accessible [community drone catalogue](https://riskofrain2.wiki.gg/wiki/Drones)
+and its individual drone pages by scanning visible text and image links. Local images in
+[public/drones](public/drones) retain their original names; each entry in
+[drones.js](src/data/drones.js) records its article and image source. Descriptions are summaries,
+not copied lore. Drone stats can vary with level, tier and patches; gold recruitment prices scale
+with difficulty. Game artwork belongs to its respective owners.
 
 Next is the item list. This is the list of all the items. This view gives the user a quick overview of all of the items at a glance. The colours signify the items rarity. Some items have an effective max, (I.E. if item X has an effective max of 5, it is useless to pick up more than 5 of item X) and this value is displayed in the bottom right of the item card. When an item is clicked on, it opens the sidebar.
 

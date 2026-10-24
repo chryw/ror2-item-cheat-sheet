@@ -101,13 +101,15 @@ export const Category = {
 export const SelectionType = {
   ITEM: "Item",
   EQUIPMENT: "Equipment",
+  DRONE: "Drone",
   CHARACTER: "Character",
   ARTIFACT: "Artifact",
 };
 
 export const SelectionTypePluralization = {
   [SelectionType.ITEM]: `${SelectionType.ITEM}s`,
-  [SelectionType.EQUIPMENT]: `${SelectionType.EQUIPMENT}`,
+  [SelectionType.EQUIPMENT]: `${SelectionType.EQUIPMENT}s`,
+  [SelectionType.DRONE]: `${SelectionType.DRONE}s`,
   [SelectionType.CHARACTER]: `${SelectionType.CHARACTER}s`,
   [SelectionType.ARTIFACT]: `${SelectionType.ARTIFACT}s`,
 };

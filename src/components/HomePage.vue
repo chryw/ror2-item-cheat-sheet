@@ -9,7 +9,7 @@
         </div>
         <div v-if="build" class="build-summary" aria-live="polite">
           <div>
-            <h1>{{ build.name }}{{ build.custom ? '' : ' build' }}</h1>
+            <h1>{{ build.name }}</h1>
             <p v-if="!build.custom">
               {{ build.focus }}.
               {{ recommendedOnly ? 'Recommended pickups only.' : 'Showing all pickups.' }}
@@ -40,6 +40,7 @@
         </div>
         <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
         <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
+        <ItemList style="flex: 1;" :itemListType="SelectionType.DRONE" />
       </div>
       <SideBar />
     </div>

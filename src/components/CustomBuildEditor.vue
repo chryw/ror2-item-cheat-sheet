@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import items from '../data/items.json';
-import { EquipmentItemRarities, SelectionType } from '../data/constants';
+import items from '../data/catalog';
+import ItemIdUtils from '../helpers/ItemIdUtils';
 
 export default {
   name: 'CustomBuildEditor',
@@ -38,8 +38,7 @@ export default {
       this.$store.dispatch('renameCustomBuild', { id: this.build.id, name: this.name });
     },
     viewItem(id) {
-      const type = EquipmentItemRarities.includes(items[id].itemRarity)
-        ? SelectionType.EQUIPMENT : SelectionType.ITEM;
+      const type = ItemIdUtils.getSelectionType(items[id]);
       this.$store.commit('setSelectedItem', { id, type });
     },
   },

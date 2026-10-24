@@ -2,7 +2,8 @@
   <div class="side-bar-wrapper">
     <div class="side-bar" v-if="selectedItem != null" v-bind:class="[this.rarityClass]">
       <div class="top-section">
-        <a class="wiki-link" v-bind:href="itemData.wikiLink" target="_blank">
+        <a class="wiki-link" v-bind:href="itemData.wikiLink"
+          target="_blank" rel="noopener noreferrer">
           <font-awesome-icon class="item-link-icon" icon="external-link-alt" />
         </a>
         <p class="item-id" v-if="this.itemData.id">#{{ this.itemData.id }}</p>
@@ -20,15 +21,8 @@
         <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
         <p class="item-short-description">{{ itemData.shortDescription }}</p>
         <div class="custom-build-actions">
-          <label for="custom-build-target">Custom build</label>
-          <select id="custom-build-target" v-model="customBuildTarget"
-            :disabled="!$store.state.customBuildsLoaded">
-            <option value="">New custom build</option>
-            <option v-for="profile in $store.state.customBuilds"
-              :key="profile.id" :value="profile.id">
-              {{ profile.name }}
-            </option>
-          </select>
+          <AppSelect id="custom-build-target" v-model="customBuildTarget" label="Custom build"
+            :options="customBuildOptions" :disabled="!$store.state.customBuildsLoaded" />
           <button type="button" :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
             @click="$store.dispatch('addCustomBuildItem', selectedItem.id)">
             {{ itemIsSaved ? 'Item already in build' : 'Add to custom build' }}
@@ -65,6 +59,18 @@
           </a>
         </div>
 
+        <div v-if="isDrone" class="drone-info">
+          <h4>Recruitment</h4>
+          <p>{{ itemData.acquisition }}</p>
+          <h4>Base stats</h4>
+          <dl>
+            <dt>Health</dt><dd>{{ itemData.health }}</dd>
+            <dt>Damage / healing</dt><dd>{{ itemData.damage }}</dd>
+            <dt>Armor</dt><dd>{{ itemData.armor }}</dd>
+            <dt>Speed</dt><dd>{{ itemData.speed }}</dd>
+          </dl>
+          <p>Base stats are not attack percentages. Drones do not stack like passive items.</p>
+        </div>
         <p class="equipment-cooldown" v-if="this.isEquipment && itemData.cooldown">
           Cooldown: <b>{{ itemData.cooldown }}</b>
         </p>
@@ -86,13 +92,12 @@
         <p class="item-rarity" v-on:mouseup="clickRarityPill(itemData.itemRarity)">
           {{ itemData.itemRarity }}
         </p>
-        <h4 class="item-category-label">Category</h4>
-        <div class="item-category-list">
+        <h4 v-if="itemCategories.length" class="item-category-label">Category</h4>
+        <div v-if="itemCategories.length" class="item-category-list">
           <p
             class="item-category"
             v-for="category in itemCategories"
             v-bind:key="category"
-            v-on:mouseup="clickCategoryPill(category)"
           >
             {{ category }}
           </p>
@@ -124,7 +129,8 @@
 import { mapState, mapMutations } from "vuex";
 
 import CloseIcon from "./Icons/CloseIcon.vue";
-import items from "../data/items.json";
+import AppSelect from "./AppSelect.vue";
+import items from "../data/catalog";
 import getItemImageUrl from "../helpers/ItemImageUtils";
 import ItemIdUtils from "../helpers/ItemIdUtils";
 
@@ -135,12 +141,18 @@ export default {
   name: "SideBar",
   components: {
     CloseIcon,
+    AppSelect,
   },
   data() {
     return {};
   },
   computed: {
     ...mapState(["selectedItem"]),
+    customBuildOptions() {
+      return [{ value: '', label: 'New custom build' }, ...this.$store.state.customBuilds.map(build => ({
+        value: build.id, label: build.name,
+      }))];
+    },
     customBuildTarget: {
       get() { return this.$store.state.customBuildTarget; },
       set(value) { this.$store.commit('setCustomBuildTarget', value); },
@@ -163,6 +175,9 @@ export default {
     },
     isEquipment() {
       return this.selectedItem.type === SelectionType.EQUIPMENT;
+    },
+    isDrone() {
+      return this.selectedItem.type === SelectionType.DRONE;
     },
     shouldShowStatStacking() {
       return this.itemData.stats && this.itemData.stats.length > 0 && !this.isEquipment;
@@ -190,26 +205,27 @@ export default {
       bus.$emit("filterRarity", rarity);
       this.setFilterByState({ rarity: [rarity] });
     },
-    clickCategoryPill(category) {
-      bus.$emit("filterCategory", category);
-      this.setFilterByState({ category: [category] });
-    },
   },
 };
 </script>
 
 <style scoped>
+.drone-info { font-size: 13px; line-height: 1.5; }
+.drone-info h4 { margin-bottom: 8px; }
+.drone-info dl { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+.drone-info dd { margin: 0; text-align: right; }
 .custom-build-actions {
   display: flex; flex-direction: column; gap: 8px; margin: 16px 0; overflow-wrap: anywhere;
 }
 .custom-build-actions label, .custom-build-actions p { font-size: 13px; margin: 0; }
-.custom-build-actions select, .custom-build-actions button {
+.custom-build-actions >>> .select-label { color: #ddd; }
+.custom-build-actions > button {
   box-sizing: border-box; width: 100%; min-height: 36px; padding: 6px 8px;
   border: 1px solid #bbb; border-radius: 4px; background: #f3f3f3; color: #333;
   min-width: 0; overflow-wrap: anywhere;
 }
-.custom-build-actions button { cursor: pointer; }
-.custom-build-actions button:disabled { cursor: default; opacity: 0.65; }
+.custom-build-actions > button { cursor: pointer; }
+.custom-build-actions > button:disabled { cursor: default; opacity: 0.65; }
 .side-bar-wrapper {
   flex-shrink: 0;
   --side-bar-width: 300px;
@@ -503,17 +519,6 @@ hr {
   border: 2px var(--sub-text-colour) solid;
   /* Large border radius to make it pill shape */
   border-radius: 100px;
-
-  cursor: pointer;
-}
-
-.item-category:hover {
-  background: rgba(190, 190, 190, 0.25);
-  transition: background-color 0.25s ease;
-}
-
-.item-category:active {
-  background: rgba(190, 190, 190, 0.75);
 }
 
 .item-stats-section {
