@@ -2,7 +2,7 @@
   <nav class="navigation" :class="{ 'is-collapsed': collapsed }" aria-label="Item filters">
     <header class="nav-header">
       <button
-        class="nav-toggle"
+        class="nav-toggle ui-button"
         type="button"
         :aria-expanded="String(!collapsed)"
         aria-controls="nav-controls"
@@ -14,7 +14,7 @@
       </button>
       <div v-show="!collapsed" class="nav-brand">
         <strong>Risk of Rain 2</strong>
-        <small>Item cheat sheet</small>
+        <small class="ui-eyebrow">Field guide / 02</small>
       </div>
     </header>
     <div id="nav-controls" v-show="!collapsed" class="nav-controls">
@@ -23,11 +23,11 @@
       <SortBySelector />
       <RarityFilter />
       <VersionFilter />
-      <button class="nav-reset" type="button" @click="resetFilters">
+      <button class="nav-reset ui-button" type="button" @click="resetFilters">
         <font-awesome-icon icon="undo-alt" aria-hidden="true" />
         Reset filters
       </button>
-      <p class="nav-hint">Combine filters to narrow your next pickup.</p>
+      <p class="nav-hint">Your run, your rules.<br>Combine filters to find your next pickup.</p>
     </div>
   </nav>
 </template>
@@ -59,9 +59,9 @@ export default {
 <style>
 .navigation {
   box-sizing: border-box;
-  flex: 0 0 248px;
-  width: 248px;
-  padding: 16px 12px;
+  flex: 0 0 272px;
+  width: 272px;
+  padding: var(--space-5) var(--space-4);
   background: var(--panel-background);
   color: var(--text-colour);
   border-right: 1px solid var(--panel-border);
@@ -78,13 +78,13 @@ export default {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-6);
 }
 
 .is-collapsed .nav-header { margin-bottom: 0; }
 .nav-brand { min-width: 0; }
-.nav-brand strong { font-size: 15px; white-space: nowrap; }
-.nav-brand small { display: block; color: var(--muted-colour); font-size: 12px; margin-top: 4px; }
+.nav-brand strong { font-size: 16px; letter-spacing: -0.04em; white-space: nowrap; }
+.nav-brand small { display: block; font-size: 10px; margin-top: 5px; }
 
 .nav-toggle {
   display: flex;
@@ -94,35 +94,32 @@ export default {
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 1px solid var(--panel-border);
-  border-radius: 4px;
-  background: #fff;
-  color: inherit;
-  cursor: pointer;
+  min-height: 40px;
+  border-radius: var(--radius-md);
   font-size: 16px;
 }
 
-.nav-controls { display: flex; flex-direction: column; gap: 16px; }
+.nav-controls { display: flex; flex-direction: column; gap: var(--space-5); }
 .nav-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .nav-field > span, .nav-field > label {
   color: var(--muted-colour);
-  font-size: 12px;
-  font-weight: 600;
+  font: 11px/1.5 var(--font-mono);
+  letter-spacing: 0.06em;
 }
 
 .nav-field input[type="search"], .nav-field input[type="text"] {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 40px;
-  padding: 0 10px;
-  font: inherit;
+  height: var(--control-height);
+  padding: 0 12px;
+  font-family: var(--font-family);
   font-size: 14px;
   font-weight: 400;
   color: var(--text-colour);
-  background: #fff;
+  background: var(--surface-raised);
   border: 1px solid var(--panel-border);
-  border-radius: 4px;
+  border-radius: var(--radius-md);
 }
 
 .nav-search { position: relative; display: flex; align-items: center; }
@@ -138,7 +135,7 @@ export default {
 .nav-field input::placeholder { color: var(--muted-colour); }
 .navigation button:focus-visible,
 .nav-field input:focus-visible, .nav-checkbox input:focus-visible {
-  outline: 2px solid #555;
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
@@ -151,21 +148,11 @@ export default {
   line-height: 1.5;
 }
 
-.nav-checkbox input { accent-color: #555; width: 16px; height: 16px; margin: 0; }
-.nav-reset {
-  min-height: 40px;
-  padding: 10px 16px;
-  border: 1px solid var(--panel-border);
-  border-radius: 4px;
-  background: #fff;
-  color: var(--text-colour);
-  font: inherit;
-  font-size: 14px;
-  cursor: pointer;
+.nav-checkbox input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.nav-hint {
+  margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--border);
+  font-size: 12px; line-height: 1.8; color: var(--muted-colour);
 }
-.nav-reset svg { margin-right: 6px; }
-.nav-toggle:hover, .nav-reset:hover { background: #e4e4e4; border-color: #999; }
-.nav-hint { margin: 0; font-size: 12px; line-height: 1.6; color: var(--muted-colour); }
 
 @media (max-width: 900px) {
   .navigation, .navigation.is-collapsed {

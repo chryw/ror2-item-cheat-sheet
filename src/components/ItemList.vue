@@ -1,7 +1,12 @@
 <template>
   <div class="item-list-wrapper">
-    <h2 class="item-list-header">{{ SelectionTypePluralization[itemListType] }}</h2>
-    <hr class="item-list-divisor" />
+    <header class="item-list-heading">
+      <h2 class="item-list-header">{{ SelectionTypePluralization[itemListType] }}</h2>
+      <span class="item-count" :aria-label="`${itemIdList.length} matching entries`">
+        {{ itemIdList.length }}
+      </span>
+      <span class="section-rule" aria-hidden="true"></span>
+    </header>
     <div class="item-list" v-bind:class="[this.cardSize]">
       <ItemCard
         v-show="!isItemIdListEmpty"
@@ -77,41 +82,47 @@ export default {
 
 <style>
 .small-view {
-  --item-card-width: 310px;
+  --item-card-width: 280px;
 }
 
 .large-view {
-  --item-card-width: 400px;
+  --item-card-width: 340px;
 }
 
 .item-list-wrapper {
-  --no-items-message-colour: #999;
-  --no-items-message-size: 150%;
+  margin-bottom: var(--space-6);
 }
 
 .item-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--item-card-width)), 1fr));
+  gap: var(--space-3);
   height: fit-content;
 }
 
 .no-items-message {
   text-align: center;
-  margin: 20px;
-  color: var(--no-items-message-colour);
-  font-size: var(--no-items-message-size);
+  margin: 0;
+  padding: var(--space-6);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
+.item-list-heading {
+  display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);
+}
 .item-list-header {
-  text-align-last: right;
-  margin: 0px;
-  margin-top: 5px;
-  margin-right: 25px;
-  color: var(--no-items-message-colour);
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
-
-hr.item-list-divisor {
-  margin: 0px 25px 10px;
-  border: 1px solid var(--no-items-message-colour);
+.item-count {
+  padding: 3px 8px; border: 1px solid var(--border); border-radius: var(--radius-pill);
+  color: var(--text-muted); font: 11px/1.3 var(--font-mono);
 }
+.section-rule { flex: 1; height: 1px; background: var(--border); }
 </style>

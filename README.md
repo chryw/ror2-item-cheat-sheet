@@ -14,7 +14,25 @@ The navbar alters the item list to make it easier for the user to navigate the i
 
 On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores the full catalogue.
 
-All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, neutral styling and in-flow option list. Role names are displayed without added suffixes. Control icons come from the existing open-source Font Awesome package.
+All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, dark styling and in-flow option list. Role names are displayed without added suffixes. Control icons come from the existing open-source Font Awesome package.
+
+### Visual system
+
+The dark appearance takes high-level inspiration from [Electric](https://electric.ax/):
+layered charcoal surfaces, warm off-white typography, fine borders, rounded panels and
+restrained accent usage. Our accent is neon yellow, not cyan. The layout, components and
+styles are original; no Electric artwork, fonts or source styles are bundled.
+
+[theme.css](src/assets/theme.css), loaded once by [App.vue](src/App.vue), defines semantic
+surface/text/accent colours, spacing, radii, typography, control height, motion and focus
+tokens. It also supplies reusable `.ui-button` / `.ui-button--primary` and `.ui-eyebrow`
+primitives, build badges and the single rarity palette used by cards and details.
+Component styles consume those tokens instead of maintaining separate light/dark palettes.
+Use [AppSelect.vue](src/components/AppSelect.vue) for every single- or multi-choice dropdown.
+Rarity is a secondary cue on cards; neon yellow marks actions, selection and keyboard focus.
+Native controls use dark colour-scheme, reduced-motion preferences are respected, and no
+external font or styling requests are needed. The compact gallery header leaves browsing
+space available rather than reproducing a marketing-page hero.
 
 Categories are informational labels in item details, not filter controls. Internal flags such as `AIBlacklist` are not displayed. All item and drone images are served from local assets using the configured deployment base path; browsing does not fetch images or catalogue data from third-party wikis.
 

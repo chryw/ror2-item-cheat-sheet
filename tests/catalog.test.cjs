@@ -101,12 +101,15 @@ test('new tiers support rarity/category filtering, sorting, search and equipment
   assert.ok(helpers.searchOperation(ids, items, 'cooldown').includes('Clarity'));
 });
 
-test('both item cards and sidebars style every new tier', async () => {
+test('cards and details share a single rarity palette covering every tier', async () => {
   const { ItemRarityClass } = await import(constantsUrl);
+  const theme = fs.readFileSync(path.join(root, 'src', 'assets', 'theme.css'), 'utf8');
+  Object.values(ItemRarityClass).forEach(className => {
+    assert.ok(theme.includes(`.${className}`), `Missing shared rarity: ${className}`);
+  });
   ['ItemCard.vue', 'SideBar.vue'].forEach(filename => {
     const source = fs.readFileSync(path.join(root, 'src', 'components', filename), 'utf8');
-    ['Hallowed', 'Hex', "N'tormat Pages"].forEach(rarity => {
-      assert.ok(source.includes(`.${ItemRarityClass[rarity]} {`));
-    });
+    assert.ok(source.includes('ItemRarityClass[this.itemData.itemRarity]'));
+    assert.ok(!source.includes('--item-card-colour:'));
   });
 });

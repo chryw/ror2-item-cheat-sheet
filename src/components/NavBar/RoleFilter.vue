@@ -5,7 +5,7 @@
       <input v-model="recommendedOnly" type="checkbox">
       {{ isCustom ? 'Saved items only' : 'Recommended items only' }}
     </label>
-    <button class="nav-reset custom-create" type="button"
+    <button class="ui-button ui-button--primary custom-create" type="button"
       :disabled="!$store.state.customBuildsLoaded"
       @click="$store.dispatch('createCustomBuild')">
       New custom build

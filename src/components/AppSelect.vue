@@ -104,19 +104,25 @@ export default {
 .app-select-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
   min-width: 0;
-  color: #333;
+  color: var(--text);
 }
-.select-label { font-size: 12px; font-weight: 600; color: #666; }
-.app-select { font-size: 14px; color: #333; }
+.select-label { font: 11px/1.5 var(--font-mono); letter-spacing: 0.06em; color: var(--text-muted); }
+.app-select { font-size: 14px; color: var(--text); }
+.app-select.multiselect--disabled { background: transparent; opacity: 0.45; }
+.app-select.multiselect--disabled .multiselect__select {
+  background: transparent; color: var(--text-muted);
+}
 .app-select .multiselect__tags {
-  min-height: 40px;
-  padding: 9px 36px 0 10px;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-  background: #fff;
+  min-height: var(--control-height);
+  padding: 11px 36px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  transition: border-color var(--motion-fast);
 }
+.app-select:hover .multiselect__tags { border-color: var(--border-strong); }
 .app-select .multiselect__input, .app-select .multiselect__single {
   min-width: 0;
   min-height: 20px;
@@ -125,47 +131,57 @@ export default {
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  background: #fff;
-  color: #333;
+  background: var(--surface-raised);
+  color: var(--text);
   font: inherit;
   font-size: 14px;
   line-height: 20px;
 }
 .app-select .multiselect__single { height: auto; overflow-wrap: anywhere; }
-.app-select .multiselect__input::placeholder { color: #666; }
+.app-select .multiselect__input::placeholder { color: var(--text-muted); }
 .app-select .multiselect__input:focus { outline: none; }
 .app-select:focus-within .multiselect__tags {
-  outline: 2px solid #555;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.app-select .multiselect__placeholder { color: #666; padding: 0; margin-bottom: 8px; }
+.app-select .multiselect__placeholder { color: var(--text-muted); padding: 0; margin-bottom: 10px; }
 .app-select .multiselect__select {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
-  height: 38px;
-  color: #666;
+  height: 42px;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .app-select .multiselect__select::before { display: none; }
-.app-select .multiselect__content-wrapper { position: relative; border-color: #bbb; }
-.app-select .multiselect__content { background: #fff; }
-.app-select .multiselect__option { white-space: normal; overflow-wrap: anywhere; line-height: 1.4; }
+.app-select .multiselect__content-wrapper {
+  position: relative;
+  margin-top: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+.app-select .multiselect__content { background: var(--surface-raised); }
+.app-select .multiselect__option {
+  min-height: var(--control-height);
+  white-space: normal; overflow-wrap: anywhere; line-height: 1.4;
+}
 .app-select .multiselect__tag {
   padding-right: 26px;
-  border-radius: 3px;
-  background: #e4e4e4;
-  color: #333;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  border: 1px solid var(--border-strong);
+  color: var(--accent);
   white-space: normal;
   overflow-wrap: anywhere;
   line-height: 1.4;
 }
-.app-select .multiselect__option--selected { background: #e4e4e4; color: #333; }
+.app-select .multiselect__option--selected { background: var(--accent-soft); color: var(--accent); }
 .app-select .multiselect__option--highlight,
 .app-select .multiselect__option--selected.multiselect__option--highlight {
-  background: #555;
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 .select-remove {
   position: absolute;
@@ -174,23 +190,23 @@ export default {
   width: 24px;
   height: 100%;
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: transparent;
-  color: #555;
+  color: var(--accent);
   cursor: pointer;
 }
-.select-remove:hover { background: #ccc; }
+.select-remove:hover { background: var(--surface-hover); }
 .select-clear {
   align-self: flex-start;
   padding: 0;
   border: 0;
   background: none;
-  color: #666;
+  color: var(--text-muted);
   text-decoration: underline;
   cursor: pointer;
 }
 .select-clear:focus-visible, .select-remove:focus-visible {
-  outline: 2px solid #555;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 </style>

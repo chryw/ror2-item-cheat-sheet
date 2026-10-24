@@ -1,10 +1,11 @@
 <template>
   <div
     class="item-card"
-    v-bind:class="[this.rarityClass, this.cardSize]"
+    v-bind:class="[this.rarityClass, this.cardSize, { 'is-selected': isSelected }]"
     role="button"
     tabindex="0"
     :aria-label="`View ${itemData.name} details`"
+    :aria-pressed="String(isSelected)"
     @click="itemCardClick"
     @keydown.enter="itemCardClick"
     @keydown.space.prevent="itemCardClick"
@@ -15,7 +16,6 @@
     <div class="item-details" :class="{ 'has-build-tier': buildTier }">
       <h4 class="item-name">
         {{ itemData.name }}
-        <!-- <span class="item-id" v-if="itemData.id" unselectable="on">#{{ itemData.id }}</span> -->
         <span class="item-effective-max" v-if="effectiveMax > 0" unselectable="on">
           Max: {{ effectiveMax }}
         </span>
@@ -50,6 +50,10 @@ export default {
   },
   computed: {
     ...mapState(["cardSize"]),
+    isSelected() {
+      return this.$store.state.selectedItem !== null
+        && this.$store.state.selectedItem.id === this.itemId;
+    },
     buildTier() {
       const { selectedBuild, builds } = this.$store.getters;
       if (selectedBuild && selectedBuild.custom) return null;
@@ -87,116 +91,57 @@ export default {
 
 <style scoped>
 .small-view {
-  --item-card-height: 50px;
-  --border-thickness: 2px;
-
-  --sub-text-colour: darkSlateGrey;
-  --background-opacity: 0.45;
-
-  --sub-text-size: 65%;
-  --item-name-text-size: 90%;
-  --description-text-size: 70%;
-
-  --item-card-margin: 2px;
-
+  --item-card-height: 82px;
+  --item-icon-size: 52px;
+  --item-name-text-size: 13px;
+  --description-text-size: 12px;
   --dlc-icon-size: 14px;
 }
 
 .large-view {
-  --item-card-height: 75px;
-  --border-thickness: 2px;
-
-  --sub-text-colour: darkSlateGrey;
-  --background-opacity: 0.25;
-
-  --sub-text-size: 75%;
-  --item-name-text-size: 95%;
-  --description-text-size: 80%;
-
-  --item-card-margin: 2px;
-
+  --item-card-height: 96px;
+  --item-icon-size: 64px;
+  --item-name-text-size: 14px;
+  --description-text-size: 13px;
   --dlc-icon-size: 14px;
-}
-
-/* Setting colours for different rarities */
-.item-colour-common {
-  --item-card-colour: #96a6a6;
-  --item-card-colour-opaque: rgba(199, 204, 206, var(--background-opacity));
-}
-.item-colour-uncommon {
-  --item-card-colour: #71bc39;
-  --item-card-colour-opaque: rgba(113, 188, 57, var(--background-opacity));
-}
-.item-colour-void {
-  --item-card-colour: #a92964;
-  --item-card-colour-opaque: rgba(169, 41, 100, var(--background-opacity));
-}
-.item-colour-hallowed {
-  --item-card-colour: #9368f9;
-  --item-card-colour-opaque: rgba(147, 104, 249, var(--background-opacity));
-}
-.item-colour-hex {
-  --item-card-colour: #b14b76;
-  --item-card-colour-opaque: rgba(177, 75, 118, var(--background-opacity));
-}
-.item-colour-page {
-  --item-card-colour: #d2bd8b;
-  --item-card-colour-opaque: rgba(210, 189, 139, var(--background-opacity));
-}
-.item-colour-legendary {
-  --item-card-colour: #df4d39;
-  --item-card-colour-opaque: rgba(223, 77, 57, var(--background-opacity));
-}
-.item-colour-boss {
-  --item-card-colour: #aeba23;
-  --item-card-colour-opaque: rgba(174, 186, 35, var(--background-opacity));
-}
-.item-colour-lunar,
-.equipment-colour-lunar {
-  --item-card-colour: #36b8e0;
-  --item-card-colour-opaque: rgba(54, 184, 224, var(--background-opacity));
-}
-.equipment-colour-normal,
-.equipment-colour-elite {
-  --item-card-colour: #c78536;
-  --item-card-colour-opaque: rgba(199, 133, 54, var(--background-opacity));
 }
 
 .item-card {
   display: flex;
   flex-direction: row;
-  height: var(--item-card-height);
-  border: var(--border-thickness) solid var(--item-card-colour);
-
+  align-items: center;
+  box-sizing: border-box;
+  min-height: var(--item-card-height);
+  padding: var(--space-3);
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--item-card-colour);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
   cursor: pointer;
-
-  margin: var(--item-card-margin);
-
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
+  user-select: none;
   position: relative;
+  transition: background var(--motion-fast), border-color var(--motion-fast);
 }
 
 .item-card:hover {
-  margin-bottom: calc(2 * var(--item-card-margin));
-  margin-top: 0px;
-  margin-right: 0px;
-  margin-left: calc(2 * var(--item-card-margin));
-  box-shadow: calc(-1 * var(--item-card-margin)) var(--item-card-margin) 5px #999999;
+  border-color: var(--border-strong);
+  border-left-color: var(--item-card-colour);
+  background: var(--surface-raised);
 }
-
-.item-card:active {
-  box-shadow: none;
-  margin: var(--item-card-margin);
+.item-card.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .item-icon {
-  height: var(--item-card-height);
-  width: var(--item-card-height);
-  border-right: var(--border-thickness) solid var(--item-card-colour);
-  background: radial-gradient(var(--item-card-colour), #222222);
+  display: block;
+  height: var(--item-icon-size);
+  width: var(--item-icon-size);
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  background: var(--canvas);
 }
 
 .item-details {
@@ -205,7 +150,7 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  background: var(--item-card-colour-opaque);
+  gap: 5px;
 }
 
 .item-details.has-build-tier { padding-right: 34px; }
@@ -218,30 +163,26 @@ export default {
 
 .item-name {
   font-size: var(--item-name-text-size);
-  margin: 3px 3px 1px 5px;
-
+  margin: 0;
+  padding-right: 12px;
+  line-height: 1.35;
+  font-weight: 600;
+  overflow-wrap: anywhere;
   position: relative;
 }
 
 .item-effective-max {
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  font-size: var(--sub-text-size);
-  color: var(--sub-text-colour);
-  /* float: right; */
-
-  user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
+  display: inline-block;
+  margin-left: 4px;
+  font: 10px/1.4 var(--font-mono);
+  color: var(--text-muted);
 }
 
 .item-short-description {
   font-style: normal;
   font-size: var(--description-text-size);
-  margin: 1px 3px 3px 5px;
+  margin: 0;
+  line-height: 1.5;
 
   /* Truncate */
   overflow: hidden;
@@ -249,30 +190,20 @@ export default {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 
-  color: var(--sub-text-colour);
-}
-
-.item-id {
-  font-size: var(--sub-text-size);
-  font-style: italic;
-  font-weight: lighter;
-  color: var(--sub-text-colour);
-
-  user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
+  color: var(--text-muted);
 }
 
 .image-div {
   position: relative;
+  flex-shrink: 0;
 }
 
 .dlc-icon {
   height: var(--dlc-icon-size);
   width: auto;
-  margin: 2px 2px 0px 0px;
+  opacity: 0.8;
+  top: 7px;
   position: absolute;
-  right: 0;
+  right: 7px;
 }
 </style>

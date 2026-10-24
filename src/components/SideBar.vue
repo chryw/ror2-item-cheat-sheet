@@ -3,7 +3,7 @@
     <div class="side-bar" v-if="selectedItem != null" v-bind:class="[this.rarityClass]">
       <div class="top-section">
         <a class="wiki-link" v-bind:href="itemData.wikiLink"
-          target="_blank" rel="noopener noreferrer">
+          target="_blank" rel="noopener noreferrer" :aria-label="`${itemData.name} wiki`">
           <font-awesome-icon class="item-link-icon" icon="external-link-alt" />
         </a>
         <p class="item-id" v-if="this.itemData.id">#{{ this.itemData.id }}</p>
@@ -23,7 +23,8 @@
         <div class="custom-build-actions">
           <AppSelect id="custom-build-target" v-model="customBuildTarget" label="Custom build"
             :options="customBuildOptions" :disabled="!$store.state.customBuildsLoaded" />
-          <button type="button" :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
+          <button class="ui-button ui-button--primary" type="button"
+            :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
             @click="$store.dispatch('addCustomBuildItem', selectedItem.id)">
             {{ itemIsSaved ? 'Item already in build' : 'Add to custom build' }}
           </button>
@@ -31,12 +32,12 @@
             <p v-if="itemIsSaved" role="status">
               {{ itemData.name }} is in {{ targetBuild.name }}.
             </p>
-            <button v-if="itemIsSaved" type="button"
+            <button v-if="itemIsSaved" class="ui-button" type="button"
               @click="$store.dispatch('removeCustomBuildItem',
                 { id: targetBuild.id, itemId: selectedItem.id })">
               Remove from custom build
             </button>
-            <button type="button" @click="viewCustomBuild">
+            <button class="ui-button" type="button" @click="viewCustomBuild">
               View {{ targetBuild.name }}
             </button>
           </template>
@@ -89,9 +90,10 @@
 
       <div class="item-category-section">
         <h4 class="item-rarity-label">Rarity</h4>
-        <p class="item-rarity" v-on:mouseup="clickRarityPill(itemData.itemRarity)">
+        <button class="item-rarity" type="button" @click="clickRarityPill(itemData.itemRarity)"
+          :aria-label="`Filter by ${itemData.itemRarity} rarity`">
           {{ itemData.itemRarity }}
-        </p>
+        </button>
         <h4 v-if="itemCategories.length" class="item-category-label">Category</h4>
         <div v-if="itemCategories.length" class="item-category-list">
           <p
@@ -218,18 +220,12 @@ export default {
   display: flex; flex-direction: column; gap: 8px; margin: 16px 0; overflow-wrap: anywhere;
 }
 .custom-build-actions label, .custom-build-actions p { font-size: 13px; margin: 0; }
-.custom-build-actions >>> .select-label { color: #ddd; }
-.custom-build-actions > button {
-  box-sizing: border-box; width: 100%; min-height: 36px; padding: 6px 8px;
-  border: 1px solid #bbb; border-radius: 4px; background: #f3f3f3; color: #333;
-  min-width: 0; overflow-wrap: anywhere;
-}
-.custom-build-actions > button { cursor: pointer; }
-.custom-build-actions > button:disabled { cursor: default; opacity: 0.65; }
+.custom-build-actions > button { width: 100%; }
+.custom-build-actions p { color: var(--text-muted); line-height: 1.6; }
 .side-bar-wrapper {
   flex-shrink: 0;
-  --side-bar-width: 300px;
-  --side-bar-background-colour: #444444;
+  --side-bar-width: 340px;
+  --side-bar-background-colour: var(--surface);
 
   --item-icon-size: 150px;
 
@@ -238,9 +234,9 @@ export default {
   --margin-left: 20px;
   --margin-top: var(--margin-left);
 
-  --main-text-colour: #fff;
+  --main-text-colour: var(--text);
   --main-text-size: 90%;
-  --sub-text-colour: #999;
+  --sub-text-colour: var(--text-muted);
   --sub-text-size: 80%;
 
   --top-bar-height: 60px;
@@ -259,70 +255,38 @@ export default {
   }
 }
 
-/* Setting colours for different rarities */
-.item-colour-common {
-  --item-card-colour: #96a6a6;
-  --item-card-colour-opaque: rgba(199, 204, 206, var(--background-opacity));
-}
-.item-colour-uncommon {
-  --item-card-colour: #71bc39;
-  --item-card-colour-opaque: rgba(113, 188, 57, var(--background-opacity));
-}
-.item-colour-void {
-  --item-card-colour: #a92964;
-  --item-card-colour-opaque: rgba(169, 41, 100, var(--background-opacity));
-}
-.item-colour-hallowed {
-  --item-card-colour: #9368f9;
-  --item-card-colour-opaque: rgba(147, 104, 249, var(--background-opacity));
-}
-.item-colour-hex {
-  --item-card-colour: #b14b76;
-  --item-card-colour-opaque: rgba(177, 75, 118, var(--background-opacity));
-}
-.item-colour-page {
-  --item-card-colour: #d2bd8b;
-  --item-card-colour-opaque: rgba(210, 189, 139, var(--background-opacity));
-}
-.item-colour-legendary {
-  --item-card-colour: #df4d39;
-  --item-card-colour-opaque: rgba(223, 77, 57, var(--background-opacity));
-}
-.item-colour-boss {
-  --item-card-colour: #aeba23;
-  --item-card-colour-opaque: rgba(174, 186, 35, var(--background-opacity));
-}
-.item-colour-lunar,
-.equipment-colour-lunar {
-  --item-card-colour: #36b8e0;
-  --item-card-colour-opaque: rgba(54, 184, 224, var(--background-opacity));
-}
-.equipment-colour-normal,
-.equipment-colour-elite {
-  --item-card-colour: #c78536;
-  --item-card-colour-opaque: rgba(199, 133, 54, var(--background-opacity));
-}
-
 .side-bar {
-  width: var(--side-bar-width);
+  box-sizing: border-box;
+  width: min(var(--side-bar-width), 100vw);
   background: var(--side-bar-background-colour);
 
   color: var(--main-text-colour);
 
   padding-bottom: var(--margin-left);
   min-height: calc(100% - var(--margin-left));
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-panel);
+  line-height: 1.6;
 }
 
 .top-section {
   display: flex;
   justify-content: space-between;
-  margin-left: 10px;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-top: 2px solid var(--item-card-colour);
 }
 
 .wiki-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
   height: 40px;
   line-height: 40px;
+  border-radius: var(--radius-md);
 }
+.wiki-link:hover { background: var(--surface-hover); }
 
 .wiki-link:link {
   text-decoration: inherit;
@@ -342,8 +306,7 @@ export default {
 .item-id {
   color: var(--sub-text-colour);
   margin: 0px;
-  font-style: italic;
-  font-size: x-large;
+  font: 12px/40px var(--font-mono);
   height: 40px;
   line-height: 40px;
   display: inline-block;
@@ -354,21 +317,31 @@ export default {
 }
 
 hr {
+  width: 100%;
+  box-sizing: border-box;
   margin-left: calc(-1 * var(--margin-left));
   margin-right: calc(-1 * var(--margin-left));
-  color: var(--sub-text-colour);
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
 }
 
 .item-info-section {
   justify-content: center;
   display: grid;
+  min-width: 0;
   padding-left: var(--margin-left);
   padding-right: var(--margin-left);
 }
 
 .item-name {
   margin: 0px;
-  font-size: 120%;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
   text-align: center;
 }
 
@@ -376,8 +349,12 @@ hr {
   height: var(--item-icon-size);
   width: var(--item-icon-size);
   margin: auto;
-  border: 5px var(--item-card-colour) solid;
-  background: radial-gradient(var(--item-card-colour), #222222);
+  object-fit: contain;
+  box-sizing: border-box;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: radial-gradient(ellipse at bottom, var(--surface-hover), var(--canvas));
 }
 
 .dlc-title {
@@ -397,14 +374,15 @@ hr {
   margin-top: 5px;
   margin-bottom: 0px;
   font-size: var(--sub-text-size);
-  font-style: italic;
+  line-height: 1.7;
   text-align: center;
 }
 
 .item-description {
   margin-top: 0px;
-  text-align: center;
-  font-size: 90%;
+  text-align: left;
+  font-size: 13px;
+  color: var(--text-muted);
   margin-bottom: 0px;
   white-space: break-spaces;
 }
@@ -482,20 +460,17 @@ hr {
 
   display: inline-block;
   color: var(--item-card-colour);
-  border: 2px var(--item-card-colour) solid;
+  border: 1px var(--item-card-colour) solid;
   /* Large border radius to make it pill shape */
   border-radius: 100px;
-
+  min-height: 40px;
+  font-family: inherit;
+  background: var(--surface-raised);
   cursor: pointer;
 }
 
 .item-rarity:hover {
-  background: rgba(190, 190, 190, 0.25);
-  transition: background-color 0.25s ease;
-}
-
-.item-rarity:active {
-  background: rgba(190, 190, 190, 0.75);
+  background: var(--surface-hover);
 }
 
 .item-category-label {
@@ -516,7 +491,7 @@ hr {
   padding: 3px 8px;
 
   color: var(--sub-text-colour);
-  border: 2px var(--sub-text-colour) solid;
+  border: 1px var(--border) solid;
   /* Large border radius to make it pill shape */
   border-radius: 100px;
 }
@@ -529,7 +504,7 @@ hr {
 }
 
 .item-stats-table {
-  border: 1px var(--sub-text-colour) solid;
+  border: 1px var(--border) solid;
   border-collapse: collapse;
   width: 100%;
 }
@@ -542,11 +517,11 @@ hr {
 .item-stats-table,
 td,
 th {
-  border: 1px var(--sub-text-colour) solid;
+  border: 1px var(--border) solid;
 }
 
 tr:nth-child(even) {
-  background-color: #555;
+  background-color: var(--surface-raised);
 }
 
 .stat-name-label,

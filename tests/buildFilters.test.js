@@ -546,6 +546,41 @@ test('keyboard dropdown scrolling uses actual bounds for wrapped options', () =>
   });
 });
 
+test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () => {
+  const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
+  const tokens = Object.fromEntries(
+    Array.from(theme.matchAll(/--([\w-]+):\s*(#[\da-f]{6})\s*;/gi),
+      match => [match[1], match[2]]),
+  );
+  const luminance = hex => {
+    const channels = hex.slice(1).match(/../g).map(channel => parseInt(channel, 16) / 255);
+    const [r, g, b] = channels.map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  ['canvas', 'surface', 'surface-raised', 'surface-hover'].forEach(background => {
+    ['text', 'text-muted', 'accent'].forEach(foreground => {
+      const a = luminance(tokens[foreground]);
+      const b = luminance(tokens[background]);
+      const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+      assert(ratio >= 4.5, `${foreground} on ${background}: ${ratio.toFixed(2)}:1`);
+    });
+  });
+  ['accent', 'accent-hover'].forEach(background => {
+    const ratio = (luminance(tokens[background]) + 0.05)
+      / (luminance(tokens['on-accent']) + 0.05);
+    assert(ratio >= 4.5, `Primary button contrast: ${ratio.toFixed(2)}:1`);
+  });
+  Array.from(theme.matchAll(/--item-card-colour:\s*(#[\da-f]{6})/gi)).forEach(([, colour]) => {
+    const ratio = (luminance(colour) + 0.05) / (luminance(tokens.surface) + 0.05);
+    assert(ratio >= 4.5, `Rarity label ${colour}: ${ratio.toFixed(2)}:1`);
+  });
+  const errorRatio = (luminance(tokens.danger) + 0.05)
+    / (luminance(tokens['danger-surface']) + 0.05);
+  assert(errorRatio >= 4.5, `Storage error contrast: ${errorRatio.toFixed(2)}:1`);
+  assert(theme.includes('color-scheme: dark'));
+  assert(theme.includes('@media (prefers-reduced-motion: reduce)'));
+});
+
 async function runTests() {
   try {
     await tests.reduce((previous, { name, run }) => previous.then(run).then(() => {

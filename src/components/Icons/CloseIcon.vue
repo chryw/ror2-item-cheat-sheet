@@ -1,5 +1,5 @@
 <template>
-  <button class="close-side-bar-button" type="button" aria-label="Close item details"
+  <button class="close-side-bar-button ui-button" type="button" aria-label="Close item details"
     @click="clickCloseButton">
     <font-awesome-icon icon="times" aria-hidden="true" />
   </button>
@@ -20,13 +20,13 @@ export default {
   height: 40px;
   width: 40px;
   padding: 0;
-  border: 0;
-  border-radius: 4px;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   background: transparent;
-  color: #ccc;
+  color: var(--text-muted);
   font-size: 18px;
   cursor: pointer;
 }
-.close-side-bar-button:hover { background: rgba(190, 190, 190, 0.25); }
-.close-side-bar-button:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+.close-side-bar-button:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
 </style>

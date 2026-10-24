@@ -5,7 +5,7 @@
         <span>Build name</span>
         <input id="custom-build-name" v-model="name" type="text" maxlength="80" required>
       </label>
-      <button class="nav-reset" type="submit" :disabled="!name.trim()">Rename</button>
+      <button class="ui-button" type="submit" :disabled="!name.trim()">Rename</button>
     </form>
     <p v-if="!build.itemIds.length">
       Your list is empty. Pick an item in the gallery, then use Add to custom build in its details.
@@ -52,11 +52,16 @@ export default {
 .saved-items {
   display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 12px 0 0; list-style: none;
 }
-.saved-items li { display: flex; align-items: center; border: 1px solid #bbb; border-radius: 4px; }
-.saved-item-link, .saved-item-remove {
-  padding: 6px 8px; border: 0; background: none; color: #333; cursor: pointer; font: inherit;
+.saved-items li {
+  display: flex; align-items: center; min-width: 0; max-width: 100%;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--surface-raised); overflow: hidden;
 }
-.saved-item-link { text-decoration: underline; text-align: left; }
-.saved-item-remove { align-self: stretch; border-left: 1px solid #bbb; }
-.saved-items button:hover { background: #ddd; }
+.saved-item-link, .saved-item-remove {
+  min-height: 40px; padding: 8px 12px; border: 0; background: none;
+  color: var(--text); cursor: pointer; font: inherit;
+}
+.saved-item-link { text-align: left; overflow-wrap: anywhere; }
+.saved-item-remove { align-self: stretch; border-left: 1px solid var(--border); }
+.saved-items button:hover { background: var(--surface-hover); color: var(--accent); }
 </style>
