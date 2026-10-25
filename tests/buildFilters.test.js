@@ -1250,6 +1250,8 @@ test('dropdown rows and trigger content use shared vertical centering', () => {
       .test(source), `${className} must centre its contents`);
   });
   assert(source.includes('transform: translateY(-50%) rotate(180deg)'));
+  assert(/\.select-remove\s*\{[^}]*top: 50%;[^}]*transform: translateY\(-50%\);/.test(source),
+    'Compact removal buttons must centre independently of the pill height');
   assert(source.includes('white-space: normal; overflow-wrap: anywhere'));
   assert(source.includes('.app-select.multiselect:not(.multiselect--active) >'));
 });

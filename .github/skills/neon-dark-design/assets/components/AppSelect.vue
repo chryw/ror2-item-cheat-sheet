@@ -473,10 +473,9 @@ export default {
 }
 .select-remove {
   position: absolute;
-  top: 0;
+  top: 50%;
   right: 0;
-  width: var(--target-size);
-  height: 100%;
+  transform: translateY(-50%);
   --button-color: var(--accent);
 }
 .select-clear {

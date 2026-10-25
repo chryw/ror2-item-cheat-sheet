@@ -127,6 +127,7 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
   On reopening, restore visibility of the retained highlight even if its index has not changed.
 - Vertically centre trigger values, tags, carets and option labels with flex alignment,
   not padding based on assumed font metrics. Keep wrapped option rows content-sized.
+- Centre compact tag-removal buttons within the pill, including when its label wraps.
 - An open picker/menu consumes Escape before dismissing itself, so enclosing dialogs
   do not close on the same keypress. A subsequent Escape can dismiss the dialog.
 
