@@ -4,7 +4,7 @@
       <div class="top-section">
         <a class="wiki-link" v-bind:href="itemData.wikiLink"
           target="_blank" rel="noopener noreferrer" :aria-label="`${itemData.name} wiki`">
-          <font-awesome-icon class="item-link-icon" icon="external-link-alt" />
+          <AppIcon class="item-link-icon" name="external-link" />
         </a>
         <p class="item-id" v-if="this.itemData.id">#{{ this.itemData.id }}</p>
         <CloseIcon v-bind:clickCloseButton="this.clickCloseButton" class="close-icon" />
@@ -55,7 +55,7 @@
             target="_blank"
             class="drops-from-link"
           >
-            <font-awesome-icon class="fa-icon" icon="external-link-alt" />
+            <AppIcon name="external-link" />
             More Info
           </a>
         </div>
@@ -82,7 +82,7 @@
         <h4 class="unlock-name">Complete "{{ itemData.unlock.name }}" to Unlock</h4>
         <p class="unlock-description">{{ itemData.unlock.description }}</p>
         <a v-bind:href="itemData.unlock.link" target="_blank" class="unlock-link">
-          <font-awesome-icon class="fa-icon" icon="external-link-alt" />
+          <AppIcon name="external-link" />
           More Info
         </a>
         <hr />

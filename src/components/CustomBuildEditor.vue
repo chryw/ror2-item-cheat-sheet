@@ -15,7 +15,7 @@
         <button class="saved-item-link" type="button" @click="viewItem(id)">{{ id }}</button>
         <button class="saved-item-remove" type="button" :aria-label="`Remove ${id} from build`"
           @click="$store.dispatch('removeCustomBuildItem', { id: build.id, itemId: id })">
-          <font-awesome-icon icon="times" aria-hidden="true" />
+          <AppIcon name="close" />
         </button>
       </li>
     </ul>

@@ -14,7 +14,18 @@ The navbar alters the item list to make it easier for the user to navigate the i
 
 On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores the full catalogue.
 
-All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, dark styling and in-flow option list. Role names are displayed without added suffixes. Control icons come from the existing open-source Font Awesome package.
+All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, dark styling and in-flow option list. Role names are displayed without added suffixes.
+
+UI icons use [Lucide](https://lucide.dev/) through the shared
+[AppIcon](src/components/Icons/AppIcon.js) renderer. Only six named icon definitions are
+imported from its maintained framework-neutral package; the deprecated Vue 2 adapter is not used.
+Icons share a 24-unit grid, 1.75-unit rounded strokes, and inherited theme colours, displayed
+at 16–20px. SVGs are decorative and hidden from assistive technology; containing controls
+retain their accessible labels. No icon font, CDN request or DOM-replacement pass is needed.
+Lucide's ISC and Feather-derived MIT notices are distributed in
+[lucide-license.txt](public/lucide-license.txt), including in the built site.
+Standalone definition imports avoid loading DOM helpers that webpack 4 cannot parse.
+Game artwork is unchanged.
 
 ### Visual system
 

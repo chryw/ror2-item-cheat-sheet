@@ -581,6 +581,37 @@ test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () =>
   assert(theme.includes('@media (prefers-reduced-motion: reduce)'));
 });
 
+test('shared Lucide icons render consistent decorative SVGs and preserve caller attributes', () => {
+  const icon = loadSource(path.join(sourceRoot, 'components', 'Icons', 'AppIcon.js')).default;
+  const h = (tag, data, children) => ({ tag, data, children });
+  ['search', 'menu', 'chevron-down', 'close', 'external-link', 'reset'].forEach(name => {
+    const vnode = icon.render(h, {
+      props: { name },
+      data: { staticClass: 'search-bar-icon', class: { active: true }, attrs: { id: 'test-icon' } },
+    });
+    assert.strictEqual(vnode.tag, 'svg');
+    assert.strictEqual(vnode.data.staticClass, 'search-bar-icon');
+    assert.deepStrictEqual(vnode.data.class, [{ active: true }, 'app-icon']);
+    assert.strictEqual(vnode.data.attrs.id, 'test-icon');
+    assert.strictEqual(vnode.data.attrs.viewBox, '0 0 24 24');
+    assert.strictEqual(vnode.data.attrs.stroke, 'currentColor');
+    assert.strictEqual(vnode.data.attrs.fill, 'none');
+    assert.strictEqual(vnode.data.attrs['stroke-width'], 1.75);
+    assert.strictEqual(vnode.data.attrs['aria-hidden'], 'true');
+    assert.strictEqual(vnode.data.attrs.focusable, 'false');
+    assert(vnode.children.length > 0);
+    vnode.children.forEach(child => {
+      assert(['path', 'circle', 'line', 'polyline', 'rect'].includes(child.tag));
+      assert(Object.keys(child.data.attrs).length > 0);
+    });
+  });
+  assert.throws(() => icon.render(h, { props: { name: 'missing' }, data: {} }),
+    /Unknown UI icon: missing/);
+  const manifest = require('../package.json');
+  assert(manifest.dependencies.lucide);
+  assert(!Object.keys(manifest.dependencies).some(name => name.startsWith('@fortawesome/')));
+});
+
 async function runTests() {
   try {
     await tests.reduce((previous, { name, run }) => previous.then(run).then(() => {

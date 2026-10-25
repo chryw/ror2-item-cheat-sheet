@@ -1,7 +1,7 @@
 <template>
   <button class="close-side-bar-button ui-button" type="button" aria-label="Close item details"
     @click="clickCloseButton">
-    <font-awesome-icon icon="times" aria-hidden="true" />
+    <AppIcon name="close" />
   </button>
 </template>
 

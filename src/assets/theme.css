@@ -47,6 +47,15 @@ body {
 button, input { font-family: inherit; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 button { touch-action: manipulation; }
+.app-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.nav-toggle .app-icon, .close-side-bar-button .app-icon { width: 20px; height: 20px; }
+.select-remove { display: inline-flex; align-items: center; justify-content: center; }
 a { color: var(--accent); text-underline-offset: 3px; }
 a:hover { color: var(--accent-hover); }
 ::selection { background: var(--accent); color: var(--on-accent); }

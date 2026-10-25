@@ -1,10 +1,10 @@
 <template>
-  <font-awesome-icon class="search-bar-icon" icon="search" aria-hidden="true" />
+  <AppIcon class="search-bar-icon" name="search" />
 </template>
 
 <style scoped>
 .search-bar-icon {
-  width: 14px;
+  width: 18px;
   color: var(--text-muted);
 }
 </style>

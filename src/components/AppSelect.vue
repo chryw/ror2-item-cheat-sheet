@@ -20,7 +20,7 @@
     >
       <template slot="caret" slot-scope="{ toggle }">
         <span class="multiselect__select" @mousedown.prevent.stop="toggle">
-          <font-awesome-icon icon="chevron-down" aria-hidden="true" />
+          <AppIcon name="chevron-down" />
         </span>
       </template>
       <template slot="tag" slot-scope="{ option, remove }">
@@ -29,7 +29,7 @@
           <button type="button" class="select-remove"
             :aria-label="`Remove ${label.toLowerCase()} ${option.label}`"
             @mousedown.prevent @click.stop="remove(option)">
-            <font-awesome-icon icon="times" aria-hidden="true" />
+            <AppIcon name="close" />
           </button>
         </span>
       </template>
@@ -156,6 +156,7 @@ export default {
   font-size: 12px;
 }
 .app-select .multiselect__select::before { display: none; }
+.app-select .app-icon { width: 16px; height: 16px; }
 .app-select .multiselect__content-wrapper {
   position: relative;
   margin-top: 6px;

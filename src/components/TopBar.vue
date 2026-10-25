@@ -10,7 +10,7 @@
         :title="collapsed ? 'Expand navigation' : 'Collapse navigation'"
         @click="collapsed = !collapsed"
       >
-        <font-awesome-icon icon="bars" aria-hidden="true" />
+        <AppIcon name="menu" />
       </button>
       <div v-show="!collapsed" class="nav-brand">
         <strong>Risk of Rain 2</strong>
@@ -24,7 +24,7 @@
       <RarityFilter />
       <VersionFilter />
       <button class="nav-reset ui-button" type="button" @click="resetFilters">
-        <font-awesome-icon icon="undo-alt" aria-hidden="true" />
+        <AppIcon name="reset" />
         Reset filters
       </button>
       <p class="nav-hint">Your run, your rules.<br>Combine filters to find your next pickup.</p>
@@ -126,7 +126,7 @@ export default {
 .nav-search > svg {
   position: absolute;
   right: 12px;
-  width: 12px;
+  width: 18px;
   color: var(--muted-colour);
   pointer-events: none;
 }

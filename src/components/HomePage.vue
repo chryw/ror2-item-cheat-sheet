@@ -37,7 +37,7 @@
             </p>
             <a v-if="build.source" :href="build.source" target="_blank" rel="noopener noreferrer">
               {{ build.id === 'operator' ? 'Operator guide' : 'Survivor mechanics' }}
-              <font-awesome-icon icon="external-link-alt" aria-hidden="true" />
+              <AppIcon name="external-link" />
             </a>
             <span class="build-legend-note">
               Starter priorities, not a universal tier list.
@@ -162,7 +162,7 @@ export default {
 .build-legend-ranks > span { display: inline-flex; align-items: center; gap: 5px; }
 .build-legend a, .build-legend-note { display: block; margin-top: 6px; }
 .build-legend-note { color: var(--text-muted); }
-.build-legend svg { margin-left: 3px; font-size: 10px; }
+.build-legend svg { margin-left: 3px; width: 14px; height: 14px; }
 
 @media (max-width: 900px) {
   .home-page { flex-direction: column; }

@@ -1,17 +1,10 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-  faExternalLinkAlt, faBars, faChevronDown, faTimes, faSearch, faUndoAlt,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
 import Vue from 'vue';
 import App from './App.vue';
+import AppIcon from './components/Icons/AppIcon';
 
 import store from './store';
 
-library.add(faExternalLinkAlt, faBars, faChevronDown, faTimes, faSearch, faUndoAlt);
-
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('AppIcon', AppIcon);
 
 Vue.config.productionTip = false;
 
