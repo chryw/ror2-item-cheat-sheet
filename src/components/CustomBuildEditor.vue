@@ -19,6 +19,22 @@
         </button>
       </li>
     </ul>
+    <div class="delete-build-actions">
+      <template v-if="confirmingDelete">
+        <p role="alert">Delete "{{ build.name }}"? This cannot be undone.</p>
+        <div class="delete-build-buttons">
+          <button ref="cancelDelete" class="ui-button" type="button" @click="cancelDelete">
+            Cancel
+          </button>
+          <button class="ui-button ui-button--danger" type="button"
+            @click="$emit('delete', build.id)">Confirm delete</button>
+        </div>
+      </template>
+      <button v-else ref="deleteBuild" class="ui-button ui-button--danger" type="button"
+        :disabled="!$store.state.customBuildsLoaded" @click="requestDelete">
+        Delete custom build
+      </button>
+    </div>
   </section>
 </template>
 
@@ -29,11 +45,19 @@ import ItemIdUtils from '../helpers/ItemIdUtils';
 export default {
   name: 'CustomBuildEditor',
   props: { build: { type: Object, required: true } },
-  data() { return { name: this.build.name }; },
+  data() { return { name: this.build.name, confirmingDelete: false }; },
   watch: {
     'build.name': function updateName(value) { this.name = value; },
   },
   methods: {
+    requestDelete() {
+      this.confirmingDelete = true;
+      this.$nextTick(() => this.$refs.cancelDelete.focus());
+    },
+    cancelDelete() {
+      this.confirmingDelete = false;
+      this.$nextTick(() => this.$refs.deleteBuild.focus());
+    },
     rename() {
       this.$store.dispatch('renameCustomBuild', { id: this.build.id, name: this.name });
     },
@@ -64,4 +88,9 @@ export default {
 .saved-item-link { text-align: left; overflow-wrap: anywhere; }
 .saved-item-remove { align-self: stretch; border-left: 1px solid var(--border); }
 .saved-items button:hover { background: var(--surface-hover); color: var(--accent); }
+.delete-build-actions {
+  margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border);
+}
+.delete-build-actions p { overflow-wrap: anywhere; }
+.delete-build-buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: 12px; }
 </style>

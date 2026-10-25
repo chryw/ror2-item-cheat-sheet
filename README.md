@@ -67,6 +67,10 @@ starting at **Custom 01**, **Custom 02**, and so on. Select a custom profile to 
 open or remove saved pickups, or toggle **Saved items only** to return to the full gallery.
 Custom lists have no tier rankings. Names and item lists save automatically to this browser's
 local storage; they do not sync across browsers or devices, and clearing site data removes them.
+Use **Delete custom build** on a selected custom profile, then confirm (or cancel).
+Deleting the selected profile returns to all survivors and removes it from both dropdowns.
+Other profiles, filters and the next custom-build number are preserved.
+The add-to-build section sits at the bottom of item details, after descriptions, stats and unlocks.
 Storage failures show an explicit warning and retry button; unsaved changes remain in memory.
 Unreadable saved data is not overwritten.
 

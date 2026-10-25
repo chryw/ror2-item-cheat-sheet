@@ -612,6 +612,60 @@ test('shared Lucide icons render consistent decorative SVGs and preserve caller 
   assert(!Object.keys(manifest.dependencies).some(name => name.startsWith('@fortawesome/')));
 });
 
+test('deleting custom profiles clears stale selections and persists without reusing IDs', async () => {
+  store.commit('setSelectedRole', 'enforcer');
+  store.commit('setCustomBuildTarget', 'custom-1');
+  store.commit('setFilterByState', { dlc: ['Base game'], rarity: [ItemRarity.COMMON] });
+  store.commit('updateSearchTermState', 'drone');
+  const otherProfiles = JSON.stringify(store.state.customBuilds.slice(1));
+  const nextNumber = store.state.nextCustomBuildNumber;
+  await store.dispatch('deleteCustomBuild', 'custom-1');
+  assert.strictEqual(store.state.selectedRole, 'enforcer');
+  assert.strictEqual(store.state.customBuildTarget, '');
+  assert.strictEqual(JSON.stringify(store.state.customBuilds), otherProfiles);
+  assert(!store.getters.builds.some(build => build.id === 'custom-1'));
+  assert(!parseCustomBuilds(stored).profiles.some(build => build.id === 'custom-1'));
+  assert.throws(() => store.dispatch('deleteCustomBuild', 'enforcer'), /Unknown custom build/);
+
+  store.commit('setSelectedRole', 'custom-2');
+  store.commit('setCustomBuildTarget', 'custom-3');
+  store.commit('updateSortByState', SortType.RECOMMENDED);
+  await store.dispatch('deleteCustomBuild', 'custom-2');
+  assert.strictEqual(store.state.selectedRole, '');
+  assert.strictEqual(store.getters.selectedBuild, undefined);
+  assert.strictEqual(store.state.sortBy, SortType.RARITY);
+  assert.strictEqual(store.state.customBuildTarget, 'custom-3');
+  assert.deepStrictEqual(Array.from(store.state.filterBy.dlc), ['Base game']);
+  assert.strictEqual(store.state.searchTerm, 'drone');
+
+  store.commit('setSelectedRole', 'custom-3');
+  const saved = stored;
+  failWrite = true;
+  await store.dispatch('deleteCustomBuild', 'custom-3');
+  assert.strictEqual(store.state.customBuilds.length, 0);
+  assert.strictEqual(store.state.selectedRole, '');
+  assert.strictEqual(store.state.customBuildTarget, '');
+  assert(store.state.customBuildError.includes('Changes are only in memory'));
+  assert.strictEqual(stored, saved);
+  failWrite = false;
+  await store.dispatch('saveCustomBuilds');
+  await store.dispatch('loadCustomBuilds');
+  assert.strictEqual(store.state.customBuilds.length, 0);
+  assert.strictEqual(store.state.nextCustomBuildNumber, nextNumber);
+  await store.dispatch('createCustomBuild');
+  assert.strictEqual(store.state.selectedRole, `custom-${nextNumber}`);
+  assert.strictEqual(store.state.customBuildError, '');
+});
+
+test('custom-build actions follow every informational section in item details', () => {
+  const sidebar = fs.readFileSync(path.join(sourceRoot, 'components', 'SideBar.vue'), 'utf8');
+  const actions = sidebar.indexOf('<section class="custom-build-actions"');
+  ['item-description', 'drone-info', 'equipment-cooldown', 'unlock-info-section',
+    'item-category-section', 'item-stats-section'].forEach(className => {
+    assert(sidebar.indexOf(`class="${className}"`) < actions, `${className} follows build actions`);
+  });
+});
+
 async function runTests() {
   try {
     await tests.reduce((previous, { name, run }) => previous.then(run).then(() => {

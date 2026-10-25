@@ -67,6 +67,16 @@ export default new Vuex.Store({
       commit('renameCustomBuild', payload);
       dispatch('saveCustomBuilds');
     },
+    deleteCustomBuild({ state, commit, dispatch }, id) {
+      if (!state.customBuildsLoaded) throw new Error('Custom builds have not loaded.');
+      const wasSelected = state.selectedRole === id;
+      commit('deleteCustomBuild', id);
+      if (wasSelected) {
+        commit('setSelectedRole', '');
+        commit('setRecommendedOnly', true);
+      }
+      return dispatch('saveCustomBuilds');
+    },
     addCustomBuildItem({ state, commit, dispatch }, itemId) {
       if (!state.customBuildsLoaded) throw new Error('Custom builds have not loaded.');
       if (!Object.prototype.hasOwnProperty.call(items, itemId) || items[itemId].hidden) {
@@ -113,6 +123,13 @@ export default new Vuex.Store({
         throw new Error('Custom build names must contain 1 to 80 characters.');
       }
       profile.name = name.trim();
+    },
+    deleteCustomBuild(state, id) {
+      if (!state.customBuilds.some(build => build.id === id)) {
+        throw new Error(`Unknown custom build: ${id}`);
+      }
+      state.customBuilds = state.customBuilds.filter(build => build.id !== id);
+      if (state.customBuildTarget === id) state.customBuildTarget = '';
     },
     addCustomBuildItem(state, itemId) {
       const profile = state.customBuilds.find(build => build.id === state.customBuildTarget);

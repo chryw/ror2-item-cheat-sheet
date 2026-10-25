@@ -20,28 +20,6 @@
         <hr />
         <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
         <p class="item-short-description">{{ itemData.shortDescription }}</p>
-        <div class="custom-build-actions">
-          <AppSelect id="custom-build-target" v-model="customBuildTarget" label="Custom build"
-            :options="customBuildOptions" :disabled="!$store.state.customBuildsLoaded" />
-          <button class="ui-button ui-button--primary" type="button"
-            :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
-            @click="$store.dispatch('addCustomBuildItem', selectedItem.id)">
-            {{ itemIsSaved ? 'Item already in build' : 'Add to custom build' }}
-          </button>
-          <template v-if="targetBuild">
-            <p v-if="itemIsSaved" role="status">
-              {{ itemData.name }} is in {{ targetBuild.name }}.
-            </p>
-            <button v-if="itemIsSaved" class="ui-button" type="button"
-              @click="$store.dispatch('removeCustomBuildItem',
-                { id: targetBuild.id, itemId: selectedItem.id })">
-              Remove from custom build
-            </button>
-            <button class="ui-button" type="button" @click="viewCustomBuild">
-              View {{ targetBuild.name }}
-            </button>
-          </template>
-        </div>
         <hr />
         <p class="item-description">{{ itemData.description }}</p>
 
@@ -123,6 +101,28 @@
           </tr>
         </table>
       </div>
+      <section class="custom-build-actions" aria-label="Custom build actions">
+        <AppSelect id="custom-build-target" v-model="customBuildTarget" label="Custom build"
+          :options="customBuildOptions" :disabled="!$store.state.customBuildsLoaded" />
+        <button class="ui-button ui-button--primary" type="button"
+          :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
+          @click="$store.dispatch('addCustomBuildItem', selectedItem.id)">
+          {{ itemIsSaved ? 'Item already in build' : 'Add to custom build' }}
+        </button>
+        <template v-if="targetBuild">
+          <p v-if="itemIsSaved" role="status">
+            {{ itemData.name }} is in {{ targetBuild.name }}.
+          </p>
+          <button v-if="itemIsSaved" class="ui-button" type="button"
+            @click="$store.dispatch('removeCustomBuildItem',
+              { id: targetBuild.id, itemId: selectedItem.id })">
+            Remove from custom build
+          </button>
+          <button class="ui-button" type="button" @click="viewCustomBuild">
+            View {{ targetBuild.name }}
+          </button>
+        </template>
+      </section>
     </div>
   </div>
 </template>
@@ -217,7 +217,9 @@ export default {
 .drone-info dl { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
 .drone-info dd { margin: 0; text-align: right; }
 .custom-build-actions {
-  display: flex; flex-direction: column; gap: 8px; margin: 16px 0; overflow-wrap: anywhere;
+  display: flex; flex-direction: column; gap: 8px;
+  margin: var(--space-5) var(--margin-left) 0;
+  padding-top: var(--space-5); border-top: 1px solid var(--border); overflow-wrap: anywhere;
 }
 .custom-build-actions label, .custom-build-actions p { font-size: 13px; margin: 0; }
 .custom-build-actions > button { width: 100%; }

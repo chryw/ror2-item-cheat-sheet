@@ -7,7 +7,7 @@
           <p class="ui-eyebrow">
             <span class="status-dot" aria-hidden="true"></span> The pickup index
           </p>
-          <h1>Know your <span>next pickup.</span></h1>
+          <h1 ref="galleryTitle" tabindex="-1">Know your <span>next pickup.</span></h1>
           <p>Explore the arsenal. Find your synergy. Build your next run.</p>
         </header>
         <div v-if="$store.state.customBuildError" class="build-error" role="alert">
@@ -43,7 +43,8 @@
               Starter priorities, not a universal tier list.
             </span>
           </div>
-          <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build" />
+          <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build"
+            @delete="deleteCustomBuild" />
         </div>
         <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
         <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
@@ -79,6 +80,10 @@ export default {
     recommendedOnly() { return this.$store.state.recommendedOnly; },
   },
   methods: {
+    async deleteCustomBuild(id) {
+      await this.$store.dispatch('deleteCustomBuild', id);
+      this.$nextTick(() => this.$refs.galleryTitle.focus());
+    },
     retryStorage() {
       this.$store.dispatch(this.$store.state.customBuildsLoaded
         ? 'saveCustomBuilds' : 'loadCustomBuilds');
