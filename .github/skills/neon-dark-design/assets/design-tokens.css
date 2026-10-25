@@ -75,6 +75,8 @@
   --motion-fast: 140ms ease;
   --shadow-panel: 0 16px 48px rgba(0, 0, 0, 0.3);
   --layer-popup: 1000;
+  --layer-panel: 110;
+  --layer-dialog: 200;
 
   --layout-rail-width: 272px;
   --layout-rail-collapsed-width: 64px;

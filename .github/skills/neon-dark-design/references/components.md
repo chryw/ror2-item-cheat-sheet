@@ -94,7 +94,11 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
   when necessary. Reposition on resize and ancestor scrolling; close if the anchor is hidden.
 - Moving a library-owned list requires returning it before destruction and cleaning up
   popup nodes/listeners. Never clone menu DOM (it would lose handlers and duplicate IDs).
+- Popup roots expose `data-select-owner` with the control ID. Consumer drawers use this
+  to recognize their own detached menus when implementing outside-click dismissal.
 - Keep keyboard-highlighted wrapped options visible using rendered row bounds.
+- An open select consumes Escape before dismissing its menu, so enclosing dialogs
+  do not close on the same keypress. A subsequent Escape can dismiss the dialog.
 
 ```vue
 <AppSelect id="status" label="Status" v-model="status"
@@ -114,7 +118,7 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
 ## AppIcon
 
 - Functional decorative SVG renderer; required `name` is one of search, menu,
-  chevron-down, close, external-link, reset. Unknown names throw explicitly.
+  chevron-down, close, external-link, reset, plus. Unknown names throw explicitly.
 - Uses currentColor, a 24-unit viewBox and the shared size/stroke tokens.
 - Icons are hidden from assistive technology; label the enclosing control.
 - Add only needed icon definitions and retain licence notices. Direct definition imports

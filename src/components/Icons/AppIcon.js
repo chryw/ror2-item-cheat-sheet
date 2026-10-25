@@ -6,6 +6,7 @@ import ChevronDown from 'lucide/dist/esm/icons/chevron-down.mjs';
 import X from 'lucide/dist/esm/icons/x.mjs';
 import ExternalLink from 'lucide/dist/esm/icons/external-link.mjs';
 import RotateCcw from 'lucide/dist/esm/icons/rotate-ccw.mjs';
+import Plus from 'lucide/dist/esm/icons/plus.mjs';
 /* eslint-enable import/extensions */
 
 const icons = {
@@ -15,6 +16,7 @@ const icons = {
   close: X,
   'external-link': ExternalLink,
   reset: RotateCcw,
+  plus: Plus,
 };
 
 export default {

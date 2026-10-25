@@ -10,6 +10,21 @@ const items = require('../src/data/items.json');
 const cache = new Map();
 const sourceRoot = path.resolve(__dirname, '..', 'src');
 
+function loadUIComponent(filename, browser = {}, document = {}) {
+  const source = fs.readFileSync(path.join(sourceRoot, 'components', filename), 'utf8');
+  const parsed = parseComponent(source);
+  assert.deepStrictEqual(compile(parsed.template.content).errors, [], filename);
+  const { code } = transformSync(parsed.script.content, {
+    babelrc: false, configFile: false, plugins: ['@babel/plugin-transform-modules-commonjs'],
+  });
+  const module = { exports: {} };
+  vm.runInThisContext(`(function(require, module, exports, window, document) { ${code}\n})`)(
+    request => (request === 'vuex' ? require(request) : {}),
+    module, module.exports, browser, document,
+  );
+  return module.exports.default;
+}
+
 // Compile application ES modules with the project's existing Babel tooling.
 function loadSource(filename) {
   const resolved = require.resolve(filename);
@@ -561,6 +576,7 @@ test('popup placement flips at viewport edges and cleans up its detached list an
     createElement() {
       return {
         style: {},
+        dataset: {},
         appendChild(node) { Object.assign(node, { parentNode: this }); },
         remove() { body.children.splice(body.children.indexOf(this), 1); },
       };
@@ -588,7 +604,7 @@ test('popup placement flips at viewport edges and cleans up its detached list an
     $el: { parentElement: body, getBoundingClientRect: () => anchor },
     $refs: { list },
   };
-  const context = { $refs: { control }, $nextTick: callback => callback() };
+  const context = { id: 'popup-control', $refs: { control }, $nextTick: callback => callback() };
   const component = module.exports.default;
   Object.entries(component.methods).forEach(([name, method]) => {
     context[name] = method.bind(context);
@@ -600,6 +616,7 @@ test('popup placement flips at viewport edges and cleans up its detached list an
   assert.strictEqual(context.popup.style.top, '238px');
   assert.strictEqual(control.optimizedHeight, 240);
   assert.strictEqual(list.parentNode, context.popup);
+  assert.strictEqual(context.popup.dataset.selectOwner, 'popup-control');
   anchor = { ...anchor, top: 850, bottom: 882 };
   context.positionPopup();
   assert.strictEqual(context.popup.style.top, '604px');
@@ -619,6 +636,17 @@ test('popup placement flips at viewport edges and cleans up its detached list an
   assert.strictEqual(list.parentNode, parent);
   assert.strictEqual(body.children.length, 0);
   assert.strictEqual(listeners.size, 0);
+  control.isOpen = true;
+  control.$el.parentElement = body;
+  context.openPopup();
+  let escaped = 0;
+  context.closeOnEscape({
+    preventDefault() { escaped += 1; },
+    stopPropagation() { escaped += 1; },
+  });
+  assert.strictEqual(escaped, 2, 'Escape closes only the dropdown, not its containing modal');
+  assert.strictEqual(control.isOpen, false);
+  assert.strictEqual(body.children.length, 0);
   component.beforeDestroy.call(context);
 });
 
@@ -691,13 +719,162 @@ test('portable base tokens are generic and product tokens only alias reusable pr
     assert(definitions.has(alias[1]), `${name} must reference a generic base token`);
   });
   const role = fs.readFileSync(path.join(sourceRoot, 'components', 'NavBar', 'RoleFilter.vue'), 'utf8');
-  assert(role.includes('<AppButton class="custom-create" variant="ghost"'));
+  assert(role.includes('<AppButton class="custom-create"'));
   assert(!role.includes('variant="primary"'));
+  assert(!role.includes('variant="ghost"'));
+  assert(role.includes('<AppIcon name="plus"'));
   ['TopBar.vue', 'CustomBuildEditor.vue', 'HomePage.vue', 'SideBar.vue', 'Icons/CloseIcon.vue',
     'NavBar/RoleFilter.vue'].forEach(filename => {
     const source = fs.readFileSync(path.join(sourceRoot, 'components', filename), 'utf8');
     assert(!/<button[\s>]/.test(source), `${filename} bypasses AppButton`);
   });
+});
+
+test('mobile navigation defaults closed and dismisses outside without treating owned popups as outside', () => {
+  const listeners = new Map();
+  const record = {
+    addEventListener(name, callback, capture) { listeners.set(name, { callback, capture }); },
+    removeEventListener(name, callback, capture) {
+      assert.deepStrictEqual(listeners.get(name), { callback, capture });
+      listeners.delete(name);
+    },
+  };
+  let mobile = true;
+  let mobileFocus = 0;
+  let navFocus = 0;
+  const input = {};
+  const nav = { contains: node => node === input };
+  const document = {
+    ...record,
+    activeElement: { blur() {} },
+    getElementById: id => (id === 'owned-input' ? input : null),
+  };
+  const browser = { ...record, matchMedia: () => ({ matches: mobile }) };
+  const component = loadUIComponent('HomePage.vue', browser, document);
+  assert.strictEqual(component.data().navCollapsed, true);
+  const context = {
+    ...component.data(),
+    selectedItem: null,
+    $nextTick: callback => callback(),
+    $refs: {
+      navigation: { $el: nav, focusToggle() { navFocus += 1; } },
+      mobileToggle: { $el: { contains: () => false }, focus() { mobileFocus += 1; } },
+    },
+  };
+  Object.entries(component.methods).forEach(([name, method]) => {
+    context[name] = method.bind(context);
+  });
+  component.mounted.call(context);
+  assert.strictEqual(context.mobileLayout, true);
+  assert.strictEqual(listeners.size, 3);
+  context.toggleNavigation();
+  assert.strictEqual(context.navCollapsed, false);
+  assert.strictEqual(navFocus, 1);
+  const ownedTarget = {
+    closest: () => ({ dataset: { selectOwner: 'owned-input' } }),
+  };
+  context.dismissNavigation({ target: ownedTarget });
+  assert.strictEqual(context.navCollapsed, false, 'Navigation-owned portal must remain interactive');
+  context.dismissNavigation({ target: { closest: () => null } });
+  assert.strictEqual(context.navCollapsed, true);
+  assert.strictEqual(mobileFocus, 1);
+  context.toggleNavigation();
+  mobile = false;
+  context.updateLayout();
+  assert.strictEqual(context.navCollapsed, true, 'Breakpoint transitions close the drawer');
+  assert.strictEqual(context.mobileLayout, false);
+  context.navCollapsed = false;
+  context.dismissNavigation({ target: { closest: () => null } });
+  assert.strictEqual(context.navCollapsed, false, 'Desktop navigation is not outside-dismissed');
+  component.beforeDestroy.call(context);
+  assert.strictEqual(listeners.size, 0);
+  assert.strictEqual(loadUIComponent('TopBar.vue').props.collapsed.default, true);
+});
+
+test('mobile details return to the build, restore focus and contain keyboard navigation', () => {
+  const commits = [];
+  const document = { activeElement: null };
+  const component = loadUIComponent('HomePage.vue', {}, document);
+  let galleryFocus = 0;
+  let cardFocus = 0;
+  let closeFocus = 0;
+  const card = {
+    isConnected: true,
+    getBoundingClientRect: () => ({ width: 100 }),
+    focus() { cardFocus += 1; },
+  };
+  document.activeElement = card;
+  const first = { getBoundingClientRect: () => ({ width: 44 }), focus() { closeFocus += 1; } };
+  const last = { getBoundingClientRect: () => ({ width: 44 }), focus() {} };
+  const context = {
+    ...component.data(),
+    mobileLayout: true,
+    selectedItem: { id: 'Crowbar' },
+    $store: { commit(...args) { commits.push(args); } },
+    $nextTick: callback => callback(),
+    $refs: {
+      navigation: { $el: { contains: () => false } },
+      details: {
+        $el: { querySelectorAll: () => [first, last] },
+        focusClose() { closeFocus += 1; },
+      },
+      gallery: { $refs: { viewport: { scrollTop: 200 } } },
+      galleryTitle: { focus() { galleryFocus += 1; } },
+    },
+  };
+  Object.entries(component.methods).forEach(([name, method]) => {
+    context[name] = method.bind(context);
+  });
+  component.watch.selectedItem.call(context, context.selectedItem, null);
+  assert.strictEqual(closeFocus, 1);
+  assert.strictEqual(context.detailsReturnFocus, card);
+  assert.strictEqual(context.navCollapsed, true);
+  document.activeElement = last;
+  let prevented = 0;
+  context.handleKeydown({ key: 'Tab', preventDefault() { prevented += 1; } });
+  assert.strictEqual(prevented, 1);
+  assert.strictEqual(closeFocus, 2);
+  context.handleKeydown({ key: 'Escape', preventDefault() {} });
+  assert.deepStrictEqual(commits.pop(), ['setSelectedItem', null]);
+  assert.strictEqual(cardFocus, 1);
+  context.viewBuild();
+  assert.deepStrictEqual(commits.pop(), ['setSelectedItem', null]);
+  assert.strictEqual(galleryFocus, 1);
+  assert.strictEqual(context.$refs.gallery.$refs.viewport.scrollTop, 0);
+  context.mobileLayout = false;
+  context.viewBuild();
+  assert.strictEqual(commits.length, 0, 'Desktop keeps details open when viewing a build');
+  const sidebar = loadUIComponent('SideBar.vue');
+  const emitted = [];
+  sidebar.methods.viewCustomBuild.call({
+    targetBuild: { id: 'custom-1' },
+    $store: { commit(...args) { commits.push(args); } },
+    $emit(name) { emitted.push(name); },
+  });
+  assert.deepStrictEqual(commits, [['setSelectedRole', 'custom-1'], ['setRecommendedOnly', true]]);
+  assert.deepStrictEqual(emitted, ['view-build']);
+});
+
+test('creating or selecting a custom build signals navigation without resetting filters', async () => {
+  const role = loadUIComponent('NavBar/RoleFilter.vue');
+  const calls = [];
+  const context = {
+    $store: {
+      async dispatch(action) { calls.push(action); },
+      commit(...args) { calls.push(args); },
+    },
+    $emit(event) { calls.push(event); },
+  };
+  await role.methods.createBuild.call(context);
+  assert.deepStrictEqual(calls, ['createCustomBuild', 'navigate']);
+  calls.length = 0;
+  role.computed.selectedRole.set.call(context, 'custom-1');
+  assert.deepStrictEqual(calls, [['setSelectedRole', 'custom-1'], 'navigate']);
+  const sidebar = fs.readFileSync(path.join(sourceRoot, 'components', 'SideBar.vue'), 'utf8');
+  assert(sidebar.includes('@media (max-width: 900px)'));
+  assert(sidebar.includes('position: fixed;'));
+  assert(sidebar.includes('position: sticky;'));
+  assert(sidebar.includes('--side-bar-width: 100%'));
 });
 
 test('panels share overlay scrollbars with native viewports and clean lifecycle handling', () => {
@@ -912,7 +1089,7 @@ test('portable design skill has valid discovery metadata and a synchronized stan
 test('shared Lucide icons render consistent decorative SVGs and preserve caller attributes', () => {
   const icon = loadSource(path.join(sourceRoot, 'components', 'Icons', 'AppIcon.js')).default;
   const h = (tag, data, children) => ({ tag, data, children });
-  ['search', 'menu', 'chevron-down', 'close', 'external-link', 'reset'].forEach(name => {
+  ['search', 'menu', 'chevron-down', 'close', 'external-link', 'reset', 'plus'].forEach(name => {
     const vnode = icon.render(h, {
       props: { name },
       data: { staticClass: 'search-bar-icon', class: { active: true }, attrs: { id: 'test-icon' } },

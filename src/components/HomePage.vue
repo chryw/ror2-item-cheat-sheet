@@ -1,56 +1,73 @@
 <template>
   <div class="home-page">
-    <TopBar />
+    <TopBar ref="navigation" :collapsed="navCollapsed" :mobile="mobileLayout"
+      @toggle="toggleNavigation" @navigate="navigateFromFilters" />
     <div class="info-section">
-      <AppScrollArea class="item-list-section" label="Pickup gallery">
+      <AppScrollArea ref="gallery" class="item-list-section" label="Pickup gallery"
+        :inert="blockingGallery ? '' : null" :aria-hidden="blockingGallery ? 'true' : null">
         <header class="gallery-header">
           <p class="ui-eyebrow">
             <span class="status-dot" aria-hidden="true"></span> The pickup index
           </p>
-          <h1 ref="galleryTitle" tabindex="-1">Know your <span>next pickup.</span></h1>
+          <div class="gallery-heading-row">
+            <AppButton ref="mobileToggle" class="mobile-nav-toggle" icon-only
+              aria-label="Expand navigation" aria-controls="item-navigation"
+              :aria-expanded="String(!navCollapsed)" @click="toggleNavigation">
+              <AppIcon name="menu" />
+            </AppButton>
+            <h1 ref="galleryTitle" tabindex="-1">
+              <span class="desktop-title">
+                Know your <span class="heading-accent">next pickup.</span>
+              </span>
+              <span class="mobile-title">Risk of Rain 2 Field Guide</span>
+            </h1>
+          </div>
           <p>Explore the arsenal. Find your synergy. Build your next run.</p>
         </header>
-        <div v-if="$store.state.customBuildError" class="build-error" role="alert">
-          <p>{{ $store.state.customBuildError }}</p>
-          <AppButton @click="retryStorage">Retry storage</AppButton>
-        </div>
-        <div v-if="build" class="build-summary" aria-live="polite">
-          <div>
-            <h2>{{ build.name }}</h2>
-            <p v-if="!build.custom">
-              {{ build.focus }}.
-              {{ recommendedOnly ? 'Recommended pickups only.' : 'Showing all pickups.' }}
-            </p>
-            <p v-else>
-              {{ build.itemIds.length }} saved
-              {{ build.itemIds.length === 1 ? 'pickup' : 'pickups' }}.
-              {{ $store.state.customBuildError ? 'Not saved to this browser.' :
-                'Automatically saved in this browser.' }}
-              {{ recommendedOnly ? 'Showing saved items only.' : 'Browse the gallery to add.' }}
-            </p>
+        <div class="gallery-content">
+          <div v-if="$store.state.customBuildError" class="build-error" role="alert">
+            <p>{{ $store.state.customBuildError }}</p>
+            <AppButton @click="retryStorage">Retry storage</AppButton>
           </div>
-          <div v-if="!build.custom" class="build-legend">
-            <p class="build-legend-ranks">
-              <span><strong class="build-badge build-badge--S">S</strong> Core</span>
-              <span><strong class="build-badge build-badge--A">A</strong> Synergy</span>
-              <span><strong class="build-badge build-badge--B">B</strong> Support</span>
-            </p>
-            <a v-if="build.source" :href="build.source" target="_blank" rel="noopener noreferrer">
-              {{ build.id === 'operator' ? 'Operator guide' : 'Survivor mechanics' }}
-              <AppIcon name="external-link" />
-            </a>
-            <span class="build-legend-note">
-              Starter priorities, not a universal tier list.
-            </span>
+          <div v-if="build" class="build-summary" aria-live="polite">
+            <div>
+              <h2>{{ build.name }}</h2>
+              <p v-if="!build.custom">
+                {{ build.focus }}.
+                {{ recommendedOnly ? 'Recommended pickups only.' : 'Showing all pickups.' }}
+              </p>
+              <p v-else>
+                {{ build.itemIds.length }} saved
+                {{ build.itemIds.length === 1 ? 'pickup' : 'pickups' }}.
+                {{ $store.state.customBuildError ? 'Not saved to this browser.' :
+                  'Automatically saved in this browser.' }}
+                {{ recommendedOnly ? 'Showing saved items only.' : 'Browse the gallery to add.' }}
+              </p>
+            </div>
+            <div v-if="!build.custom" class="build-legend">
+              <p class="build-legend-ranks">
+                <span><strong class="build-badge build-badge--S">S</strong> Core</span>
+                <span><strong class="build-badge build-badge--A">A</strong> Synergy</span>
+                <span><strong class="build-badge build-badge--B">B</strong> Support</span>
+              </p>
+              <a v-if="build.source" :href="build.source" target="_blank" rel="noopener noreferrer">
+                {{ build.id === 'operator' ? 'Operator guide' : 'Survivor mechanics' }}
+                <AppIcon name="external-link" />
+              </a>
+              <span class="build-legend-note">
+                Starter priorities, not a universal tier list.
+              </span>
+            </div>
+            <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build"
+              @delete="deleteCustomBuild" />
           </div>
-          <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build"
-            @delete="deleteCustomBuild" />
+          <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
+          <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
+          <ItemList style="flex: 1;" :itemListType="SelectionType.DRONE" />
         </div>
-        <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
-        <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
-        <ItemList style="flex: 1;" :itemListType="SelectionType.DRONE" />
       </AppScrollArea>
-      <SideBar />
+      <SideBar ref="details" :mobile="mobileLayout"
+        @close="restoreDetailsFocus" @view-build="viewBuild" />
     </div>
   </div>
 </template>
@@ -75,13 +92,127 @@ export default {
   data() {
     return {
       SelectionType,
+      navCollapsed: true,
+      mobileLayout: false,
     };
   },
   computed: {
     build() { return this.$store.getters.selectedBuild; },
     recommendedOnly() { return this.$store.state.recommendedOnly; },
+    selectedItem() { return this.$store.state.selectedItem; },
+    blockingGallery() {
+      return this.mobileLayout && (!this.navCollapsed || this.selectedItem !== null);
+    },
+  },
+  watch: {
+    selectedItem(item, previous) {
+      if (!item) return;
+      if (!previous) this.detailsReturnFocus = document.activeElement;
+      if (this.mobileLayout) {
+        this.closeNavigation(false);
+        this.$nextTick(() => this.$refs.details.focusClose());
+      }
+    },
+  },
+  mounted() {
+    this.updateLayout();
+    window.addEventListener('resize', this.updateLayout);
+    document.addEventListener('pointerdown', this.dismissNavigation, true);
+    document.addEventListener('keydown', this.handleKeydown);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateLayout);
+    document.removeEventListener('pointerdown', this.dismissNavigation, true);
+    document.removeEventListener('keydown', this.handleKeydown);
   },
   methods: {
+    updateLayout() {
+      const mobile = window.matchMedia('(max-width: 900px)').matches;
+      if (this.mobileLayout !== mobile) {
+        this.closeNavigation(false);
+        if (mobile && this.selectedItem) this.$nextTick(() => this.$refs.details.focusClose());
+      }
+      this.mobileLayout = mobile;
+    },
+    toggleNavigation() {
+      if (!this.navCollapsed) {
+        this.closeNavigation();
+        return;
+      }
+      this.navCollapsed = false;
+      if (this.mobileLayout) this.$nextTick(() => this.$refs.navigation.focusToggle());
+    },
+    closeNavigation(restoreFocus = true) {
+      if (this.$refs.navigation.$el.contains(document.activeElement)) document.activeElement.blur();
+      this.navCollapsed = true;
+      if (restoreFocus) {
+        this.$nextTick(() => {
+          if (this.mobileLayout) this.$refs.mobileToggle.focus();
+          else this.$refs.navigation.focusToggle();
+        });
+      }
+    },
+    dismissNavigation(event) {
+      if (!this.mobileLayout || this.navCollapsed) return;
+      const nav = this.$refs.navigation.$el;
+      const { target } = event;
+      if (nav.contains(target) || this.$refs.mobileToggle.$el.contains(target)) return;
+      const popup = target.closest('.app-select-popup');
+      if (popup && nav.contains(document.getElementById(popup.dataset.selectOwner))) return;
+      this.closeNavigation();
+    },
+    navigateFromFilters() {
+      if (!this.mobileLayout) return;
+      this.closeNavigation(false);
+      this.focusGallery();
+    },
+    focusGallery() {
+      this.$nextTick(() => {
+        this.$refs.gallery.$refs.viewport.scrollTop = 0;
+        this.$refs.galleryTitle.focus({ preventScroll: true });
+      });
+    },
+    restoreDetailsFocus() {
+      this.$nextTick(() => {
+        const target = this.detailsReturnFocus;
+        if (target && target.isConnected && target.getBoundingClientRect().width > 0) {
+          target.focus();
+        } else this.focusGallery();
+        this.detailsReturnFocus = null;
+      });
+    },
+    viewBuild() {
+      if (!this.mobileLayout) return;
+      this.$store.commit('setSelectedItem', null);
+      this.focusGallery();
+    },
+    handleKeydown(event) {
+      if (!this.mobileLayout || event.defaultPrevented) return;
+      const navigationOpen = !this.navCollapsed;
+      if (!navigationOpen && !this.selectedItem) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        if (navigationOpen) this.closeNavigation();
+        else {
+          this.$store.commit('setSelectedItem', null);
+          this.restoreDetailsFocus();
+        }
+      } else if (event.key === 'Tab') {
+        const panel = navigationOpen ? this.$refs.navigation.$el : this.$refs.details.$el;
+        const controls = Array.from(panel.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        )).filter(el => el.getBoundingClientRect().width > 0);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    },
     async deleteCustomBuild(id) {
       await this.$store.dispatch('deleteCustomBuild', id);
       this.$nextTick(() => this.$refs.galleryTitle.focus());
@@ -106,6 +237,11 @@ export default {
   overflow: hidden;
 }
 
+.mobile-nav-toggle { display: none; }
+.mobile-title { display: none; }
+.gallery-content { min-width: 0; }
+.gallery-heading-row { display: flex; align-items: center; gap: var(--space-3); }
+.gallery-heading-row h1 { flex: 1; min-width: 0; }
 .info-section {
   flex: 1;
   min-width: 0;
@@ -137,7 +273,7 @@ export default {
   letter-spacing: var(--tracking-display);
   font-weight: var(--weight-heading);
 }
-.gallery-header h1 span { color: var(--accent); }
+.gallery-header .heading-accent { color: var(--accent); }
 .gallery-header > p:last-child {
   margin: 0; color: var(--text-muted);
   font-size: var(--text-body); line-height: var(--leading-relaxed);
@@ -177,12 +313,23 @@ export default {
 .build-legend svg { margin-left: 3px; width: var(--icon-xs); height: var(--icon-xs); }
 
 @media (max-width: 900px) {
-  .home-page { flex-direction: column; }
-  .item-list-section { padding: var(--space-5); }
+  .item-list-section { padding: 0; }
+  .gallery-content { padding: var(--space-4); }
+  .mobile-nav-toggle { display: inline-flex; }
+  .mobile-title { display: inline; }
+  .desktop-title { display: none; }
+  .gallery-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
+    border-bottom: var(--border-width) solid var(--border);
+    background: var(--canvas);
+  }
+  .gallery-header .ui-eyebrow, .gallery-header > p:last-child { display: none; }
+  .gallery-header h1 { margin: 0; font-size: var(--text-title); }
 }
 @media (max-width: 480px) {
-  .item-list-section { padding: var(--space-4); }
-  .gallery-header { padding-bottom: var(--space-5); }
   .build-summary { padding: var(--space-4); }
 }
 </style>

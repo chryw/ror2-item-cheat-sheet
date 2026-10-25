@@ -12,7 +12,23 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
-On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores the full catalogue.
+Navigation starts collapsed. On desktop (above 900px), its hamburger expands a left sidebar.
+On narrower screens the hamburger shares the gallery title row, and filters open in a
+full-width overlay panel instead of consuming a dedicated row or shrinking the gallery.
+The mobile title reads **Risk of Rain 2 Field Guide**. Its sticky header is flush with
+the viewport edge, with no gap for scrolling content to show through.
+Press Escape or use the panel's hamburger to close it. Outside-click dismissal recognizes
+dropdown menus belonging to the panel. Choosing a survivor/custom build or creating a build returns
+to the gallery on mobile. Collapsing never clears your filters or saved lists.
+Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores it.
+
+Mobile item details fill the entire viewport, including tablet and landscape layouts
+up to 900px. The close/wiki row stays sticky while the details scroll. Closing restores
+focus to the originating pickup, and **View custom build** closes mobile details and
+returns to the build editor; desktop keeps its side-by-side details panel.
+Mobile drawers/details move focus into the panel, contain keyboard focus, support Escape,
+and make the underlying gallery inert. The compact mobile title/navigation header stays
+accessible while browsing long result lists.
 Navigation, gallery and details use [AppScrollArea.vue](src/components/AppScrollArea.vue),
 a shared [OverlayScrollbars](https://github.com/KingSora/OverlayScrollbars) wrapper.
 The themed, draggable scrollbars overlay the content edge: they reserve no gutter and
@@ -27,7 +43,7 @@ They flip above near viewport edges and reposition on resize/scroll. Opening a m
 changes its container's height, scroll range or sibling positions. Role names have no added suffixes.
 
 UI icons use [Lucide](https://lucide.dev/) through the shared
-[AppIcon](src/components/Icons/AppIcon.js) renderer. Only six named icon definitions are
+[AppIcon](src/components/Icons/AppIcon.js) renderer. Only seven named icon definitions are
 imported from its maintained framework-neutral package; the deprecated Vue 2 adapter is not used.
 Icons share a 24-unit grid, 1.75-unit rounded strokes, and inherited theme colours, displayed
 at 16–20px. SVGs are decorative and hidden from assistive technology; containing controls
@@ -70,7 +86,7 @@ Reusable controls are actual components, not one-off button/input class recipes:
 Buttons/fields/selects are 32px tall on fine-pointer desktop; icon controls use a
 24px minimum click target. At <=600px or with any coarse pointer, controls and icon targets
 are at least 44px. These are shared token changes, not separate per-page variants.
-**New custom build** uses the quiet ghost button variant rather than a primary accent fill.
+**New custom build** uses the same secondary button style as **Reset filters**, with a plus icon.
 Consumer styles own composition/layout and game cues, not copies of base control styling.
 Change repeated visual values in the token file; keep isolated geometric adjustments local.
 The 900/600/480px media-query breakpoints remain literal because CSS custom properties

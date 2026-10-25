@@ -1,15 +1,17 @@
 <template>
-  <AppScrollArea tag="nav" class="navigation" label="Filter controls"
-    :class="{ 'is-collapsed': collapsed }" aria-label="Item filters">
+  <AppScrollArea id="item-navigation" tag="nav" class="navigation" label="Filter controls"
+    :class="{ 'is-collapsed': collapsed }" aria-label="Item filters"
+    :role="mobile ? 'dialog' : null" :aria-modal="mobile && !collapsed ? 'true' : null">
     <header class="nav-header">
       <AppButton
+        ref="toggle"
         class="nav-toggle"
         icon-only
         :aria-expanded="String(!collapsed)"
         aria-controls="nav-controls"
         :aria-label="collapsed ? 'Expand navigation' : 'Collapse navigation'"
         :title="collapsed ? 'Expand navigation' : 'Collapse navigation'"
-        @click="collapsed = !collapsed"
+        @click="$emit('toggle')"
       >
         <AppIcon name="menu" />
       </AppButton>
@@ -20,7 +22,7 @@
     </header>
     <div id="nav-controls" v-show="!collapsed" class="nav-controls">
       <SearchBar />
-      <RoleFilter />
+      <RoleFilter @navigate="$emit('navigate')" />
       <SortBySelector />
       <RarityFilter />
       <VersionFilter />
@@ -45,8 +47,12 @@ import { SortType } from '../data/constants';
 export default {
   name: 'TopBar',
   components: { AppScrollArea, SearchBar, RoleFilter, SortBySelector, RarityFilter, VersionFilter },
-  data() { return { collapsed: false }; },
+  props: {
+    collapsed: { type: Boolean, default: true },
+    mobile: { type: Boolean, default: false },
+  },
   methods: {
+    focusToggle() { this.$refs.toggle.focus(); },
     resetFilters() {
       this.$store.commit('setSelectedRole', '');
       this.$store.commit('setRecommendedOnly', true);
@@ -134,22 +140,30 @@ export default {
 }
 
 @media (max-width: 900px) {
-  .navigation, .navigation.is-collapsed {
-    flex: 0 0 auto;
+  .navigation {
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-panel);
     width: 100%;
-    max-height: 50vh;
-    padding: var(--space-3) var(--space-4);
+    height: 100vh;
+    height: 100dvh;
+    padding: 0;
     border-right: 0;
-    border-bottom: var(--border-width) solid var(--panel-border);
+    box-shadow: var(--shadow-panel);
   }
-  .nav-header { margin-bottom: var(--space-4); }
+  .navigation.is-collapsed { display: none; }
+  .nav-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
+    background: var(--surface);
+    border-bottom: var(--border-width) solid var(--border);
+    margin-bottom: var(--space-4);
+  }
   .nav-controls {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4);
+    gap: var(--space-4);
+    padding: 0 var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));
   }
-  .nav-hint { grid-column: 1 / -1; }
-}
-
-@media (max-width: 480px) {
-  .nav-controls { grid-template-columns: minmax(0, 1fr); }
 }
 </style>

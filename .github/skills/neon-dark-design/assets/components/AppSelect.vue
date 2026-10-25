@@ -1,5 +1,5 @@
 <template>
-  <div class="app-select-field">
+  <div class="app-select-field" @keydown.esc.capture="closeOnEscape">
     <label class="select-label" :for="id">{{ label }}</label>
     <multiselect
       ref="control"
@@ -99,6 +99,12 @@ export default {
     this.closePopup();
   },
   methods: {
+    closeOnEscape(event) {
+      if (!this.$refs.control.isOpen) return;
+      event.preventDefault();
+      event.stopPropagation();
+      this.$refs.control.deactivate();
+    },
     openPopup() {
       this.$nextTick(() => {
         if (!this.$refs.control || !this.$refs.control.isOpen || this.popup) return;
@@ -106,6 +112,7 @@ export default {
         this.popupParent = list.parentNode;
         this.popup = document.createElement('div');
         this.popup.className = 'app-select app-select-popup';
+        this.popup.dataset.selectOwner = this.id;
         document.body.appendChild(this.popup);
         this.popup.appendChild(list);
         window.addEventListener('resize', this.positionPopup);

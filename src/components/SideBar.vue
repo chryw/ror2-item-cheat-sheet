@@ -1,13 +1,16 @@
 <template>
-  <AppScrollArea class="side-bar-wrapper" label="Item details">
-    <div class="side-bar" v-if="selectedItem != null" v-bind:class="[this.rarityClass]">
+  <AppScrollArea v-if="selectedItem != null" class="side-bar-wrapper" label="Item details"
+    :role="mobile ? 'dialog' : null" :aria-modal="mobile ? 'true' : null"
+    :aria-label="`${itemData.name} details`">
+    <div class="side-bar" v-bind:class="[this.rarityClass]">
       <div class="top-section">
         <a class="wiki-link" v-bind:href="itemData.wikiLink"
           target="_blank" rel="noopener noreferrer" :aria-label="`${itemData.name} wiki`">
           <AppIcon class="item-link-icon" name="external-link" />
         </a>
         <p class="item-id" v-if="this.itemData.id">#{{ this.itemData.id }}</p>
-        <CloseIcon v-bind:clickCloseButton="this.clickCloseButton" class="close-icon" />
+        <CloseIcon ref="closeButton" v-bind:clickCloseButton="this.clickCloseButton"
+          class="close-icon" />
       </div>
 
       <div class="item-info-section">
@@ -147,6 +150,7 @@ export default {
     CloseIcon,
     AppSelect,
   },
+  props: { mobile: { type: Boolean, default: false } },
   data() {
     return {};
   },
@@ -201,13 +205,19 @@ export default {
     viewCustomBuild() {
       this.$store.commit('setSelectedRole', this.targetBuild.id);
       this.$store.commit('setRecommendedOnly', true);
+      this.$emit('view-build');
+    },
+    focusClose() {
+      this.$refs.closeButton.$el.focus();
     },
     clickCloseButton() {
       this.setSelectedItem(null);
+      this.$emit('close');
     },
     clickRarityPill(rarity) {
       bus.$emit("filterRarity", rarity);
       this.setFilterByState({ rarity: [rarity] });
+      if (this.mobile) this.clickCloseButton();
     },
   },
 };
@@ -248,17 +258,6 @@ export default {
 
 }
 
-@media (max-width: 600px) {
-  .side-bar-wrapper {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 10;
-    max-width: 100%;
-  }
-}
-
 .side-bar {
   box-sizing: border-box;
   width: min(var(--side-bar-width), 100vw);
@@ -279,6 +278,32 @@ export default {
   align-items: center;
   padding: var(--space-3) var(--space-4);
   border-top: var(--border-width-emphasis) solid var(--item-card-colour);
+}
+
+@media (max-width: 900px) {
+  .side-bar-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-dialog);
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    --side-bar-width: 100%;
+  }
+  .side-bar {
+    width: 100%;
+    min-height: 100%;
+    border-left: 0;
+    padding-bottom: max(var(--margin-left), env(safe-area-inset-bottom));
+  }
+  .top-section {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--surface);
+    border-bottom: var(--border-width) solid var(--border);
+    padding-top: max(var(--space-3), env(safe-area-inset-top));
+  }
 }
 
 .wiki-link {

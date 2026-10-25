@@ -5,9 +5,10 @@
       <input v-model="recommendedOnly" type="checkbox">
       {{ isCustom ? 'Saved items only' : 'Recommended items only' }}
     </label>
-    <AppButton class="custom-create" variant="ghost"
+    <AppButton class="custom-create"
       :disabled="!$store.state.customBuildsLoaded"
-      @click="$store.dispatch('createCustomBuild')">
+      @click="createBuild">
+      <AppIcon name="plus" />
       New custom build
     </AppButton>
   </div>
@@ -19,6 +20,12 @@ import AppSelect from '../AppSelect.vue';
 export default {
   name: 'RoleFilter',
   components: { AppSelect },
+  methods: {
+    async createBuild() {
+      await this.$store.dispatch('createCustomBuild');
+      this.$emit('navigate');
+    },
+  },
   computed: {
     options() {
       return [{ value: '', label: 'All survivors' }, ...this.$store.getters.builds.map(build => ({
@@ -30,7 +37,10 @@ export default {
     },
     selectedRole: {
       get() { return this.$store.state.selectedRole; },
-      set(value) { this.$store.commit('setSelectedRole', value); },
+      set(value) {
+        this.$store.commit('setSelectedRole', value);
+        this.$emit('navigate');
+      },
     },
     recommendedOnly: {
       get() { return this.$store.state.recommendedOnly; },
@@ -41,5 +51,5 @@ export default {
 </script>
 
 <style scoped>
-.custom-create { margin-top: var(--space-2); color: var(--text-muted); }
+.custom-create { width: 100%; margin-top: var(--space-2); }
 </style>
