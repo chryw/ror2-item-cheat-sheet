@@ -1,8 +1,8 @@
-# ror2-item-cheat-sheet
+# Risk of Rain 2 Field Guide
 
 [![Deploy to GitHub Pages](https://github.com/chryw/ror2-item-cheat-sheet/actions/workflows/deploy.yml/badge.svg)](https://github.com/chryw/ror2-item-cheat-sheet/actions/workflows/deploy.yml)
 
-[Click here for the Risk of Rain 2 Item Cheat Sheet](https://chryw.github.io/ror2-item-cheat-sheet/)
+[Open Risk of Rain 2 Field Guide](https://chryw.github.io/ror2-item-cheat-sheet/)
 
 This website is an item cheat sheet for the game Risk of Rain 2 (RoR2). In RoR2, progressing through levels gives the player the ability to gain many items. Each item has a different stat it boosts and a different ability. With 248 catalog entries, it can get difficult to determine if you want to pick up each item. This website gives an easy way to see what items do at a glance. Clicking on an item gives a more in depth view of the item, along with links to the relevant wiki page.
 
@@ -12,15 +12,21 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
-Navigation starts collapsed. On desktop (above 900px), a persistent header contains a
-labelled **Filters** button and the site identity. The button opens a docked left panel;
+The persistent header uses one **Risk of Rain 2 Field Guide** H1 on desktop and mobile,
+matching the browser-tab title. A smaller, muted subtitle describes the reference:
+**Items, equipment, drones, and survivor builds.** There is no competing slogan or hero;
+catalogue sections and build names are subordinate headings. The product header does not
+scroll with the gallery, and the catalogue starts directly below it.
+
+Navigation starts collapsed. On desktop (above 900px), the header contains a
+labelled **Filters** button beside the product identity. The button opens a docked left panel;
 collapsing it reclaims the entire width instead of leaving an empty icon rail.
 The panel has a clear heading and close action, and its header stays visible while scrolling.
 Escape closes the panel and restores focus to the header button without clearing selections.
 Desktop panels are non-modal: the gallery remains usable and Tab is not trapped.
-On narrower screens the hamburger shares the gallery title row, and filters open in a
+On narrower screens the hamburger shares the same product header, and filters open in a
 full-width overlay panel instead of consuming a dedicated row or shrinking the gallery.
-The mobile title reads **Risk of Rain 2 Field Guide**. Its sticky header is flush with
+The header is flush with
 the viewport edge, with no gap for scrolling content to show through.
 Press Escape or use the panel's hamburger to close it. Outside-click dismissal recognizes
 dropdown menus belonging to the panel. Choosing a survivor/custom build or creating a build returns
@@ -32,7 +38,7 @@ up to 900px. The close/wiki row stays sticky while the details scroll. Closing r
 focus to the originating pickup, and **View custom build** closes mobile details and
 returns to the build editor; desktop keeps its side-by-side details panel.
 Mobile drawers/details move focus into the panel, contain keyboard focus, support Escape,
-and make the underlying gallery inert. The compact mobile title/navigation header stays
+and make the underlying gallery and product header inert. The compact product header stays
 accessible while browsing long result lists.
 Navigation, gallery and details use [AppScrollArea.vue](src/components/AppScrollArea.vue),
 a shared [OverlayScrollbars](https://github.com/KingSora/OverlayScrollbars) wrapper.
@@ -57,6 +63,12 @@ Lucide's ISC and Feather-derived MIT notices are distributed in
 [lucide-license.txt](public/lucide-license.txt), including in the built site.
 Standalone definition imports avoid loading DOM helpers that webpack 4 cannot parse.
 Game artwork is unchanged.
+
+Catalogue cards use neutral borders on every edge. A small square swatch and a compact,
+coloured rarity label below the description carry the existing rarity palette without
+decorative edge stripes. The written label and accessible rarity description keep colour
+from being the only cue. Hover and selected-card outlines remain neutral/interaction cues,
+not rarity colours.
 
 ### Visual system
 

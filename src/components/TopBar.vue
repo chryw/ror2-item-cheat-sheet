@@ -16,8 +16,7 @@
         <AppIcon :name="mobile ? 'menu' : 'close'" />
       </AppButton>
       <div v-show="!collapsed" class="nav-brand">
-        <strong>{{ mobile ? 'Risk of Rain 2' : 'Filters & builds' }}</strong>
-        <small v-if="mobile" class="ui-eyebrow">Field guide</small>
+        <h2>Filters &amp; builds</h2>
       </div>
     </header>
     <div id="nav-controls" v-show="!collapsed" class="nav-controls">
@@ -91,8 +90,11 @@ export default {
 }
 
 .nav-brand { min-width: 0; }
-.nav-brand strong { font-size: var(--text-base); letter-spacing: -0.04em; white-space: nowrap; }
-.nav-brand small { display: block; font-size: var(--text-xs); margin-top: 5px; }
+.nav-brand h2 {
+  margin: 0;
+  font-size: var(--text-base);
+  letter-spacing: var(--tracking-heading);
+}
 
 .nav-toggle {
   flex: 0 0 var(--control-height-compact);

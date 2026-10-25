@@ -5,6 +5,7 @@
     role="button"
     tabindex="0"
     :aria-label="`View ${itemData.name} details`"
+    :aria-description="`${itemData.itemRarity} rarity`"
     :aria-pressed="String(isSelected)"
     @click="itemCardClick"
     @keydown.enter="itemCardClick"
@@ -14,13 +15,17 @@
       <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
     </div>
     <div class="item-details" :class="{ 'has-build-tier': buildTier }">
-      <h4 class="item-name">
+      <h3 class="item-name">
         {{ itemData.name }}
         <span class="item-effective-max" v-if="effectiveMax > 0" unselectable="on">
           Max: {{ effectiveMax }}
         </span>
-      </h4>
+      </h3>
       <p class="item-short-description">{{ itemData.shortDescription }}</p>
+      <span class="rarity-indicator">
+        <span class="rarity-swatch" aria-hidden="true"></span>
+        {{ itemData.itemRarity }}
+      </span>
       <span v-if="buildTier" class="build-tier build-badge"
         :class="`build-badge--${buildTier}`"
         :aria-label="`${buildTier} tier for this survivor's build`"
@@ -115,7 +120,6 @@ export default {
   padding: var(--space-3);
   gap: var(--space-3);
   border: var(--border-width) solid var(--border);
-  border-left: var(--border-width-emphasis) solid var(--item-card-colour);
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--text);
@@ -127,7 +131,6 @@ export default {
 
 .item-card:hover {
   border-color: var(--border-strong);
-  border-left-color: var(--item-card-colour);
   background: var(--surface-raised);
 }
 .item-card.is-selected {
@@ -191,6 +194,19 @@ export default {
   -webkit-box-orient: vertical;
 
   color: var(--text-muted);
+}
+
+.rarity-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--item-card-colour);
+  font: var(--text-label)/var(--leading-label) var(--font-mono);
+}
+.rarity-swatch {
+  flex: 0 0 var(--space-2);
+  height: var(--space-2);
+  background: currentColor;
 }
 
 .image-div {

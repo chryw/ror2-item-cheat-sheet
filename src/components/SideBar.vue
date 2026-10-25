@@ -15,7 +15,7 @@
 
       <div class="item-info-section">
         <hr style="margin-top: 0px" />
-        <h3 class="item-name">{{ itemData.name }}</h3>
+        <h2 class="item-name">{{ itemData.name }}</h2>
         <span class="dlc-title">
           <img class="dlc-icon" v-if="itemData.dlc" v-bind:src="this.dlcIconUrl" />
           <p class="item-short-description item-dlc" v-if="itemData.dlc">{{ itemData.dlc }}</p>
@@ -42,9 +42,9 @@
         </div>
 
         <div v-if="isDrone" class="drone-info">
-          <h4>Recruitment</h4>
+          <h3>Recruitment</h3>
           <p>{{ itemData.acquisition }}</p>
-          <h4>Base stats</h4>
+          <h3>Base stats</h3>
           <dl>
             <dt>Health</dt><dd>{{ itemData.health }}</dd>
             <dt>Damage / healing</dt><dd>{{ itemData.damage }}</dd>
@@ -60,7 +60,7 @@
       </div>
 
       <div class="unlock-info-section" v-if="itemData.unlock">
-        <h4 class="unlock-name">Complete "{{ itemData.unlock.name }}" to Unlock</h4>
+        <h3 class="unlock-name">Complete "{{ itemData.unlock.name }}" to Unlock</h3>
         <p class="unlock-description">{{ itemData.unlock.description }}</p>
         <a v-bind:href="itemData.unlock.link" target="_blank" class="unlock-link">
           <AppIcon name="external-link" />
@@ -70,12 +70,12 @@
       </div>
 
       <div class="item-category-section">
-        <h4 class="item-rarity-label">Rarity</h4>
+        <h3 class="item-rarity-label">Rarity</h3>
         <AppButton class="item-rarity" @click="clickRarityPill(itemData.itemRarity)"
           :aria-label="`Filter by ${itemData.itemRarity} rarity`">
           {{ itemData.itemRarity }}
         </AppButton>
-        <h4 v-if="itemCategories.length" class="item-category-label">Category</h4>
+        <h3 v-if="itemCategories.length" class="item-category-label">Category</h3>
         <div v-if="itemCategories.length" class="item-category-list">
           <p
             class="item-category"
@@ -88,7 +88,7 @@
       </div>
 
       <div class="item-stats-section" v-if="this.shouldShowStatStacking">
-        <h4 class="item-stats-label">Item Stacking</h4>
+        <h3 class="item-stats-label">Item Stacking</h3>
         <table class="item-stats-table" v-if="itemData.stats">
           <tr class="item-stats-labels">
             <th class="stat-name-label">Stat</th>
@@ -224,8 +224,9 @@ export default {
 </script>
 
 <style scoped>
+.side-bar h3 { font-size: var(--text-base); }
 .drone-info { font-size: var(--text-body); line-height: var(--leading-ui); }
-.drone-info h4 { margin-bottom: var(--space-2); }
+.drone-info h3 { font-size: var(--text-body); margin-bottom: var(--space-2); }
 .drone-info dl { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2); }
 .drone-info dd { margin: 0; text-align: right; }
 .custom-build-actions {

@@ -758,7 +758,7 @@ test('mobile navigation defaults closed and dismisses outside without treating o
     $nextTick: callback => callback(),
     $refs: {
       navigation: { $el: nav, focusToggle() { navFocus += 1; } },
-      mobileToggle: { $el: { contains: () => false }, focus() { mobileFocus += 1; } },
+      navigationToggle: { $el: { contains: () => false }, focus() { mobileFocus += 1; } },
     },
   };
   Object.entries(component.methods).forEach(([name, method]) => {
@@ -791,6 +791,36 @@ test('mobile navigation defaults closed and dismisses outside without treating o
   assert.strictEqual(loadUIComponent('TopBar.vue').props.collapsed.default, true);
 });
 
+test('one product heading and factual subtitle identify the site at every breakpoint', () => {
+  const source = fs.readFileSync(path.join(sourceRoot, 'components', 'HomePage.vue'), 'utf8');
+  const { ast, errors } = compile(parseComponent(source).template.content);
+  assert.deepStrictEqual(errors, []);
+  const headings = [];
+  function walk(node) {
+    if (node.tag === 'h1') headings.push(node);
+    (node.children || []).forEach(walk);
+  }
+  function text(node) {
+    return node.text || (node.children || []).map(text).join('');
+  }
+  walk(ast);
+  assert.strictEqual(headings.length, 1, 'Do not duplicate the product title for responsive layouts');
+  const heading = headings[0];
+  const productName = text(heading).replace(/\s+/g, ' ').trim();
+  assert.strictEqual(productName, 'Risk of Rain 2 Field Guide');
+  assert.strictEqual(heading.if, undefined);
+  assert.strictEqual(heading.parent.parent.tag, 'header');
+  assert.strictEqual(heading.parent.parent.attrsMap.class, 'product-header');
+  const subtitle = heading.parent.children.find(node => node.tag === 'p');
+  assert.strictEqual(text(subtitle), 'Items, equipment, drones, and survivor builds.');
+  ['Know your', 'next pickup.', 'The pickup index', 'Explore the arsenal.'].forEach(slogan => {
+    assert(!source.includes(slogan), `Competing marketing copy must not replace the title: ${slogan}`);
+  });
+  const html = fs.readFileSync(path.join(sourceRoot, '..', 'public', 'index.html'), 'utf8');
+  assert.strictEqual(html.match(/<title>([^<]+)<\/title>/)[1], productName);
+  assert(html.includes('reference for items, equipment, drones, survivor builds'));
+});
+
 test('desktop filters use a header trigger, preserve state and do not trap keyboard focus', () => {
   let triggerFocus = 0;
   let prevented = 0;
@@ -804,7 +834,7 @@ test('desktop filters use a header trigger, preserve state and do not trap keybo
     $nextTick: callback => callback(),
     $refs: {
       navigation: { $el: { contains: () => false } },
-      desktopToggle: { focus() { triggerFocus += 1; } },
+      navigationToggle: { focus() { triggerFocus += 1; } },
     },
   };
   Object.entries(component.methods).forEach(([name, method]) => {
@@ -854,8 +884,9 @@ test('mobile details return to the build, restore focus and contain keyboard nav
         $el: { querySelectorAll: () => [first, last] },
         focusClose() { closeFocus += 1; },
       },
-      gallery: { $refs: { viewport: { scrollTop: 200 } } },
-      galleryTitle: { focus() { galleryFocus += 1; } },
+      gallery: {
+        $refs: { viewport: { scrollTop: 200, focus() { galleryFocus += 1; } } },
+      },
     },
   };
   Object.entries(component.methods).forEach(([name, method]) => {
@@ -970,6 +1001,21 @@ test('panels share overlay scrollbars with native viewports and clean lifecycle 
   assert(fs.existsSync(path.join(sourceRoot, '..', 'public', 'overlayscrollbars-license.txt')));
 });
 
+test('rarity uses a labelled colour swatch instead of decorative card edges', () => {
+  const source = fs.readFileSync(path.join(sourceRoot, 'components', 'ItemCard.vue'), 'utf8');
+  const parsed = parseComponent(source);
+  assert.deepStrictEqual(compile(parsed.template.content).errors, []);
+  assert(/:aria-description="`\$\{itemData\.itemRarity\} rarity`"/.test(parsed.template.content));
+  assert(parsed.template.content.includes('<span class="rarity-swatch" aria-hidden="true"></span>'));
+  assert(parsed.template.content.includes('{{ itemData.itemRarity }}'));
+  const styles = parsed.styles.map(style => style.content).join('\n');
+  assert(parsed.template.content.includes('<h3 class="item-name">'));
+  assert(styles.includes('border: var(--border-width) solid var(--border)'));
+  assert(!styles.includes('border-left'));
+  assert(styles.includes('color: var(--item-card-colour)'));
+  assert(styles.includes('background: currentColor'));
+});
+
 test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () => {
   const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
   const tokenSource = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
@@ -1010,8 +1056,10 @@ test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () =>
     const colour = tokens[`rarity-${rarity}`];
     assert(colour, `Missing rarity token: ${rarity}`);
     assert(theme.includes(`var(--rarity-${rarity})`), `Unused rarity token: ${rarity}`);
-    const ratio = (luminance(colour) + 0.05) / (luminance(tokens.surface) + 0.05);
-    assert(ratio >= 4.5, `Rarity label ${colour}: ${ratio.toFixed(2)}:1`);
+    ['surface', 'surface-raised'].forEach(background => {
+      const ratio = (luminance(colour) + 0.05) / (luminance(tokens[background]) + 0.05);
+      assert(ratio >= 4.5, `Rarity label ${colour} on ${background}: ${ratio.toFixed(2)}:1`);
+    });
   });
   ['core', 'synergy', 'support'].forEach(rank => {
     const ratio = (luminance(tokens[`rank-${rank}-text`]) + 0.05)

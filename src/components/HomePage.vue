@@ -1,15 +1,20 @@
 <template>
   <div class="home-page">
-    <header class="desktop-toolbar">
-      <AppButton ref="desktopToggle" class="desktop-nav-toggle"
-                 :aria-label="navCollapsed ? 'Show filters' : 'Hide filters'"
-                 aria-controls="item-navigation" :aria-expanded="String(!navCollapsed)"
-                 @click="toggleNavigation">
-        <AppIcon name="panel-left" />
-        Filters
+    <header class="product-header" :inert="blockingGallery ? '' : null"
+      :aria-hidden="blockingGallery ? 'true' : null">
+      <AppButton ref="navigationToggle" class="navigation-toggle" :icon-only="mobileLayout"
+        :aria-label="mobileLayout ? 'Expand navigation' :
+          (navCollapsed ? 'Show filters' : 'Hide filters')"
+        aria-controls="item-navigation" :aria-expanded="String(!navCollapsed)"
+        @click="toggleNavigation">
+        <AppIcon :name="mobileLayout ? 'menu' : 'panel-left'" />
+        <span v-if="!mobileLayout">Filters</span>
       </AppButton>
-      <span class="toolbar-divider" aria-hidden="true"></span>
-      <p class="toolbar-brand"><strong>Risk of Rain 2</strong><span>Field Guide</span></p>
+      <span class="header-divider" aria-hidden="true"></span>
+      <div class="product-identity">
+        <h1>Risk of Rain 2 <span>Field Guide</span></h1>
+        <p>Items, equipment, drones, and survivor builds.</p>
+      </div>
     </header>
     <div class="workspace">
       <TopBar ref="navigation" :collapsed="navCollapsed" :mobile="mobileLayout"
@@ -18,25 +23,6 @@
         <AppScrollArea ref="gallery" class="item-list-section" label="Pickup gallery"
           :inert="blockingGallery ? '' : null"
           :aria-hidden="blockingGallery ? 'true' : null">
-          <header class="gallery-header">
-            <p class="ui-eyebrow">
-              <span class="status-dot" aria-hidden="true"></span> The pickup index
-            </p>
-            <div class="gallery-heading-row">
-              <AppButton ref="mobileToggle" class="mobile-nav-toggle" icon-only
-                         aria-label="Expand navigation" aria-controls="item-navigation"
-                         :aria-expanded="String(!navCollapsed)" @click="toggleNavigation">
-                <AppIcon name="menu" />
-              </AppButton>
-              <h1 ref="galleryTitle" tabindex="-1">
-                <span class="desktop-title">
-                  Know your <span class="heading-accent">next pickup.</span>
-                </span>
-                <span class="mobile-title">Risk of Rain 2 Field Guide</span>
-              </h1>
-            </div>
-            <p>Explore the arsenal. Find your synergy. Build your next run.</p>
-          </header>
           <div class="gallery-content">
             <div v-if="$store.state.customBuildError" class="build-error" role="alert">
               <p>{{ $store.state.customBuildError }}</p>
@@ -162,8 +148,7 @@ export default {
       this.navCollapsed = true;
       if (restoreFocus) {
         this.$nextTick(() => {
-          if (this.mobileLayout) this.$refs.mobileToggle.focus();
-          else this.$refs.desktopToggle.focus();
+          this.$refs.navigationToggle.focus();
         });
       }
     },
@@ -171,7 +156,7 @@ export default {
       if (!this.mobileLayout || this.navCollapsed) return;
       const nav = this.$refs.navigation.$el;
       const { target } = event;
-      if (nav.contains(target) || this.$refs.mobileToggle.$el.contains(target)) return;
+      if (nav.contains(target) || this.$refs.navigationToggle.$el.contains(target)) return;
       const popup = target.closest('.app-select-popup');
       if (popup && nav.contains(document.getElementById(popup.dataset.selectOwner))) return;
       this.closeNavigation();
@@ -184,7 +169,7 @@ export default {
     focusGallery() {
       this.$nextTick(() => {
         this.$refs.gallery.$refs.viewport.scrollTop = 0;
-        this.$refs.galleryTitle.focus({ preventScroll: true });
+        this.$refs.gallery.$refs.viewport.focus({ preventScroll: true });
       });
     },
     restoreDetailsFocus() {
@@ -231,7 +216,7 @@ export default {
     },
     async deleteCustomBuild(id) {
       await this.$store.dispatch('deleteCustomBuild', id);
-      this.$nextTick(() => this.$refs.galleryTitle.focus());
+      this.focusGallery();
     },
     retryStorage() {
       this.$store.dispatch(this.$store.state.customBuildsLoaded
@@ -253,7 +238,7 @@ export default {
   overflow: hidden;
 }
 
-.desktop-toolbar {
+.product-header {
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -262,31 +247,35 @@ export default {
   border-bottom: var(--border-width) solid var(--border);
   background: var(--surface);
 }
-.desktop-nav-toggle[aria-expanded="true"] {
+.navigation-toggle { flex-shrink: 0; }
+.navigation-toggle[aria-expanded="true"] {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
 }
-.toolbar-divider {
+.header-divider {
   align-self: stretch;
   width: var(--border-width);
   background: var(--border);
 }
-.toolbar-brand {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
+.product-identity { min-width: 0; }
+.product-identity h1 {
   margin: 0;
-  font-size: var(--text-sm);
+  color: var(--text);
+  font-size: var(--text-title);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
 }
-.toolbar-brand strong { color: var(--text); }
-.toolbar-brand span { color: var(--text-muted); }
+.product-identity h1 span { color: var(--accent); }
+.product-identity p {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
 .workspace { display: flex; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
-.mobile-nav-toggle { display: none; }
-.mobile-title { display: none; }
 .gallery-content { min-width: 0; }
-.gallery-heading-row { display: flex; align-items: center; gap: var(--space-3); }
-.gallery-heading-row h1 { flex: 1; min-width: 0; }
 .info-section {
   flex: 1;
   min-width: 0;
@@ -304,25 +293,6 @@ export default {
   padding: var(--space-6);
 }
 
-.gallery-header { padding: var(--space-1) 0 var(--space-6); }
-.gallery-header .ui-eyebrow {
-  display: flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-3);
-}
-.status-dot {
-  width: 6px; height: 6px; border-radius: var(--radius-circle); background: var(--accent);
-}
-.gallery-header h1 {
-  margin: 0 0 var(--space-3);
-  font-size: var(--text-display);
-  line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-display);
-  font-weight: var(--weight-heading);
-}
-.gallery-header .heading-accent { color: var(--accent); }
-.gallery-header > p:last-child {
-  margin: 0; color: var(--text-muted);
-  font-size: var(--text-body); line-height: var(--leading-relaxed);
-}
 .build-summary {
   display: flex;
   flex-wrap: wrap;
@@ -358,22 +328,15 @@ export default {
 .build-legend svg { margin-left: 3px; width: var(--icon-xs); height: var(--icon-xs); }
 
 @media (max-width: 900px) {
-  .desktop-toolbar { display: none; }
+  .product-header {
+    gap: var(--space-3);
+    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
+  }
+  .header-divider { display: none; }
+  .product-identity h1 { font-size: var(--text-subtitle); }
+  .product-identity p { font-size: var(--text-sm); }
   .item-list-section { padding: 0; }
   .gallery-content { padding: var(--space-4); }
-  .mobile-nav-toggle { display: inline-flex; }
-  .mobile-title { display: inline; }
-  .desktop-title { display: none; }
-  .gallery-header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
-    border-bottom: var(--border-width) solid var(--border);
-    background: var(--canvas);
-  }
-  .gallery-header .ui-eyebrow, .gallery-header > p:last-child { display: none; }
-  .gallery-header h1 { margin: 0; font-size: var(--text-title); }
 }
 @media (max-width: 480px) {
   .build-summary { padding: var(--space-4); }
