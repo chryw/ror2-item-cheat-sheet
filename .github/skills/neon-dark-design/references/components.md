@@ -118,7 +118,7 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
 ## AppIcon
 
 - Functional decorative SVG renderer; required `name` is one of search, menu,
-  chevron-down, close, external-link, reset, plus. Unknown names throw explicitly.
+  chevron-down, close, external-link, reset, plus, panel-left. Unknown names throw explicitly.
 - Uses currentColor, a 24-unit viewBox and the shared size/stroke tokens.
 - Icons are hidden from assistive technology; label the enclosing control.
 - Add only needed icon definitions and retain licence notices. Direct definition imports

@@ -12,7 +12,12 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
-Navigation starts collapsed. On desktop (above 900px), its hamburger expands a left sidebar.
+Navigation starts collapsed. On desktop (above 900px), a persistent header contains a
+labelled **Filters** button and the site identity. The button opens a docked left panel;
+collapsing it reclaims the entire width instead of leaving an empty icon rail.
+The panel has a clear heading and close action, and its header stays visible while scrolling.
+Escape closes the panel and restores focus to the header button without clearing selections.
+Desktop panels are non-modal: the gallery remains usable and Tab is not trapped.
 On narrower screens the hamburger shares the gallery title row, and filters open in a
 full-width overlay panel instead of consuming a dedicated row or shrinking the gallery.
 The mobile title reads **Risk of Rain 2 Field Guide**. Its sticky header is flush with
@@ -43,7 +48,7 @@ They flip above near viewport edges and reposition on resize/scroll. Opening a m
 changes its container's height, scroll range or sibling positions. Role names have no added suffixes.
 
 UI icons use [Lucide](https://lucide.dev/) through the shared
-[AppIcon](src/components/Icons/AppIcon.js) renderer. Only seven named icon definitions are
+[AppIcon](src/components/Icons/AppIcon.js) renderer. Only eight named icon definitions are
 imported from its maintained framework-neutral package; the deprecated Vue 2 adapter is not used.
 Icons share a 24-unit grid, 1.75-unit rounded strokes, and inherited theme colours, displayed
 at 16–20px. SVGs are decorative and hidden from assistive technology; containing controls

@@ -1,73 +1,88 @@
 <template>
   <div class="home-page">
-    <TopBar ref="navigation" :collapsed="navCollapsed" :mobile="mobileLayout"
-      @toggle="toggleNavigation" @navigate="navigateFromFilters" />
-    <div class="info-section">
-      <AppScrollArea ref="gallery" class="item-list-section" label="Pickup gallery"
-        :inert="blockingGallery ? '' : null" :aria-hidden="blockingGallery ? 'true' : null">
-        <header class="gallery-header">
-          <p class="ui-eyebrow">
-            <span class="status-dot" aria-hidden="true"></span> The pickup index
-          </p>
-          <div class="gallery-heading-row">
-            <AppButton ref="mobileToggle" class="mobile-nav-toggle" icon-only
-              aria-label="Expand navigation" aria-controls="item-navigation"
-              :aria-expanded="String(!navCollapsed)" @click="toggleNavigation">
-              <AppIcon name="menu" />
-            </AppButton>
-            <h1 ref="galleryTitle" tabindex="-1">
-              <span class="desktop-title">
-                Know your <span class="heading-accent">next pickup.</span>
-              </span>
-              <span class="mobile-title">Risk of Rain 2 Field Guide</span>
-            </h1>
-          </div>
-          <p>Explore the arsenal. Find your synergy. Build your next run.</p>
-        </header>
-        <div class="gallery-content">
-          <div v-if="$store.state.customBuildError" class="build-error" role="alert">
-            <p>{{ $store.state.customBuildError }}</p>
-            <AppButton @click="retryStorage">Retry storage</AppButton>
-          </div>
-          <div v-if="build" class="build-summary" aria-live="polite">
-            <div>
-              <h2>{{ build.name }}</h2>
-              <p v-if="!build.custom">
-                {{ build.focus }}.
-                {{ recommendedOnly ? 'Recommended pickups only.' : 'Showing all pickups.' }}
-              </p>
-              <p v-else>
-                {{ build.itemIds.length }} saved
-                {{ build.itemIds.length === 1 ? 'pickup' : 'pickups' }}.
-                {{ $store.state.customBuildError ? 'Not saved to this browser.' :
-                  'Automatically saved in this browser.' }}
-                {{ recommendedOnly ? 'Showing saved items only.' : 'Browse the gallery to add.' }}
-              </p>
+    <header class="desktop-toolbar">
+      <AppButton ref="desktopToggle" class="desktop-nav-toggle"
+                 :aria-label="navCollapsed ? 'Show filters' : 'Hide filters'"
+                 aria-controls="item-navigation" :aria-expanded="String(!navCollapsed)"
+                 @click="toggleNavigation">
+        <AppIcon name="panel-left" />
+        Filters
+      </AppButton>
+      <span class="toolbar-divider" aria-hidden="true"></span>
+      <p class="toolbar-brand"><strong>Risk of Rain 2</strong><span>Field Guide</span></p>
+    </header>
+    <div class="workspace">
+      <TopBar ref="navigation" :collapsed="navCollapsed" :mobile="mobileLayout"
+              @toggle="toggleNavigation" @navigate="navigateFromFilters" />
+      <div class="info-section">
+        <AppScrollArea ref="gallery" class="item-list-section" label="Pickup gallery"
+          :inert="blockingGallery ? '' : null"
+          :aria-hidden="blockingGallery ? 'true' : null">
+          <header class="gallery-header">
+            <p class="ui-eyebrow">
+              <span class="status-dot" aria-hidden="true"></span> The pickup index
+            </p>
+            <div class="gallery-heading-row">
+              <AppButton ref="mobileToggle" class="mobile-nav-toggle" icon-only
+                         aria-label="Expand navigation" aria-controls="item-navigation"
+                         :aria-expanded="String(!navCollapsed)" @click="toggleNavigation">
+                <AppIcon name="menu" />
+              </AppButton>
+              <h1 ref="galleryTitle" tabindex="-1">
+                <span class="desktop-title">
+                  Know your <span class="heading-accent">next pickup.</span>
+                </span>
+                <span class="mobile-title">Risk of Rain 2 Field Guide</span>
+              </h1>
             </div>
-            <div v-if="!build.custom" class="build-legend">
-              <p class="build-legend-ranks">
-                <span><strong class="build-badge build-badge--S">S</strong> Core</span>
-                <span><strong class="build-badge build-badge--A">A</strong> Synergy</span>
-                <span><strong class="build-badge build-badge--B">B</strong> Support</span>
-              </p>
-              <a v-if="build.source" :href="build.source" target="_blank" rel="noopener noreferrer">
-                {{ build.id === 'operator' ? 'Operator guide' : 'Survivor mechanics' }}
-                <AppIcon name="external-link" />
-              </a>
-              <span class="build-legend-note">
-                Starter priorities, not a universal tier list.
-              </span>
+            <p>Explore the arsenal. Find your synergy. Build your next run.</p>
+          </header>
+          <div class="gallery-content">
+            <div v-if="$store.state.customBuildError" class="build-error" role="alert">
+              <p>{{ $store.state.customBuildError }}</p>
+              <AppButton @click="retryStorage">Retry storage</AppButton>
             </div>
-            <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build"
-              @delete="deleteCustomBuild" />
+            <div v-if="build" class="build-summary" aria-live="polite">
+              <div>
+                <h2>{{ build.name }}</h2>
+                <p v-if="!build.custom">
+                  {{ build.focus }}.
+                  {{ recommendedOnly ? 'Recommended pickups only.' : 'Showing all pickups.' }}
+                </p>
+                <p v-else>
+                  {{ build.itemIds.length }} saved
+                  {{ build.itemIds.length === 1 ? 'pickup' : 'pickups' }}.
+                  {{ $store.state.customBuildError ? 'Not saved to this browser.' :
+                    'Automatically saved in this browser.' }}
+                  {{ recommendedOnly ? 'Showing saved items only.' : 'Browse the gallery to add.' }}
+                </p>
+              </div>
+              <div v-if="!build.custom" class="build-legend">
+                <p class="build-legend-ranks">
+                  <span><strong class="build-badge build-badge--S">S</strong> Core</span>
+                  <span><strong class="build-badge build-badge--A">A</strong> Synergy</span>
+                  <span><strong class="build-badge build-badge--B">B</strong> Support</span>
+                </p>
+                <a v-if="build.source" :href="build.source"
+                  target="_blank" rel="noopener noreferrer">
+                  {{ build.id === 'operator' ? 'Operator guide' : 'Survivor mechanics' }}
+                  <AppIcon name="external-link" />
+                </a>
+                <span class="build-legend-note">
+                  Starter priorities, not a universal tier list.
+                </span>
+              </div>
+              <CustomBuildEditor v-if="build.custom" :key="build.id" :build="build"
+                                 @delete="deleteCustomBuild" />
+            </div>
+            <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
+            <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
+            <ItemList style="flex: 1;" :itemListType="SelectionType.DRONE" />
           </div>
-          <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
-          <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
-          <ItemList style="flex: 1;" :itemListType="SelectionType.DRONE" />
-        </div>
-      </AppScrollArea>
-      <SideBar ref="details" :mobile="mobileLayout"
-        @close="restoreDetailsFocus" @view-build="viewBuild" />
+        </AppScrollArea>
+        <SideBar ref="details" :mobile="mobileLayout"
+                 @close="restoreDetailsFocus" @view-build="viewBuild" />
+      </div>
     </div>
   </div>
 </template>
@@ -148,7 +163,7 @@ export default {
       if (restoreFocus) {
         this.$nextTick(() => {
           if (this.mobileLayout) this.$refs.mobileToggle.focus();
-          else this.$refs.navigation.focusToggle();
+          else this.$refs.desktopToggle.focus();
         });
       }
     },
@@ -187,8 +202,9 @@ export default {
       this.focusGallery();
     },
     handleKeydown(event) {
-      if (!this.mobileLayout || event.defaultPrevented) return;
+      if (event.defaultPrevented) return;
       const navigationOpen = !this.navCollapsed;
+      if (!this.mobileLayout && (event.key !== 'Escape' || !navigationOpen)) return;
       if (!navigationOpen && !this.selectedItem) return;
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -230,13 +246,42 @@ export default {
   font-family: var(--font-family);
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
 }
 
+.desktop-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: 0 0 auto;
+  padding: var(--space-3) var(--space-5);
+  border-bottom: var(--border-width) solid var(--border);
+  background: var(--surface);
+}
+.desktop-nav-toggle[aria-expanded="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.toolbar-divider {
+  align-self: stretch;
+  width: var(--border-width);
+  background: var(--border);
+}
+.toolbar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.toolbar-brand strong { color: var(--text); }
+.toolbar-brand span { color: var(--text-muted); }
+.workspace { display: flex; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
 .mobile-nav-toggle { display: none; }
 .mobile-title { display: none; }
 .gallery-content { min-width: 0; }
@@ -313,6 +358,7 @@ export default {
 .build-legend svg { margin-left: 3px; width: var(--icon-xs); height: var(--icon-xs); }
 
 @media (max-width: 900px) {
+  .desktop-toolbar { display: none; }
   .item-list-section { padding: 0; }
   .gallery-content { padding: var(--space-4); }
   .mobile-nav-toggle { display: inline-flex; }

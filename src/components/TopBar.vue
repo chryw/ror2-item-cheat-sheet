@@ -9,15 +9,15 @@
         icon-only
         :aria-expanded="String(!collapsed)"
         aria-controls="nav-controls"
-        :aria-label="collapsed ? 'Expand navigation' : 'Collapse navigation'"
-        :title="collapsed ? 'Expand navigation' : 'Collapse navigation'"
+        :aria-label="mobile ? 'Collapse navigation' : 'Hide filters'"
+        :title="mobile ? 'Collapse navigation' : 'Hide filters'"
         @click="$emit('toggle')"
       >
-        <AppIcon name="menu" />
+        <AppIcon :name="mobile ? 'menu' : 'close'" />
       </AppButton>
       <div v-show="!collapsed" class="nav-brand">
-        <strong>Risk of Rain 2</strong>
-        <small class="ui-eyebrow">Field guide / 02</small>
+        <strong>{{ mobile ? 'Risk of Rain 2' : 'Filters & builds' }}</strong>
+        <small v-if="mobile" class="ui-eyebrow">Field guide</small>
       </div>
     </header>
     <div id="nav-controls" v-show="!collapsed" class="nav-controls">
@@ -69,36 +69,43 @@ export default {
   box-sizing: border-box;
   flex: 0 0 var(--nav-width);
   width: var(--nav-width);
-  padding: var(--space-5) var(--space-4);
+  padding: 0;
   background: var(--panel-background);
   color: var(--text-colour);
   border-right: var(--border-width) solid var(--panel-border);
 }
 
-.navigation.is-collapsed {
-  flex-basis: var(--nav-width-collapsed);
-  width: var(--nav-width-collapsed);
-  padding-left: var(--space-2);
-  padding-right: var(--space-2);
-}
+.navigation.is-collapsed { display: none; }
 
 .nav-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  background: var(--surface);
+  border-bottom: var(--border-width) solid var(--border);
 }
 
-.is-collapsed .nav-header { margin-bottom: 0; }
 .nav-brand { min-width: 0; }
 .nav-brand strong { font-size: var(--text-base); letter-spacing: -0.04em; white-space: nowrap; }
 .nav-brand small { display: block; font-size: var(--text-xs); margin-top: 5px; }
 
 .nav-toggle {
   flex: 0 0 var(--control-height-compact);
+  margin-left: auto;
+  order: 1;
 }
 
-.nav-controls { display: flex; flex-direction: column; gap: var(--space-5); }
+.nav-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: 0 var(--space-4) var(--space-4);
+}
 .nav-field { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 .nav-field > span, .nav-field > label {
   color: var(--muted-colour);
@@ -151,16 +158,10 @@ export default {
     border-right: 0;
     box-shadow: var(--shadow-panel);
   }
-  .navigation.is-collapsed { display: none; }
   .nav-header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
     padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
-    background: var(--surface);
-    border-bottom: var(--border-width) solid var(--border);
-    margin-bottom: var(--space-4);
   }
+  .nav-toggle { margin-left: 0; order: 0; }
   .nav-controls {
     gap: var(--space-4);
     padding: 0 var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));

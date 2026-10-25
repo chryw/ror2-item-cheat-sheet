@@ -791,6 +791,42 @@ test('mobile navigation defaults closed and dismisses outside without treating o
   assert.strictEqual(loadUIComponent('TopBar.vue').props.collapsed.default, true);
 });
 
+test('desktop filters use a header trigger, preserve state and do not trap keyboard focus', () => {
+  let triggerFocus = 0;
+  let prevented = 0;
+  const document = { activeElement: null };
+  const component = loadUIComponent('HomePage.vue', {}, document);
+  const state = { selectedRole: 'huntress', searchTerm: 'damage', filterBy: { dlc: ['Hallowed Concepts'] } };
+  const context = {
+    ...component.data(),
+    selectedItem: null,
+    $store: { state },
+    $nextTick: callback => callback(),
+    $refs: {
+      navigation: { $el: { contains: () => false } },
+      desktopToggle: { focus() { triggerFocus += 1; } },
+    },
+  };
+  Object.entries(component.methods).forEach(([name, method]) => {
+    context[name] = method.bind(context);
+  });
+  context.toggleNavigation();
+  assert.strictEqual(context.navCollapsed, false);
+  assert.strictEqual(triggerFocus, 0, 'Opening a non-modal panel keeps focus on its trigger');
+  assert.strictEqual(component.computed.blockingGallery.call(context), false);
+  context.handleKeydown({ key: 'Tab', preventDefault() { prevented += 1; } });
+  assert.strictEqual(prevented, 0, 'Desktop must not contain Tab focus');
+  context.handleKeydown({ key: 'Escape', defaultPrevented: true });
+  assert.strictEqual(context.navCollapsed, false, 'Dropdown-consumed Escape leaves the panel open');
+  context.handleKeydown({ key: 'Escape', preventDefault() { prevented += 1; } });
+  assert.strictEqual(context.navCollapsed, true);
+  assert.strictEqual(triggerFocus, 1, 'Closing restores the persistent header trigger');
+  assert.strictEqual(prevented, 1);
+  assert.deepStrictEqual(state, {
+    selectedRole: 'huntress', searchTerm: 'damage', filterBy: { dlc: ['Hallowed Concepts'] },
+  });
+});
+
 test('mobile details return to the build, restore focus and contain keyboard navigation', () => {
   const commits = [];
   const document = { activeElement: null };
@@ -1089,7 +1125,7 @@ test('portable design skill has valid discovery metadata and a synchronized stan
 test('shared Lucide icons render consistent decorative SVGs and preserve caller attributes', () => {
   const icon = loadSource(path.join(sourceRoot, 'components', 'Icons', 'AppIcon.js')).default;
   const h = (tag, data, children) => ({ tag, data, children });
-  ['search', 'menu', 'chevron-down', 'close', 'external-link', 'reset', 'plus'].forEach(name => {
+  ['search', 'menu', 'chevron-down', 'close', 'external-link', 'reset', 'plus', 'panel-left'].forEach(name => {
     const vnode = icon.render(h, {
       props: { name },
       data: { staticClass: 'search-bar-icon', class: { active: true }, attrs: { id: 'test-icon' } },

@@ -7,6 +7,7 @@ import X from 'lucide/dist/esm/icons/x.mjs';
 import ExternalLink from 'lucide/dist/esm/icons/external-link.mjs';
 import RotateCcw from 'lucide/dist/esm/icons/rotate-ccw.mjs';
 import Plus from 'lucide/dist/esm/icons/plus.mjs';
+import PanelLeft from 'lucide/dist/esm/icons/panel-left.mjs';
 /* eslint-enable import/extensions */
 
 const icons = {
@@ -17,6 +18,7 @@ const icons = {
   'external-link': ExternalLink,
   reset: RotateCcw,
   plus: Plus,
+  'panel-left': PanelLeft,
 };
 
 export default {
