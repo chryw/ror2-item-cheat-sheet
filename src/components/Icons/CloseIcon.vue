@@ -11,12 +11,3 @@ export default {
   props: ['clickCloseButton'],
 };
 </script>
-
-<style scoped>
-.close-side-bar-button {
-  color: var(--text-muted);
-}
-.close-side-bar-button:focus-visible {
-  outline: var(--focus-ring); outline-offset: calc(-1 * var(--focus-offset));
-}
-</style>

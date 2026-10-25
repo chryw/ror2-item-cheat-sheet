@@ -15,17 +15,13 @@
       <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
     </div>
     <div class="item-details" :class="{ 'has-build-tier': buildTier }">
-      <h3 class="item-name">
+      <h3 class="item-name" :title="`${itemData.itemRarity} rarity`">
         {{ itemData.name }}
         <span class="item-effective-max" v-if="effectiveMax > 0" unselectable="on">
           Max: {{ effectiveMax }}
         </span>
       </h3>
       <p class="item-short-description">{{ itemData.shortDescription }}</p>
-      <span class="rarity-indicator">
-        <span class="rarity-swatch" aria-hidden="true"></span>
-        {{ itemData.itemRarity }}
-      </span>
       <span v-if="buildTier" class="build-tier build-badge"
         :class="`build-badge--${buildTier}`"
         :aria-label="`${buildTier} tier for this survivor's build`"
@@ -153,7 +149,7 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-1);
 }
 
 .item-details.has-build-tier { padding-right: 34px; }
@@ -165,10 +161,11 @@ export default {
 }
 
 .item-name {
+  color: var(--item-card-colour);
   font-size: var(--item-name-text-size);
   margin: 0;
   padding-right: var(--space-3);
-  line-height: 1.35;
+  line-height: var(--leading-heading);
   font-weight: var(--weight-semibold);
   overflow-wrap: anywhere;
   position: relative;
@@ -194,19 +191,6 @@ export default {
   -webkit-box-orient: vertical;
 
   color: var(--text-muted);
-}
-
-.rarity-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--item-card-colour);
-  font: var(--text-label)/var(--leading-label) var(--font-mono);
-}
-.rarity-swatch {
-  flex: 0 0 var(--space-2);
-  height: var(--space-2);
-  background: currentColor;
 }
 
 .image-div {

@@ -1,14 +1,13 @@
 <template>
   <div class="home-page">
-    <header class="product-header" :inert="blockingGallery ? '' : null"
-      :aria-hidden="blockingGallery ? 'true' : null">
-      <AppButton ref="navigationToggle" class="navigation-toggle" :icon-only="mobileLayout"
-        :aria-label="mobileLayout ? 'Expand navigation' :
-          (navCollapsed ? 'Show filters' : 'Hide filters')"
+    <header class="product-header" :inert="mobileLayout && selectedItem ? '' : null"
+      :aria-hidden="mobileLayout && selectedItem ? 'true' : null">
+      <AppButton ref="navigationToggle" class="navigation-toggle" collapse-label
+        :active="!navCollapsed" :aria-label="navCollapsed ? 'Show filters' : 'Hide filters'"
         aria-controls="item-navigation" :aria-expanded="String(!navCollapsed)"
         @click="toggleNavigation">
-        <AppIcon :name="mobileLayout ? 'menu' : 'panel-left'" />
-        <span v-if="!mobileLayout">Filters</span>
+        <AppIcon name="menu" />
+        <span class="ui-button__label">Filters</span>
       </AppButton>
       <span class="header-divider" aria-hidden="true"></span>
       <div class="product-identity">
@@ -17,8 +16,7 @@
       </div>
     </header>
     <div class="workspace">
-      <TopBar ref="navigation" :collapsed="navCollapsed" :mobile="mobileLayout"
-              @toggle="toggleNavigation" @navigate="navigateFromFilters" />
+      <TopBar ref="navigation" :collapsed="navCollapsed" @navigate="navigateFromFilters" />
       <div class="info-section">
         <AppScrollArea ref="gallery" class="item-list-section" label="Pickup gallery"
           :inert="blockingGallery ? '' : null"
@@ -141,7 +139,6 @@ export default {
         return;
       }
       this.navCollapsed = false;
-      if (this.mobileLayout) this.$nextTick(() => this.$refs.navigation.focusToggle());
     },
     closeNavigation(restoreFocus = true) {
       if (this.$refs.navigation.$el.contains(document.activeElement)) document.activeElement.blur();
@@ -203,6 +200,7 @@ export default {
         const controls = Array.from(panel.querySelectorAll(
           'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
         )).filter(el => el.getBoundingClientRect().width > 0);
+        if (navigationOpen) controls.unshift(this.$refs.navigationToggle.$el);
         const first = controls[0];
         const last = controls[controls.length - 1];
         if (event.shiftKey && document.activeElement === first) {
@@ -248,11 +246,6 @@ export default {
   background: var(--surface);
 }
 .navigation-toggle { flex-shrink: 0; }
-.navigation-toggle[aria-expanded="true"] {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent);
-}
 .header-divider {
   align-self: stretch;
   width: var(--border-width);
@@ -262,19 +255,19 @@ export default {
 .product-identity h1 {
   margin: 0;
   color: var(--text);
-  font-size: var(--text-title);
-  font-weight: var(--weight-heading);
-  line-height: var(--leading-heading);
+  font: var(--type-product);
   letter-spacing: var(--tracking-heading);
 }
 .product-identity h1 span { color: var(--accent); }
 .product-identity p {
   margin: var(--space-1) 0 0;
   color: var(--text-muted);
-  font-size: var(--text-body);
-  line-height: var(--leading-body);
+  font: var(--type-caption);
 }
-.workspace { display: flex; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.workspace {
+  position: relative;
+  display: flex; flex: 1; min-width: 0; min-height: 0; overflow: hidden;
+}
 .gallery-content { min-width: 0; }
 .info-section {
   flex: 1;
@@ -308,7 +301,7 @@ export default {
 }
 .build-summary > div { min-width: 0; max-width: 100%; }
 .build-summary h2 {
-  margin: 0 0 6px; font-size: var(--text-subtitle);
+  margin: 0 0 var(--space-2); font: var(--type-title);
   letter-spacing: var(--tracking-heading); overflow-wrap: anywhere;
 }
 .build-error {
@@ -333,8 +326,6 @@ export default {
     padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
   }
   .header-divider { display: none; }
-  .product-identity h1 { font-size: var(--text-subtitle); }
-  .product-identity p { font-size: var(--text-sm); }
   .item-list-section { padding: 0; }
   .gallery-content { padding: var(--space-4); }
 }

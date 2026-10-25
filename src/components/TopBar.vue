@@ -1,20 +1,7 @@
 <template>
   <AppScrollArea id="item-navigation" tag="nav" class="navigation" label="Filter controls"
-    :class="{ 'is-collapsed': collapsed }" aria-label="Item filters"
-    :role="mobile ? 'dialog' : null" :aria-modal="mobile && !collapsed ? 'true' : null">
+    :class="{ 'is-collapsed': collapsed }" aria-label="Item filters">
     <header class="nav-header">
-      <AppButton
-        ref="toggle"
-        class="nav-toggle"
-        icon-only
-        :aria-expanded="String(!collapsed)"
-        aria-controls="nav-controls"
-        :aria-label="mobile ? 'Collapse navigation' : 'Hide filters'"
-        :title="mobile ? 'Collapse navigation' : 'Hide filters'"
-        @click="$emit('toggle')"
-      >
-        <AppIcon :name="mobile ? 'menu' : 'close'" />
-      </AppButton>
       <div v-show="!collapsed" class="nav-brand">
         <h2>Filters &amp; builds</h2>
       </div>
@@ -48,10 +35,8 @@ export default {
   components: { AppScrollArea, SearchBar, RoleFilter, SortBySelector, RarityFilter, VersionFilter },
   props: {
     collapsed: { type: Boolean, default: true },
-    mobile: { type: Boolean, default: false },
   },
   methods: {
-    focusToggle() { this.$refs.toggle.focus(); },
     resetFilters() {
       this.$store.commit('setSelectedRole', '');
       this.$store.commit('setRecommendedOnly', true);
@@ -92,14 +77,8 @@ export default {
 .nav-brand { min-width: 0; }
 .nav-brand h2 {
   margin: 0;
-  font-size: var(--text-base);
+  font: var(--type-heading);
   letter-spacing: var(--tracking-heading);
-}
-
-.nav-toggle {
-  flex: 0 0 var(--control-height-compact);
-  margin-left: auto;
-  order: 1;
 }
 
 .nav-controls {
@@ -111,7 +90,7 @@ export default {
 .nav-field { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 .nav-field > span, .nav-field > label {
   color: var(--muted-colour);
-  font: var(--text-label)/var(--leading-ui) var(--font-mono);
+  font: var(--type-label);
   letter-spacing: var(--tracking-label);
 }
 
@@ -145,25 +124,23 @@ export default {
 .nav-checkbox input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
 .nav-hint {
   margin: 0; padding-top: var(--space-4); border-top: var(--border-width) solid var(--border);
-  font-size: var(--text-sm); line-height: 1.8; color: var(--muted-colour);
+  font: var(--type-caption); color: var(--muted-colour);
 }
 
 @media (max-width: 900px) {
   .navigation {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: var(--layer-panel);
     width: 100%;
-    height: 100vh;
-    height: 100dvh;
+    height: 100%;
     padding: 0;
     border-right: 0;
     box-shadow: var(--shadow-panel);
   }
   .nav-header {
-    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-4) var(--space-3);
+    padding: var(--space-4);
   }
-  .nav-toggle { margin-left: 0; order: 0; }
   .nav-controls {
     gap: var(--space-4);
     padding: 0 var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));

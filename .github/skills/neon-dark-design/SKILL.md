@@ -56,9 +56,10 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 ### Typography and spacing
 
 - Use the supplied local system sans stack; no external font fetch is necessary.
-- Compact headings have slightly negative tracking. Use the fluid display token for
-  the page heading; keep data labels/body copy readable instead of enlarging all text.
-- Use the monospace stack for small technical labels, counts and badges, not all prose.
+- Compact headings have slightly negative tracking. Use the five-size scale and shared
+  `--type-*` font recipes: product, title, heading, body, caption, label, control and code.
+  Adapt the recipe's size token at a breakpoint rather than changing semantics or duplicating headings.
+- Use sans-serif labels; reserve the monospace stack for technical values, counts and badges.
 - Use the 4/8/12/16/24/32px spacing scale for repeated rhythm.
 - Reuse medium radii for controls/cards, large radii for larger panels, and pill radii
   for action buttons or tags. Preserve the same radius in default, hover, focus and open states.
@@ -67,11 +68,15 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 
 ### Controls
 
-- Buttons: compact 32px regular desktop controls and a 24px minimum click target,
-  including icon buttons. Narrow/coarse-pointer devices use 44px minimum touch targets.
+- Buttons: 32px regular desktop controls, including square icon buttons, and explicit
+  compact 24px removal actions. Narrow/coarse-pointer devices use 44px minimum touch targets.
   Target size is a floor, not a forced height for every control. Use raised neutral
   surfaces, fine borders and semibold text. Primary accent fill is opt-in; creation/setup
   actions should not compete with the primary task. Preserve hover/focus/disabled/danger states.
+- Use the shared button's icon-only, size, active and responsive-label variants instead
+  of per-page icon-button recipes. Navigation links can use the same component with href.
+  Keep one disclosure control and stable header content across open/closed states; mobile
+  overlays should not replace the product header with an unrelated heading or alter its height.
 - Fields: raised surface, medium radius, muted placeholder, persistent external label.
 - Selects: one shared implementation for single and multiple selection. Keep search,
   keyboard navigation, selected values, tags, removals and clear actions consistent.

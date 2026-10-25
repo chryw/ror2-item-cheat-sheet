@@ -671,7 +671,14 @@ test('base controls forward native behavior and keep IME text-entry and focus se
   assert(!button.component.props.variant.validator('unrecognized'));
   assert(button.template.includes('v-bind="$attrs"'));
   assert(button.template.includes('v-on="$listeners"'));
-  assert(button.template.includes(':type="type"'));
+  assert(button.template.includes(':type="href ? null : type"'));
+  assert(button.template.includes(':is="href ? \'a\' : \'button\'"'));
+  assert.strictEqual(button.component.props.href.default, null);
+  assert.strictEqual(button.component.props.size.default, 'regular');
+  assert(button.component.props.size.validator('compact'));
+  assert(!button.component.props.size.validator('large'));
+  assert.strictEqual(button.component.props.collapseLabel.default, false);
+  assert.strictEqual(button.component.props.active.default, false);
   let focused = false;
   button.component.methods.focus.call({ $el: { focus() { focused = true; } } });
   assert(focused);
@@ -769,7 +776,7 @@ test('mobile navigation defaults closed and dismisses outside without treating o
   assert.strictEqual(listeners.size, 3);
   context.toggleNavigation();
   assert.strictEqual(context.navCollapsed, false);
-  assert.strictEqual(navFocus, 1);
+  assert.strictEqual(navFocus, 0, 'The shared header trigger stays focused when opening navigation');
   const ownedTarget = {
     closest: () => ({ dataset: { selectOwner: 'owned-input' } }),
   };
@@ -922,6 +929,37 @@ test('mobile details return to the build, restore focus and contain keyboard nav
   assert.deepStrictEqual(emitted, ['view-build']);
 });
 
+test('mobile navigation includes its persistent header trigger in the focus loop', () => {
+  let triggerFocus = 0;
+  let lastFocus = 0;
+  let prevented = 0;
+  const trigger = { focus() { triggerFocus += 1; } };
+  const last = {
+    getBoundingClientRect: () => ({ width: 44 }),
+    focus() { lastFocus += 1; },
+  };
+  const document = { activeElement: trigger };
+  const component = loadUIComponent('HomePage.vue', {}, document);
+  const context = {
+    mobileLayout: true,
+    navCollapsed: false,
+    $refs: {
+      navigation: { $el: { querySelectorAll: () => [last] } },
+      navigationToggle: { $el: trigger },
+    },
+  };
+  component.methods.handleKeydown.call(context, {
+    key: 'Tab', shiftKey: true, preventDefault() { prevented += 1; },
+  });
+  assert.strictEqual(lastFocus, 1);
+  document.activeElement = last;
+  component.methods.handleKeydown.call(context, {
+    key: 'Tab', shiftKey: false, preventDefault() { prevented += 1; },
+  });
+  assert.strictEqual(triggerFocus, 1);
+  assert.strictEqual(prevented, 2);
+});
+
 test('creating or selecting a custom build signals navigation without resetting filters', async () => {
   const role = loadUIComponent('NavBar/RoleFilter.vue');
   const calls = [];
@@ -1001,19 +1039,49 @@ test('panels share overlay scrollbars with native viewports and clean lifecycle 
   assert(fs.existsSync(path.join(sourceRoot, '..', 'public', 'overlayscrollbars-license.txt')));
 });
 
-test('rarity uses a labelled colour swatch instead of decorative card edges', () => {
+test('rarity colours the item name without extra rows, image frames or coloured card edges', () => {
   const source = fs.readFileSync(path.join(sourceRoot, 'components', 'ItemCard.vue'), 'utf8');
   const parsed = parseComponent(source);
   assert.deepStrictEqual(compile(parsed.template.content).errors, []);
   assert(/:aria-description="`\$\{itemData\.itemRarity\} rarity`"/.test(parsed.template.content));
-  assert(parsed.template.content.includes('<span class="rarity-swatch" aria-hidden="true"></span>'));
-  assert(parsed.template.content.includes('{{ itemData.itemRarity }}'));
+  assert(/:title="`\$\{itemData\.itemRarity\} rarity`"/.test(parsed.template.content));
+  assert(!parsed.template.content.includes('rarity-indicator'));
+  assert(!parsed.template.content.includes('rarity-swatch'));
   const styles = parsed.styles.map(style => style.content).join('\n');
-  assert(parsed.template.content.includes('<h3 class="item-name">'));
+  assert(parsed.template.content.includes('<h3 class="item-name"'));
   assert(styles.includes('border: var(--border-width) solid var(--border)'));
   assert(!styles.includes('border-left'));
-  assert(styles.includes('color: var(--item-card-colour)'));
-  assert(styles.includes('background: currentColor'));
+  assert(!styles.includes('border: var(--border-width) solid var(--item-card-colour)'));
+  assert(/\.item-name\s*\{[^}]*color: var\(--item-card-colour\)/.test(styles));
+});
+
+test('typography has five sizes and shared semantic recipes instead of arbitrary local scales', () => {
+  const tokens = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
+  const sizes = Array.from(tokens.matchAll(/--font-size-[\w-]+:\s*(\d+)px/g), match => +match[1]);
+  assert.deepStrictEqual(sizes, [12, 14, 16, 20, 24]);
+  ['body', 'caption', 'label', 'control', 'heading', 'title', 'product', 'code'].forEach(role => {
+    assert(tokens.includes(`--type-${role}:`));
+  });
+  const sidebar = fs.readFileSync(path.join(sourceRoot, 'components', 'SideBar.vue'), 'utf8');
+  assert(!/font-size:\s*\d+%/.test(sidebar));
+  assert(!/--(?:main|sub)-text-size:\s*\d+%/.test(sidebar));
+});
+
+test('navigation reuses one responsive trigger and leaves the mobile product header unchanged', () => {
+  const home = fs.readFileSync(path.join(sourceRoot, 'components', 'HomePage.vue'), 'utf8');
+  const nav = fs.readFileSync(path.join(sourceRoot, 'components', 'TopBar.vue'), 'utf8');
+  assert(home.includes('class="navigation-toggle" collapse-label'));
+  assert(home.includes('<AppIcon name="menu"'));
+  assert(home.includes(':inert="mobileLayout && selectedItem ?'));
+  assert(!nav.includes('<AppButton\n'));
+  assert(!nav.includes('nav-toggle'));
+  assert(nav.includes('position: absolute;'));
+  assert(nav.includes('height: 100%;'));
+  assert(!nav.includes('aria-modal'));
+  const button = fs.readFileSync(path.join(sourceRoot, 'components', 'base', 'AppButton.vue'), 'utf8');
+  assert(button.includes('.ui-button--responsive .ui-button__label { display: none; }'));
+  assert(button.includes('.ui-button.is-active'));
+  assert(!home.includes('.navigation-toggle[aria-expanded'));
 });
 
 test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () => {

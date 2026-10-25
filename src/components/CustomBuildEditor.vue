@@ -15,7 +15,7 @@
         <AppButton class="saved-item-link" variant="ghost" @click="viewItem(id)">
           {{ id }}
         </AppButton>
-        <AppButton class="saved-item-remove" variant="ghost" icon-only
+        <AppButton class="saved-item-remove" variant="ghost" icon-only size="compact"
           :aria-label="`Remove ${id} from build`"
           @click="$store.dispatch('removeCustomBuildItem', { id: build.id, itemId: id })">
           <AppIcon name="close" />

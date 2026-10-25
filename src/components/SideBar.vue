@@ -4,10 +4,10 @@
     :aria-label="`${itemData.name} details`">
     <div class="side-bar" v-bind:class="[this.rarityClass]">
       <div class="top-section">
-        <a class="wiki-link" v-bind:href="itemData.wikiLink"
+        <AppButton variant="ghost" icon-only v-bind:href="itemData.wikiLink"
           target="_blank" rel="noopener noreferrer" :aria-label="`${itemData.name} wiki`">
-          <AppIcon class="item-link-icon" name="external-link" />
-        </a>
+          <AppIcon name="external-link" />
+        </AppButton>
         <p class="item-id" v-if="this.itemData.id">#{{ this.itemData.id }}</p>
         <CloseIcon ref="closeButton" v-bind:clickCloseButton="this.clickCloseButton"
           class="close-icon" />
@@ -251,9 +251,9 @@ export default {
   --margin-top: var(--margin-left);
 
   --main-text-colour: var(--text);
-  --main-text-size: 90%;
+  --main-text-size: var(--text-body);
   --sub-text-colour: var(--text-muted);
-  --sub-text-size: 80%;
+  --sub-text-size: var(--text-sm);
 
   --top-bar-height: 60px;
 
@@ -307,32 +307,6 @@ export default {
   }
 }
 
-.wiki-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--control-height-compact);
-  height: var(--control-height-compact);
-  line-height: var(--control-height-compact);
-  border-radius: var(--radius-md);
-}
-.wiki-link:hover { background: var(--surface-hover); }
-
-.wiki-link:link {
-  text-decoration: inherit;
-  color: inherit;
-}
-
-.wiki-link:visited {
-  text-decoration: inherit;
-  color: inherit;
-}
-
-.item-link-icon {
-  color: var(--sub-text-colour);
-  font-size: 120%;
-}
-
 .item-id {
   color: var(--sub-text-colour);
   margin: 0px;
@@ -367,10 +341,8 @@ hr {
 
 .item-name {
   margin: 0px;
-  font-size: var(--text-title);
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.035em;
-  line-height: var(--leading-tight);
+  font: var(--type-title);
+  letter-spacing: var(--tracking-heading);
   overflow-wrap: anywhere;
   text-align: center;
 }
@@ -442,7 +414,7 @@ hr {
   padding-top: 10px;
   margin-top: 0px;
   text-align: center;
-  font-size: 90%;
+  font-size: var(--text-body);
   margin-bottom: 0px;
 }
 
@@ -484,23 +456,10 @@ hr {
 }
 
 .item-rarity {
-  font-size: var(--main-text-size);
+  --button-color: var(--item-card-colour);
   margin: 5px auto;
-  padding: 3px 8px;
-
-  display: inline-block;
-  color: var(--item-card-colour);
-  border: var(--border-width) var(--item-card-colour) solid;
-  /* Large border radius to make it pill shape */
+  border-color: var(--item-card-colour);
   border-radius: var(--radius-pill);
-  min-height: var(--control-height-compact);
-  font-family: inherit;
-  background: var(--surface-raised);
-  cursor: pointer;
-}
-
-.item-rarity:hover {
-  background: var(--surface-hover);
 }
 
 .item-category-label {

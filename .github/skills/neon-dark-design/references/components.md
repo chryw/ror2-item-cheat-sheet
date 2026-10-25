@@ -42,15 +42,26 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
 | --- | --- | --- |
 | variant | secondary | secondary, primary, danger, ghost |
 | type | button | button, submit, reset; forms must opt in to submit |
-| iconOnly | false | Compact square target; caller must provide an accessible name |
+| iconOnly | false | Square target; caller must provide an accessible name |
+| size | regular | regular (32px desktop) or compact (24px); both at least 44px on touch |
+| collapseLabel | false | At <=900px, hide `.ui-button__label` and use regular square geometry |
+| active | false | Shared accent outline/soft surface for persistent selection/disclosure state |
+| href | null | Render a native anchor for navigation; otherwise a native button |
 
 - Native attributes and listeners pass through to the real button, including disabled,
   aria-expanded, aria-controls, title, click and mousedown modifiers.
 - Default slot holds text and optional decorative icons.
 - `focus()` focuses the native button, so confirmation/cancellation flows can restore focus.
 - Disabled buttons use native semantics; styling must not make them look actionable.
-- Regular desktop controls are 32px high; icon controls use the 24px minimum target.
+- Regular desktop controls, including icon-only controls, are 32px high.
+  Use `size="compact"` for repeated removal actions with a 24px minimum target.
   On narrow/coarse-pointer devices both meet the 44px touch target.
+- Links use the same variants, icon size, hover and focus treatment as buttons; pass
+  href/target/rel for navigation. Do not use a button click handler to simulate a link.
+  Native `disabled` applies to buttons, not links.
+- Responsive disclosure controls keep one DOM instance, icon, accessible name and state.
+  Put optional visible text in `<span class="ui-button__label">`; do not render separate
+  mobile/desktop controls or override their dimensions in consumer styles.
 - Primary is an intentional priority, not the default. Creation/setup actions that compete
   with the main task should normally be secondary or ghost.
 
@@ -137,6 +148,12 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
 - `--control-height` is 32px desktop / 44px touch. `--control-height-compact` follows the
   target size. Do not override these with hardcoded per-page touch or desktop variants.
 - Media queries use literal conditions: custom properties cannot define query conditions.
+- The typography scale has five sizes: small 12px, body 14px, heading 16px,
+  title 20px, product 24px. Use `--type-body`, `--type-caption`, `--type-label`,
+  `--type-control`, `--type-heading`, `--type-title`, `--type-product` and `--type-code`
+  as font recipes. Existing `--text-*` aliases resolve to this scale.
+  Use sans-serif labels and reserve monospace for technical values. Avoid percentage-based
+  nested text sizes and per-component line-height/tracking scales.
 
 ## Regression requirements
 

@@ -21,14 +21,17 @@ scroll with the gallery, and the catalogue starts directly below it.
 Navigation starts collapsed. On desktop (above 900px), the header contains a
 labelled **Filters** button beside the product identity. The button opens a docked left panel;
 collapsing it reclaims the entire width instead of leaving an empty icon rail.
-The panel has a clear heading and close action, and its header stays visible while scrolling.
+The panel has a clear heading that stays visible while scrolling. The same header button
+opens and closes navigation at every viewport size, with the same menu icon and active state.
 Escape closes the panel and restores focus to the header button without clearing selections.
 Desktop panels are non-modal: the gallery remains usable and Tab is not trapped.
 On narrower screens the hamburger shares the same product header, and filters open in a
-full-width overlay panel instead of consuming a dedicated row or shrinking the gallery.
+full-width overlay panel beneath the unchanged product header instead of replacing it,
+consuming a dedicated row or shrinking the gallery. Opening and closing filters never
+changes the product header's height, title, subtitle or button geometry.
 The header is flush with
 the viewport edge, with no gap for scrolling content to show through.
-Press Escape or use the panel's hamburger to close it. Outside-click dismissal recognizes
+Press Escape or use the header's menu button to close it. Outside-click dismissal recognizes
 dropdown menus belonging to the panel. Choosing a survivor/custom build or creating a build returns
 to the gallery on mobile. Collapsing never clears your filters or saved lists.
 Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores it.
@@ -37,9 +40,10 @@ Mobile item details fill the entire viewport, including tablet and landscape lay
 up to 900px. The close/wiki row stays sticky while the details scroll. Closing restores
 focus to the originating pickup, and **View custom build** closes mobile details and
 returns to the build editor; desktop keeps its side-by-side details panel.
-Mobile drawers/details move focus into the panel, contain keyboard focus, support Escape,
-and make the underlying gallery and product header inert. The compact product header stays
-accessible while browsing long result lists.
+Mobile filters keep focus within the shared header trigger and panel controls, support
+Escape, and make the gallery inert. Full-screen details move focus into the dialog and
+make both the gallery and product header inert. The compact product header stays accessible
+while browsing long result lists or filtering.
 Navigation, gallery and details use [AppScrollArea.vue](src/components/AppScrollArea.vue),
 a shared [OverlayScrollbars](https://github.com/KingSora/OverlayScrollbars) wrapper.
 The themed, draggable scrollbars overlay the content edge: they reserve no gutter and
@@ -64,11 +68,11 @@ Lucide's ISC and Feather-derived MIT notices are distributed in
 Standalone definition imports avoid loading DOM helpers that webpack 4 cannot parse.
 Game artwork is unchanged.
 
-Catalogue cards use neutral borders on every edge. A small square swatch and a compact,
-coloured rarity label below the description carry the existing rarity palette without
-decorative edge stripes. The written label and accessible rarity description keep colour
-from being the only cue. Hover and selected-card outlines remain neutral/interaction cues,
-not rarity colours.
+Catalogue cards use neutral borders on every edge. Item-name text carries the existing
+rarity palette without adding a row, increasing card height or duplicating borders already
+present in the game artwork. The name's tooltip, card's accessible rarity description and written rarity in item
+details keep the information available without relying on colour alone.
+Hover and selected-card outlines remain interaction cues, not rarity colours.
 
 ### Visual system
 
@@ -81,6 +85,11 @@ styles are original; no Electric artwork, fonts or source styles are bundled.
 semantic colours, typography, spacing, radii, borders, focus, icon sizes/stroke, control
 dimensions, layout/media scales, status colours and a generic colour palette.
 It contains no game concepts.
+Typography uses five sizes (12, 14, 16, 20 and 24px), shared heading/body line heights,
+and semantic `--type-*` recipes for product titles, titles, headings, body copy, captions,
+labels, controls and technical values. Small labels use the system sans stack; monospace
+is reserved for technical values. Responsive styling changes the recipe's token, not the
+semantic heading or control type.
 [site-tokens.css](src/assets/site-tokens.css) is the consumer layer: rarity, build ranks
 and site layout names alias the reusable primitives, without duplicating their values.
 For example, `--rarity-common: var(--color-gray-400)` and
@@ -94,14 +103,16 @@ Reusable controls are actual components, not one-off button/input class recipes:
 
 | Component | Contract |
 | --- | --- |
-| [AppButton](src/components/base/AppButton.vue) | secondary/primary/danger/ghost, icon-only, native attrs/listeners, safe button default, focus() |
+| [AppButton](src/components/base/AppButton.vue) | secondary/primary/danger/ghost, regular/compact, icon-only, responsive label, active state, optional native link, attrs/listeners, safe button default, focus() |
 | [AppInput](src/components/base/AppInput.vue) | v-model, native validation/attrs/listeners, IME composition, focus() |
 | [AppSelect](src/components/AppSelect.vue) | labeled single/multi selection, search, removable tags, elevated popup and keyboard scrolling |
 | [AppIcon](src/components/Icons/AppIcon.js) | named decorative Lucide SVGs, shared stroke and size |
 | [AppScrollArea](src/components/AppScrollArea.vue) | named native keyboard viewport, overlay handles, responsive measurements and cleanup |
 
-Buttons/fields/selects are 32px tall on fine-pointer desktop; icon controls use a
-24px minimum click target. At <=600px or with any coarse pointer, controls and icon targets
+Buttons/fields/selects and regular square icon controls are 32px tall on fine-pointer
+desktop; compact removal actions use a 24px minimum click target.
+Wiki links and close actions share the same icon-control geometry, focus and hover styles.
+At <=600px or with any coarse pointer, controls and icon targets
 are at least 44px. These are shared token changes, not separate per-page variants.
 **New custom build** uses the same secondary button style as **Reset filters**, with a plus icon.
 Consumer styles own composition/layout and game cues, not copies of base control styling.

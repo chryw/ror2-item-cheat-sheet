@@ -116,14 +116,13 @@ export default {
 }
 .item-list-header {
   margin: 0;
-  font-size: var(--text-section);
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.025em;
+  font: var(--type-heading);
+  letter-spacing: var(--tracking-heading);
 }
 .item-count {
   padding: 3px var(--space-2);
   border: var(--border-width) solid var(--border); border-radius: var(--radius-pill);
-  color: var(--text-muted); font: var(--text-label)/1.3 var(--font-mono);
+  color: var(--text-muted); font: var(--type-code);
 }
 .section-rule { flex: 1; height: var(--border-width); background: var(--border); }
 </style>

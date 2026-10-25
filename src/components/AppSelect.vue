@@ -30,7 +30,7 @@
       <template slot="tag" slot-scope="{ option, remove }">
         <span class="multiselect__tag">
           <span>{{ option.label }}</span>
-          <AppButton class="select-remove" variant="ghost" icon-only
+          <AppButton class="select-remove" variant="ghost" icon-only size="compact"
             :aria-label="`Remove ${label.toLowerCase()} ${option.label}`"
             @mousedown.prevent @click.stop="remove(option)">
             <AppIcon name="close" />
@@ -188,7 +188,7 @@ export default {
   color: var(--text);
 }
 .select-label {
-  font: var(--text-label)/var(--leading-ui) var(--font-mono);
+  font: var(--type-label);
   letter-spacing: var(--tracking-label); color: var(--text-muted);
 }
 .app-select {
@@ -244,7 +244,7 @@ export default {
   width: var(--control-height);
   height: calc(var(--control-height) - 2px);
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--text-sm);
 }
 .app-select .multiselect__select::before { display: none; }
 .app-select .app-icon { width: var(--icon-sm); height: var(--icon-sm); }
@@ -286,13 +286,8 @@ export default {
   right: 0;
   width: var(--target-size);
   height: 100%;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--accent);
-  cursor: pointer;
+  --button-color: var(--accent);
 }
-.select-remove:hover { background: var(--surface-hover); }
 .select-clear {
   align-self: flex-start;
   color: var(--text-muted);

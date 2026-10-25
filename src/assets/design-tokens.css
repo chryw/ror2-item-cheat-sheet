@@ -17,30 +17,44 @@
   --danger: #ffa8a0;
   --danger-surface: #301f25;
 
-  --text-xs: 10px;
-  --text-label: 11px;
-  --text-sm: 12px;
-  --text-body: 13px;
-  --text-control: 14px;
-  --text-base: 16px;
-  --text-section: 17px;
-  --text-subtitle: 22px;
-  --text-title: 24px;
-  --text-display: clamp(28px, 3vw, 44px);
+  --font-size-small: 12px;
+  --font-size-body: 14px;
+  --font-size-heading: 16px;
+  --font-size-title: 20px;
+  --font-size-product: 24px;
+  --text-xs: var(--font-size-small);
+  --text-label: var(--font-size-small);
+  --text-sm: var(--font-size-small);
+  --text-body: var(--font-size-body);
+  --text-control: var(--font-size-body);
+  --text-base: var(--font-size-heading);
+  --text-section: var(--font-size-heading);
+  --text-subtitle: var(--font-size-title);
+  --text-title: var(--font-size-product);
+  --text-display: var(--font-size-product);
   --weight-regular: 400;
   --weight-semibold: 600;
-  --weight-heading: 650;
+  --weight-heading: var(--weight-semibold);
   --weight-bold: 700;
-  --leading-heading: 1.12;
-  --leading-tight: 1.2;
-  --leading-label: 1.4;
+  --leading-heading: 1.25;
+  --leading-tight: var(--leading-heading);
+  --leading-label: 1.5;
   --leading-ui: 1.5;
-  --leading-body: 1.6;
-  --leading-relaxed: 1.7;
-  --tracking-display: -0.045em;
-  --tracking-heading: -0.03em;
-  --tracking-label: 0.06em;
-  --tracking-eyebrow: 0.12em;
+  --leading-body: 1.5;
+  --leading-relaxed: var(--leading-body);
+  --tracking-display: var(--tracking-heading);
+  --tracking-heading: -0.02em;
+  --tracking-label: 0.02em;
+  --tracking-eyebrow: var(--tracking-label);
+  --type-body: var(--weight-regular) var(--text-body)/var(--leading-body) var(--font-family);
+  --type-caption: var(--weight-regular) var(--text-sm)/var(--leading-body) var(--font-family);
+  --type-label: var(--weight-medium) var(--text-label)/var(--leading-ui) var(--font-family);
+  --weight-medium: 500;
+  --type-control: var(--weight-semibold) var(--text-control)/var(--control-line-height) var(--font-family);
+  --type-heading: var(--weight-semibold) var(--text-section)/var(--leading-heading) var(--font-family);
+  --type-title: var(--weight-semibold) var(--text-subtitle)/var(--leading-heading) var(--font-family);
+  --type-product: var(--weight-semibold) var(--text-title)/var(--leading-heading) var(--font-family);
+  --type-code: var(--weight-regular) var(--text-sm)/var(--leading-ui) var(--font-mono);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -106,6 +120,10 @@
   --color-lime-400: #d1d974;
   --color-sky-400: #78cde5;
   --color-amber-400: #edb66c;
+}
+
+@media (max-width: 900px) {
+  :root { --text-title: var(--font-size-title); }
 }
 
 @media (max-width: 600px), (any-pointer: coarse) {
