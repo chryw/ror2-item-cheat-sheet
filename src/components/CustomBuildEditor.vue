@@ -70,27 +70,32 @@ export default {
 </script>
 
 <style scoped>
-.custom-build-editor { flex: 1 0 100%; min-width: 0; font-size: 12px; }
-.rename-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
+.custom-build-editor { flex: 1 0 100%; min-width: 0; font-size: var(--text-sm); }
+.rename-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2); }
 .rename-form label { flex: 1; min-width: 120px; }
 .saved-items {
-  display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 12px 0 0; list-style: none;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 0; margin: var(--space-3) 0 0; list-style: none;
 }
 .saved-items li {
   display: flex; align-items: center; min-width: 0; max-width: 100%;
-  border: 1px solid var(--border); border-radius: var(--radius-md);
+  border: var(--border-width) solid var(--border); border-radius: var(--radius-md);
   background: var(--surface-raised); overflow: hidden;
 }
 .saved-item-link, .saved-item-remove {
-  min-height: 40px; padding: 8px 12px; border: 0; background: none;
+  min-height: var(--control-height-compact); padding: var(--space-2) var(--space-3);
+  border: 0; background: none;
   color: var(--text); cursor: pointer; font: inherit;
 }
 .saved-item-link { text-align: left; overflow-wrap: anywhere; }
-.saved-item-remove { align-self: stretch; border-left: 1px solid var(--border); }
+.saved-item-remove { align-self: stretch; border-left: var(--border-width) solid var(--border); }
 .saved-items button:hover { background: var(--surface-hover); color: var(--accent); }
 .delete-build-actions {
-  margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border);
+  margin-top: var(--space-4); padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--border);
 }
 .delete-build-actions p { overflow-wrap: anywhere; }
-.delete-build-buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: 12px; }
+.delete-build-buttons {
+  display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3);
+}
 </style>

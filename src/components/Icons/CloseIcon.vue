@@ -17,16 +17,18 @@ export default {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 40px;
+  height: var(--control-height-compact);
+  width: var(--control-height-compact);
   padding: 0;
-  min-height: 40px;
-  border: 1px solid var(--border);
+  min-height: var(--control-height-compact);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--text-muted);
-  font-size: 18px;
+  font-size: var(--icon-md);
   cursor: pointer;
 }
-.close-side-bar-button:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.close-side-bar-button:focus-visible {
+  outline: var(--focus-ring); outline-offset: calc(-1 * var(--focus-offset));
+}
 </style>

@@ -1,34 +1,6 @@
+@import "./design-tokens.css";
+
 :root {
-  color-scheme: dark;
-  --font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --canvas: #101216;
-  --surface: #171a20;
-  --surface-raised: #20242c;
-  --surface-hover: #282d36;
-  --border: #303641;
-  --border-strong: #505967;
-  --text: #f0f1e8;
-  --text-muted: #a6adb8;
-  --accent: #dfff00;
-  --accent-hover: #edff70;
-  --accent-soft: rgba(223, 255, 0, 0.08);
-  --on-accent: #151800;
-  --danger: #ffa8a0;
-  --danger-surface: #301f25;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-pill: 999px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --control-height: 44px;
-  --motion-fast: 140ms ease;
-  --shadow-panel: 0 16px 48px rgba(0, 0, 0, 0.3);
   --panel-background: var(--surface);
   --panel-border: var(--border);
   --text-colour: var(--text);
@@ -49,22 +21,25 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 button { touch-action: manipulation; }
 .app-icon {
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  stroke-width: var(--icon-stroke-width);
   flex-shrink: 0;
   vertical-align: middle;
 }
-.nav-toggle .app-icon, .close-side-bar-button .app-icon { width: 20px; height: 20px; }
+.nav-toggle .app-icon, .close-side-bar-button .app-icon {
+  width: var(--icon-lg); height: var(--icon-lg);
+}
 .select-remove { display: inline-flex; align-items: center; justify-content: center; }
-a { color: var(--accent); text-underline-offset: 3px; }
+a { color: var(--accent); text-underline-offset: var(--focus-offset); }
 a:hover { color: var(--accent-hover); }
 ::selection { background: var(--accent); color: var(--on-accent); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 
 .ui-eyebrow {
   color: var(--text-muted);
-  font: 11px/1.5 var(--font-mono);
-  letter-spacing: 0.12em;
+  font: var(--text-label)/var(--leading-ui) var(--font-mono);
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 
@@ -76,12 +51,12 @@ a:hover { color: var(--accent-hover); }
   gap: var(--space-2);
   min-height: var(--control-height);
   min-width: 0;
-  padding: 10px 18px;
-  border: 1px solid var(--border);
+  padding: var(--control-padding-block) var(--control-padding-inline);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius-pill);
   background: var(--surface-raised);
   color: var(--text);
-  font: 600 13px/1.5 var(--font-family);
+  font: var(--weight-semibold) var(--text-body)/var(--leading-ui) var(--font-family);
   overflow-wrap: anywhere;
   cursor: pointer;
   transition: background var(--motion-fast), border-color var(--motion-fast);
@@ -99,7 +74,7 @@ a:hover { color: var(--accent-hover); }
   border-color: var(--accent-hover);
   background: var(--accent-hover);
 }
-.ui-button:disabled { opacity: 0.45; cursor: not-allowed; }
+.ui-button:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .ui-button--danger { color: var(--danger); border-color: var(--danger); }
 .ui-button--danger:hover:not(:disabled) {
   background: var(--danger-surface); border-color: var(--danger);
@@ -110,29 +85,29 @@ a:hover { color: var(--accent-hover); }
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 24px;
-  height: 24px;
+  width: var(--badge-size);
+  height: var(--badge-size);
   flex-shrink: 0;
-  border: 1px solid currentColor;
+  border: var(--border-width) solid currentColor;
   border-radius: var(--radius-sm);
   background: var(--surface-raised);
   color: var(--text);
-  font: 700 12px/1 var(--font-mono);
+  font: var(--weight-bold) var(--text-sm)/1 var(--font-mono);
 }
-.build-badge--S { background: #3b321b; color: #f5cc62; }
-.build-badge--A { background: #18352f; color: #8cdbc5; }
-.build-badge--B { background: #202e43; color: #a8c9f1; }
+.build-badge--S { background: var(--rank-core-surface); color: var(--rank-core-text); }
+.build-badge--A { background: var(--rank-synergy-surface); color: var(--rank-synergy-text); }
+.build-badge--B { background: var(--rank-support-surface); color: var(--rank-support-text); }
 
-.item-colour-common { --item-card-colour: #b8c1c7; }
-.item-colour-uncommon { --item-card-colour: #91cb72; }
-.item-colour-void { --item-card-colour: #e78ab7; }
-.item-colour-hallowed { --item-card-colour: #b499ff; }
-.item-colour-hex { --item-card-colour: #e08bab; }
-.item-colour-page { --item-card-colour: #d2bd8b; }
-.item-colour-legendary { --item-card-colour: #ff8a7b; }
-.item-colour-boss { --item-card-colour: #d1d974; }
-.item-colour-lunar, .equipment-colour-lunar { --item-card-colour: #78cde5; }
-.equipment-colour-normal, .equipment-colour-elite { --item-card-colour: #edb66c; }
+.item-colour-common { --item-card-colour: var(--rarity-common); }
+.item-colour-uncommon { --item-card-colour: var(--rarity-uncommon); }
+.item-colour-void { --item-card-colour: var(--rarity-void); }
+.item-colour-hallowed { --item-card-colour: var(--rarity-hallowed); }
+.item-colour-hex { --item-card-colour: var(--rarity-hex); }
+.item-colour-page { --item-card-colour: var(--rarity-page); }
+.item-colour-legendary { --item-card-colour: var(--rarity-legendary); }
+.item-colour-boss { --item-card-colour: var(--rarity-boss); }
+.item-colour-lunar, .equipment-colour-lunar { --item-card-colour: var(--rarity-lunar); }
+.equipment-colour-normal, .equipment-colour-elite { --item-card-colour: var(--rarity-equipment); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

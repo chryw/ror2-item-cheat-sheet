@@ -548,8 +548,9 @@ test('keyboard dropdown scrolling uses actual bounds for wrapped options', () =>
 
 test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () => {
   const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
+  const tokenSource = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
   const tokens = Object.fromEntries(
-    Array.from(theme.matchAll(/--([\w-]+):\s*(#[\da-f]{6})\s*;/gi),
+    Array.from(tokenSource.matchAll(/--([\w-]+):\s*(#[\da-f]{6})\s*;/gi),
       match => [match[1], match[2]]),
   );
   const luminance = hex => {
@@ -570,15 +571,86 @@ test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () =>
       / (luminance(tokens['on-accent']) + 0.05);
     assert(ratio >= 4.5, `Primary button contrast: ${ratio.toFixed(2)}:1`);
   });
-  Array.from(theme.matchAll(/--item-card-colour:\s*(#[\da-f]{6})/gi)).forEach(([, colour]) => {
+  const rarities = [
+    'common', 'uncommon', 'void', 'hallowed', 'hex', 'page',
+    'legendary', 'boss', 'lunar', 'equipment',
+  ];
+  rarities.forEach(rarity => {
+    const colour = tokens[`rarity-${rarity}`];
+    assert(colour, `Missing rarity token: ${rarity}`);
+    assert(theme.includes(`var(--rarity-${rarity})`), `Unused rarity token: ${rarity}`);
     const ratio = (luminance(colour) + 0.05) / (luminance(tokens.surface) + 0.05);
     assert(ratio >= 4.5, `Rarity label ${colour}: ${ratio.toFixed(2)}:1`);
+  });
+  ['core', 'synergy', 'support'].forEach(rank => {
+    const ratio = (luminance(tokens[`rank-${rank}-text`]) + 0.05)
+      / (luminance(tokens[`rank-${rank}-surface`]) + 0.05);
+    assert(ratio >= 4.5, `Build badge ${rank}: ${ratio.toFixed(2)}:1`);
   });
   const errorRatio = (luminance(tokens.danger) + 0.05)
     / (luminance(tokens['danger-surface']) + 0.05);
   assert(errorRatio >= 4.5, `Storage error contrast: ${errorRatio.toFixed(2)}:1`);
-  assert(theme.includes('color-scheme: dark'));
+  assert(tokenSource.includes('color-scheme: dark'));
   assert(theme.includes('@media (prefers-reduced-motion: reduce)'));
+});
+
+test('design tokens resolve and shared component styles use the imported palette', () => {
+  const tokenSource = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
+  const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
+  assert(theme.startsWith('@import "./design-tokens.css";'));
+  const styles = [tokenSource, theme];
+  const collectStyles = directory => {
+    fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
+      const filename = path.join(directory, entry.name);
+      if (entry.isDirectory()) collectStyles(filename);
+      else if (entry.name.endsWith('.vue')) {
+        const component = parseComponent(fs.readFileSync(filename, 'utf8'));
+        styles.push(...component.styles.map(style => style.content));
+      }
+    });
+  };
+  collectStyles(sourceRoot);
+  const definitions = new Set(Array.from(styles.join('\n').matchAll(/(--[\w-]+)\s*:/g),
+    match => match[1]));
+  styles.forEach(style => {
+    Array.from(style.matchAll(/var\((--[\w-]+)/g)).forEach(([, name]) => {
+      assert(definitions.has(name), `Undefined design token: ${name}`);
+    });
+  });
+  const tokens = new Map(Array.from(tokenSource.matchAll(/(--[\w-]+):\s*([^;]+);/g),
+    match => [match[1], match[2]]));
+  const checkDependencies = (name, ancestors = []) => {
+    assert(!ancestors.includes(name), `Cyclic design token: ${[...ancestors, name].join(' -> ')}`);
+    assert(tokens.has(name), `Missing token dependency: ${name}`);
+    Array.from(tokens.get(name).matchAll(/var\((--[\w-]+)/g)).forEach(([, dependency]) => {
+      checkDependencies(dependency, [...ancestors, name]);
+    });
+  };
+  tokens.forEach((value, name) => checkDependencies(name));
+  assert(theme.includes('stroke-width: var(--icon-stroke-width)'));
+});
+
+test('portable design skill has valid discovery metadata and a synchronized standalone starter', () => {
+  const skillRoot = path.resolve(sourceRoot, '..', '.github', 'skills', 'neon-dark-design');
+  const skill = fs.readFileSync(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const metadata = skill.match(/^---\r?\nname: ([a-z0-9-]{1,64})\r?\ndescription: ("[^\r\n]+")\r?\n---/);
+  assert(metadata, 'Skill requires discoverable name and description frontmatter');
+  assert.strictEqual(metadata[1], path.basename(skillRoot));
+  const description = JSON.parse(metadata[2]);
+  assert(description.length > 0 && description.length <= 1024);
+  assert(skill.split('\n').length < 500);
+  const resources = Array.from(skill.matchAll(/\]\((\.\/[^)]+)\)/g), match => match[1]);
+  assert(resources.includes('./assets/design-tokens.css'));
+  resources.forEach(resource => {
+    const filename = path.resolve(skillRoot, resource);
+    assert(filename.startsWith(`${skillRoot}${path.sep}`), `Nonportable skill resource: ${resource}`);
+    assert(fs.statSync(filename).isFile(), `Missing skill resource: ${resource}`);
+  });
+  const starter = fs.readFileSync(path.join(skillRoot, 'assets', 'design-tokens.css'), 'utf8');
+  const canonical = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
+  assert.strictEqual(starter.replace(/\r\n/g, '\n'), canonical.replace(/\r\n/g, '\n'),
+    'Update the skill starter whenever the canonical design tokens change');
+  assert(!starter.includes('@import'), 'Starter must work without repository dependencies');
 });
 
 test('shared Lucide icons render consistent decorative SVGs and preserve caller attributes', () => {

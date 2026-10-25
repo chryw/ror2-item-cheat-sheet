@@ -41,5 +41,5 @@ export default {
 </script>
 
 <style scoped>
-.custom-create { width: 100%; margin-top: 12px; }
+.custom-create { width: 100%; margin-top: var(--space-3); }
 </style>

@@ -82,11 +82,11 @@ export default {
 
 <style>
 .small-view {
-  --item-card-width: 280px;
+  --item-card-width: var(--card-width-compact);
 }
 
 .large-view {
-  --item-card-width: 340px;
+  --item-card-width: var(--card-width-comfortable);
 }
 
 .item-list-wrapper {
@@ -104,11 +104,11 @@ export default {
   text-align: center;
   margin: 0;
   padding: var(--space-6);
-  border: 1px dashed var(--border);
+  border: var(--border-width) dashed var(--border);
   border-radius: var(--radius-md);
   color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
 }
 
 .item-list-heading {
@@ -116,13 +116,14 @@ export default {
 }
 .item-list-header {
   margin: 0;
-  font-size: 17px;
-  font-weight: 600;
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
   letter-spacing: -0.025em;
 }
 .item-count {
-  padding: 3px 8px; border: 1px solid var(--border); border-radius: var(--radius-pill);
-  color: var(--text-muted); font: 11px/1.3 var(--font-mono);
+  padding: 3px var(--space-2);
+  border: var(--border-width) solid var(--border); border-radius: var(--radius-pill);
+  color: var(--text-muted); font: var(--text-label)/1.3 var(--font-mono);
 }
-.section-rule { flex: 1; height: 1px; background: var(--border); }
+.section-rule { flex: 1; height: var(--border-width); background: var(--border); }
 </style>

@@ -108,9 +108,12 @@ export default {
   min-width: 0;
   color: var(--text);
 }
-.select-label { font: 11px/1.5 var(--font-mono); letter-spacing: 0.06em; color: var(--text-muted); }
-.app-select { font-size: 14px; color: var(--text); }
-.app-select.multiselect--disabled { background: transparent; opacity: 0.45; }
+.select-label {
+  font: var(--text-label)/var(--leading-ui) var(--font-mono);
+  letter-spacing: var(--tracking-label); color: var(--text-muted);
+}
+.app-select { font-size: var(--text-control); color: var(--text); }
+.app-select.multiselect--disabled { background: transparent; opacity: var(--opacity-disabled); }
 .app-select.multiselect--disabled .multiselect__select {
   background: transparent; color: var(--text-muted);
 }
@@ -118,7 +121,7 @@ export default {
 .app-select.multiselect .multiselect__tags {
   min-height: var(--control-height);
   padding: 11px 36px 0 12px;
-  border: 1px solid var(--border);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
   transition: border-color var(--motion-fast);
@@ -126,8 +129,8 @@ export default {
 .app-select:hover .multiselect__tags { border-color: var(--border-strong); }
 .app-select .multiselect__input, .app-select .multiselect__single {
   min-width: 0;
-  min-height: 20px;
-  height: 20px;
+  min-height: var(--control-line-height);
+  height: var(--control-line-height);
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -135,15 +138,15 @@ export default {
   background: var(--surface-raised);
   color: var(--text);
   font: inherit;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--text-control);
+  line-height: var(--control-line-height);
 }
 .app-select .multiselect__single { height: auto; overflow-wrap: anywhere; }
 .app-select .multiselect__input::placeholder { color: var(--text-muted); }
 .app-select .multiselect__input:focus { outline: none; }
 .app-select:focus-within .multiselect__tags {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset-control);
 }
 .app-select .multiselect__placeholder { color: var(--text-muted); padding: 0; margin-bottom: 10px; }
 .app-select .multiselect__select {
@@ -156,11 +159,11 @@ export default {
   font-size: 12px;
 }
 .app-select .multiselect__select::before { display: none; }
-.app-select .app-icon { width: 16px; height: 16px; }
+.app-select .app-icon { width: var(--icon-sm); height: var(--icon-sm); }
 .app-select .multiselect__content-wrapper {
   position: relative;
   margin-top: 6px;
-  border: 1px solid var(--border-strong);
+  border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
   overflow-x: hidden;
@@ -168,17 +171,17 @@ export default {
 .app-select .multiselect__content { background: var(--surface-raised); }
 .app-select .multiselect__option {
   min-height: var(--control-height);
-  white-space: normal; overflow-wrap: anywhere; line-height: 1.4;
+  white-space: normal; overflow-wrap: anywhere; line-height: var(--leading-label);
 }
 .app-select .multiselect__tag {
   padding-right: 26px;
   border-radius: var(--radius-sm);
   background: var(--accent-soft);
-  border: 1px solid var(--border-strong);
+  border: var(--border-width) solid var(--border-strong);
   color: var(--accent);
   white-space: normal;
   overflow-wrap: anywhere;
-  line-height: 1.4;
+  line-height: var(--leading-label);
 }
 .app-select .multiselect__option--selected { background: var(--accent-soft); color: var(--accent); }
 .app-select .multiselect__option--highlight,
@@ -190,7 +193,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  width: 24px;
+  width: var(--badge-size);
   height: 100%;
   border: 0;
   border-radius: var(--radius-sm);
@@ -209,7 +212,7 @@ export default {
   cursor: pointer;
 }
 .select-clear:focus-visible, .select-remove:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset-control);
 }
 </style>

@@ -59,20 +59,20 @@ export default {
 <style>
 .navigation {
   box-sizing: border-box;
-  flex: 0 0 272px;
-  width: 272px;
+  flex: 0 0 var(--nav-width);
+  width: var(--nav-width);
   padding: var(--space-5) var(--space-4);
   background: var(--panel-background);
   color: var(--text-colour);
-  border-right: 1px solid var(--panel-border);
+  border-right: var(--border-width) solid var(--panel-border);
   overflow-y: auto;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
 .navigation.is-collapsed {
-  flex-basis: 64px;
-  width: 64px;
+  flex-basis: var(--nav-width-collapsed);
+  width: var(--nav-width-collapsed);
   padding-left: var(--space-2);
   padding-right: var(--space-2);
 }
@@ -84,34 +84,34 @@ export default {
 .nav-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   margin-bottom: var(--space-6);
 }
 
 .is-collapsed .nav-header { margin-bottom: 0; }
 .nav-brand { min-width: 0; }
-.nav-brand strong { font-size: 16px; letter-spacing: -0.04em; white-space: nowrap; }
-.nav-brand small { display: block; font-size: 10px; margin-top: 5px; }
+.nav-brand strong { font-size: var(--text-base); letter-spacing: -0.04em; white-space: nowrap; }
+.nav-brand small { display: block; font-size: var(--text-xs); margin-top: 5px; }
 
 .nav-toggle {
   display: flex;
-  flex: 0 0 40px;
+  flex: 0 0 var(--control-height-compact);
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: var(--control-height-compact);
+  height: var(--control-height-compact);
   padding: 0;
-  min-height: 40px;
+  min-height: var(--control-height-compact);
   border-radius: var(--radius-md);
-  font-size: 16px;
+  font-size: var(--text-base);
 }
 
 .nav-controls { display: flex; flex-direction: column; gap: var(--space-5); }
-.nav-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.nav-field { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 .nav-field > span, .nav-field > label {
   color: var(--muted-colour);
-  font: 11px/1.5 var(--font-mono);
-  letter-spacing: 0.06em;
+  font: var(--text-label)/var(--leading-ui) var(--font-mono);
+  letter-spacing: var(--tracking-label);
 }
 
 .nav-field input[type="search"], .nav-field input[type="text"] {
@@ -119,13 +119,13 @@ export default {
   width: 100%;
   min-width: 0;
   height: var(--control-height);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   font-family: var(--font-family);
-  font-size: 14px;
-  font-weight: 400;
+  font-size: var(--text-control);
+  font-weight: var(--weight-regular);
   color: var(--text-colour);
   background: var(--surface-raised);
-  border: 1px solid var(--panel-border);
+  border: var(--border-width) solid var(--panel-border);
   border-radius: var(--radius-md);
 }
 
@@ -133,7 +133,7 @@ export default {
 .nav-search > svg {
   position: absolute;
   right: 12px;
-  width: 18px;
+  width: var(--icon-md);
   color: var(--muted-colour);
   pointer-events: none;
 }
@@ -142,23 +142,23 @@ export default {
 .nav-field input::placeholder { color: var(--muted-colour); }
 .navigation button:focus-visible,
 .nav-field input:focus-visible, .nav-checkbox input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
 }
 
 .nav-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  font-size: 12px;
-  line-height: 1.5;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: var(--leading-ui);
 }
 
 .nav-checkbox input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
 .nav-hint {
-  margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--border);
-  font-size: 12px; line-height: 1.8; color: var(--muted-colour);
+  margin: 0; padding-top: var(--space-4); border-top: var(--border-width) solid var(--border);
+  font-size: var(--text-sm); line-height: 1.8; color: var(--muted-colour);
 }
 
 @media (max-width: 900px) {
@@ -166,12 +166,14 @@ export default {
     flex: 0 0 auto;
     width: 100%;
     max-height: 50vh;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
     border-right: 0;
-    border-bottom: 1px solid var(--panel-border);
+    border-bottom: var(--border-width) solid var(--panel-border);
   }
-  .nav-header { margin-bottom: 16px; }
-  .nav-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .nav-header { margin-bottom: var(--space-4); }
+  .nav-controls {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4);
+  }
   .nav-hint { grid-column: 1 / -1; }
 }
 

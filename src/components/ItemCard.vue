@@ -91,19 +91,19 @@ export default {
 
 <style scoped>
 .small-view {
-  --item-card-height: 82px;
-  --item-icon-size: 52px;
-  --item-name-text-size: 13px;
-  --description-text-size: 12px;
-  --dlc-icon-size: 14px;
+  --item-card-height: var(--card-height-compact);
+  --item-icon-size: var(--card-image-compact);
+  --item-name-text-size: var(--text-body);
+  --description-text-size: var(--text-sm);
+  --dlc-icon-size: var(--icon-xs);
 }
 
 .large-view {
-  --item-card-height: 96px;
-  --item-icon-size: 64px;
-  --item-name-text-size: 14px;
-  --description-text-size: 13px;
-  --dlc-icon-size: 14px;
+  --item-card-height: var(--card-height-comfortable);
+  --item-icon-size: var(--card-image-comfortable);
+  --item-name-text-size: var(--text-control);
+  --description-text-size: var(--text-body);
+  --dlc-icon-size: var(--icon-xs);
 }
 
 .item-card {
@@ -114,8 +114,8 @@ export default {
   min-height: var(--item-card-height);
   padding: var(--space-3);
   gap: var(--space-3);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--item-card-colour);
+  border: var(--border-width) solid var(--border);
+  border-left: var(--border-width-emphasis) solid var(--item-card-colour);
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--text);
@@ -164,17 +164,17 @@ export default {
 .item-name {
   font-size: var(--item-name-text-size);
   margin: 0;
-  padding-right: 12px;
+  padding-right: var(--space-3);
   line-height: 1.35;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   overflow-wrap: anywhere;
   position: relative;
 }
 
 .item-effective-max {
   display: inline-block;
-  margin-left: 4px;
-  font: 10px/1.4 var(--font-mono);
+  margin-left: var(--space-1);
+  font: var(--text-xs)/var(--leading-label) var(--font-mono);
   color: var(--text-muted);
 }
 
@@ -182,7 +182,7 @@ export default {
   font-style: normal;
   font-size: var(--description-text-size);
   margin: 0;
-  line-height: 1.5;
+  line-height: var(--leading-ui);
 
   /* Truncate */
   overflow: hidden;
@@ -201,7 +201,7 @@ export default {
 .dlc-icon {
   height: var(--dlc-icon-size);
   width: auto;
-  opacity: 0.8;
+  opacity: var(--opacity-subtle);
   top: 7px;
   position: absolute;
   right: 7px;

@@ -4,7 +4,7 @@
 
 <style scoped>
 .search-bar-icon {
-  width: 18px;
+  width: var(--icon-md);
   color: var(--text-muted);
 }
 </style>

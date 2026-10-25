@@ -36,11 +36,30 @@ layered charcoal surfaces, warm off-white typography, fine borders, rounded pane
 restrained accent usage. Our accent is neon yellow, not cyan. The layout, components and
 styles are original; no Electric artwork, fonts or source styles are bundled.
 
-[theme.css](src/assets/theme.css), loaded once by [App.vue](src/App.vue), defines semantic
-surface/text/accent colours, spacing, radii, typography, control height, motion and focus
-tokens. It also supplies reusable `.ui-button` / `.ui-button--primary` and `.ui-eyebrow`
-primitives, build badges and the single rarity palette used by cards and details.
-Component styles consume those tokens instead of maintaining separate light/dark palettes.
+[design-tokens.css](src/assets/design-tokens.css) is the canonical token-only stylesheet:
+semantic colours, typography, spacing, radii, borders, focus, icon sizes/stroke, control
+dimensions, motion, opacity and optional catalogue layout/rank/rarity values.
+[theme.css](src/assets/theme.css), loaded once by [App.vue](src/App.vue), imports these
+tokens and supplies reusable `.ui-button` / `.ui-button--primary` / `.ui-button--danger`
+and `.ui-eyebrow` primitives, build badges and shared rarity mappings.
+Component styles consume semantic tokens instead of maintaining separate palettes.
+Change repeated visual values in the token file; keep isolated geometric adjustments local.
+The 900/600/480px media-query breakpoints remain literal because CSS custom properties
+cannot be used in media-query conditions.
+
+The portable [neon-dark-design skill](.github/skills/neon-dark-design/SKILL.md) captures
+the visual language, component contracts, accessibility checks, responsive layout guidance,
+and dropdown/scrollbar pitfalls. It includes a self-contained
+[starter token stylesheet](.github/skills/neon-dark-design/assets/design-tokens.css).
+To reuse it for another site, copy the entire `neon-dark-design` folder into that
+repository's `.github/skills/` (or your supported personal skills directory), ask the agent
+to use the skill, and adapt its starter tokens to the new product. No game assets or
+application code are needed. Catalogue-specific extensions can be removed.
+
+When updating this site's canonical tokens, update the bundled starter in the same change.
+`npm test` checks that the two copies match, validates skill discovery metadata and resource
+links, checks token references for missing definitions/cycles, and tests text/rank/rarity
+contrast. The application never imports runtime styles from the skill directory.
 Use [AppSelect.vue](src/components/AppSelect.vue) for every single- or multi-choice dropdown.
 Its detached trigger and menu retain the same corner radius in closed, open and focused states;
 the shared trigger selector overrides vue-multiselect's joined-menu corner reset.
