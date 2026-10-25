@@ -13,6 +13,8 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
 On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores the full catalogue.
+Navigation reserves a stable scrollbar gutter so opening a dropdown does not resize the controls.
+Browsers without scrollbar-gutter support keep a scroll track reserved instead.
 
 All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, dark styling and in-flow option list. Role names are displayed without added suffixes.
 

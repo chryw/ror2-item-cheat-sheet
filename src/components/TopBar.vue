@@ -66,12 +66,19 @@ export default {
   color: var(--text-colour);
   border-right: 1px solid var(--panel-border);
   overflow-y: auto;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
 .navigation.is-collapsed {
   flex-basis: 64px;
   width: 64px;
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+@supports not (scrollbar-gutter: stable) {
+  .navigation { overflow-y: scroll; }
 }
 
 .nav-header {
