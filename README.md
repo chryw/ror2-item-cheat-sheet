@@ -10,7 +10,8 @@ The technology used for this project was Vue and Vuex.
 
 There are 3 sections on the website. The navbar, the item list, and the sidebar. 
 
-The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
+The navbar alters the item list to make it easier for the user to navigate the item list.
+Search, survivor, rarity and version filters narrow the catalogue; ordering is automatic.
 
 The persistent header uses one **Risk of Rain 2 Field Guide** H1 on desktop and mobile,
 matching the browser-tab title. A smaller, muted subtitle describes the reference:
@@ -34,7 +35,8 @@ the viewport edge, with no gap for scrolling content to show through.
 Press Escape or use the header's menu button to close it. Outside-click dismissal recognizes
 dropdown menus belonging to the panel. Choosing a survivor/custom build or creating a build returns
 to the gallery on mobile. Collapsing never clears your filters or saved lists.
-Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores it.
+Search, rarity and version controls narrow the catalogue; **Reset filters** restores it.
+There is no manual sort control or name-sort mode.
 
 Mobile item details fill the entire viewport, including tablet and landscape layouts
 up to 900px. The close/wiki row stays sticky while the details scroll. Closing restores
@@ -52,10 +54,12 @@ scrolling continue to use the native scroll viewport.
 Its MIT notice is distributed in [overlayscrollbars-license.txt](public/overlayscrollbars-license.txt).
 
 All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around
-vue-multiselect: survivor, sort, rarity, version and custom-build destination. Menus open
+vue-multiselect: survivor, rarity, version and custom-build destination. Menus open
 in a fixed, z-indexed popup layer outside the scrolling panels, anchored to their control.
 They flip above near viewport edges and reposition on resize/scroll. Opening a menu never
 changes its container's height, scroll range or sibling positions. Role names have no added suffixes.
+Trigger values, tags, carets and option labels use shared flex alignment to stay vertically
+centred at desktop and touch sizes, including wrapped labels.
 
 UI icons use [Lucide](https://lucide.dev/) through the shared
 [AppIcon](src/components/Icons/AppIcon.js) renderer. Only eight named icon definitions are
@@ -73,6 +77,11 @@ rarity palette without adding a row, increasing card height or duplicating borde
 present in the game artwork. The name's tooltip, card's accessible rarity description and written rarity in item
 details keep the information available without relying on colour alone.
 Hover and selected-card outlines remain interaction cues, not rarity colours.
+Each catalogue section is divided into rarity groups in the game's existing rarity order.
+Small rarity headings and neutral hairline dividers reuse the main section-heading layout
+without competing with the larger **Items**, **Equipments** and **Drones** headings/counts.
+Only groups with matching entries appear. Build priorities apply within each rarity group.
+Hex uses a soft yellow-green alias consistently across names, group headings and details.
 
 ### Visual system
 
@@ -150,7 +159,15 @@ space available rather than reproducing a marketing-page hero.
 
 Categories are informational labels in item details, not filter controls. Internal flags such as `AIBlacklist` are not displayed. All item and drone images are served from local assets using the configured deployment base path; browsing does not fetch images or catalogue data from third-party wikis.
 
-Choose a **Survivor / role** to filter items and equipment to a starter build. This also selects **Build tier (S / A / B)** sorting: S is core, A is synergy, and B is general support. Ties are alphabetical. Compact letter badges use gold (S), teal (A), and blue (B), matching the build legend; these colours are independent of item rarity. Uncheck **Recommended items only** to browse everything while keeping build priorities visible (unranked items sort last). Search, rarity and version filters still apply, and clearing the survivor restores the full catalogue subject to those filters. Drones remain visible for built-in survivor presets without invented tier rankings; custom profiles filter drones to the saved list.
+Choose a **Survivor / role** to filter items and equipment to a starter build. Within each
+rarity group, build priorities automatically order S, A, B, then unranked items: S is core,
+A is synergy, and B is general support. Ties are alphabetical. Compact letter badges use
+gold (S), teal (A), and blue (B), matching the build legend; these colours are independent
+of item rarity. Uncheck **Recommended items only** to browse everything while keeping
+build priorities visible. Search, rarity and version filters still apply, and clearing
+the survivor restores the full catalogue subject to those filters. Drones remain visible
+for built-in survivor presets without invented tier rankings; custom profiles filter
+drones to the saved list.
 
 Operator's named item recommendations follow the [Rogue Ranker Operator guide](https://rogueranker.com/operator-ror2/), with Spare Drone Parts given core priority. Support items and equipment are supplemental starter suggestions. Other survivors use curated starter presets, not rankings sourced from that guide or a universal tier list. Skill variants, difficulty, item stacks and DLC ownership can change the best pickup; selecting a survivor does not hide DLC items. Presets are maintained in [survivorBuilds.js](src/data/survivorBuilds.js).
 

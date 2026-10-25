@@ -9,7 +9,6 @@
     <div id="nav-controls" v-show="!collapsed" class="nav-controls">
       <SearchBar />
       <RoleFilter @navigate="$emit('navigate')" />
-      <SortBySelector />
       <RarityFilter />
       <VersionFilter />
       <AppButton class="nav-reset" @click="resetFilters">
@@ -25,14 +24,13 @@
 import SearchBar from './NavBar/SearchBar.vue';
 import AppScrollArea from './AppScrollArea.vue';
 import RoleFilter from './NavBar/RoleFilter.vue';
-import SortBySelector from './NavBar/SortBySelector.vue';
 import RarityFilter from './NavBar/RarityFilter.vue';
 import VersionFilter from './NavBar/VersionFilter.vue';
 import { SortType } from '../data/constants';
 
 export default {
   name: 'TopBar',
-  components: { AppScrollArea, SearchBar, RoleFilter, SortBySelector, RarityFilter, VersionFilter },
+  components: { AppScrollArea, SearchBar, RoleFilter, RarityFilter, VersionFilter },
   props: {
     collapsed: { type: Boolean, default: true },
   },

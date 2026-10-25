@@ -55,7 +55,9 @@ const { survivorBuilds, getBuildTier, buildTierOrder } = loadSource(
 );
 const utils = loadSource(path.join(sourceRoot, 'helpers', 'ItemIdUtils.js')).default;
 const getItemImageUrl = loadSource(path.join(sourceRoot, 'helpers', 'ItemImageUtils.js')).default;
-const { SortType, ItemRarity, SelectionType, SelectionTypePluralization } = loadSource(
+const {
+  SortType, ItemRarity, ItemRaritySortValue, SelectionType, SelectionTypePluralization,
+} = loadSource(
   path.join(sourceRoot, 'data', 'constants.js'),
 );
 const drones = loadSource(path.join(sourceRoot, 'data', 'drones.js')).default;
@@ -173,10 +175,8 @@ test('all catalogue images are local image files with deployment-safe URLs', () 
   assert.throws(() => getItemImageUrl('Missing item', '/'), /Missing catalogue image/);
 });
 
-test('existing name and rarity sorts are still available', () => {
-  assert.deepStrictEqual(utils.sortOperation(
-    ['Ukulele', 'Crowbar'], items, SortType.NAME,
-  ), ['Crowbar', 'Ukulele']);
+test('automatic rarity ordering remains available without a name-sort mode', () => {
+  assert.strictEqual(SortType.NAME, undefined);
   assert.deepStrictEqual(utils.sortOperation(
     ['Spare Drone Parts', 'Crowbar', 'Ukulele'], items, SortType.RARITY,
   ), ['Crowbar', 'Ukulele', 'Spare Drone Parts']);
@@ -185,11 +185,10 @@ test('existing name and rarity sorts are still available', () => {
 test('role selection chooses build sorting, survives role switches, and resets safely', () => {
   store.commit('setSelectedRole', 'operator');
   assert.strictEqual(store.state.sortBy, SortType.RECOMMENDED);
-  store.commit('updateSortByState', SortType.NAME);
   store.commit('setSelectedRole', 'loader');
-  assert.strictEqual(store.state.sortBy, SortType.NAME);
+  assert.strictEqual(store.state.sortBy, SortType.RECOMMENDED);
   store.commit('setSelectedRole', '');
-  assert.strictEqual(store.state.sortBy, SortType.NAME);
+  assert.strictEqual(store.state.sortBy, SortType.RARITY);
   store.commit('setSelectedRole', 'operator');
   store.commit('setSelectedRole', '');
   assert.strictEqual(store.state.sortBy, SortType.RARITY);
@@ -425,7 +424,7 @@ test('all gallery sections use plural names and contain mutually exclusive entry
   assert.deepStrictEqual(groups[1], utils.filterByItemListType(ids, items, true));
 });
 
-test('drone version, rarity, search and sort controls intersect correctly', () => {
+test('drone version, rarity, search and automatic ordering intersect correctly', () => {
   const droneIds = Object.keys(drones);
   const base = utils.filterOperation(droneIds, drones, { dlc: ['Base game'] });
   const expansion = utils.filterOperation(droneIds, drones, { dlc: ['Alloyed Collective'] });
@@ -437,8 +436,6 @@ test('drone version, rarity, search and sort controls intersect correctly', () =
   });
   assert.deepStrictEqual(rareExpansion.sort(), ['Bombardment Drone', 'Freeze Drone']);
   assert.deepStrictEqual(utils.searchOperation(rareExpansion, drones, 'freezes'), ['Freeze Drone']);
-  assert.deepStrictEqual(utils.sortOperation(droneIds.slice(), drones, SortType.NAME),
-    droneIds.slice().sort());
   assert.deepStrictEqual(utils.sortOperation(
     ['Healing Drone', 'Gunner Drone'], drones, SortType.RARITY,
   ), ['Gunner Drone', 'Healing Drone']);
@@ -472,7 +469,7 @@ test('drone picks persist alongside items and equipment in existing custom profi
 });
 
 test('all dropdown surfaces share AppSelect without competing native controls or category filters', () => {
-  ['NavBar/RoleFilter.vue', 'NavBar/SortBySelector.vue', 'NavBar/RarityFilter.vue',
+  ['NavBar/RoleFilter.vue', 'NavBar/RarityFilter.vue',
     'NavBar/VersionFilter.vue', 'SideBar.vue'].forEach(filename => {
     const source = fs.readFileSync(path.join(sourceRoot, 'components', filename), 'utf8');
     assert(source.includes('<AppSelect '), `${filename} does not use shared dropdown`);
@@ -481,6 +478,8 @@ test('all dropdown surfaces share AppSelect without competing native controls or
   });
   const nav = fs.readFileSync(path.join(sourceRoot, 'components', 'TopBar.vue'), 'utf8');
   assert(!nav.includes('CategoryFilter'));
+  assert(!nav.includes('SortBySelector'));
+  assert(!fs.existsSync(path.join(sourceRoot, 'components', 'NavBar', 'SortBySelector.vue')));
   assert(!nav.includes('.multiselect'));
   const role = fs.readFileSync(path.join(sourceRoot, 'components', 'NavBar', 'RoleFilter.vue'), 'utf8');
   assert(!role.includes('build.dlc'));
@@ -599,7 +598,9 @@ test('popup placement flips at viewport edges and cleans up its detached list an
     module, module.exports, document, window, () => ({ overflowY: 'auto' }),
   );
   let anchor = { top: 200, bottom: 232, left: 100, width: 200 };
+  let highlightScrolls = 0;
   const control = {
+    scrollToHighlightedOption() { highlightScrolls += 1; },
     isOpen: true,
     $el: { parentElement: body, getBoundingClientRect: () => anchor },
     $refs: { list },
@@ -612,6 +613,7 @@ test('popup placement flips at viewport edges and cleans up its detached list an
   control.deactivate = () => { control.isOpen = false; context.closePopup(); };
   context.openPopup();
   context.openPopup();
+  assert.strictEqual(highlightScrolls, 1, 'Reopening scrolls the retained highlight into view');
   assert.strictEqual(body.children.length, 1, 'One popup per open control');
   assert.strictEqual(context.popup.style.top, '238px');
   assert.strictEqual(control.optimizedHeight, 240);
@@ -1048,11 +1050,83 @@ test('rarity colours the item name without extra rows, image frames or coloured 
   assert(!parsed.template.content.includes('rarity-indicator'));
   assert(!parsed.template.content.includes('rarity-swatch'));
   const styles = parsed.styles.map(style => style.content).join('\n');
-  assert(parsed.template.content.includes('<h3 class="item-name"'));
+  assert(parsed.template.content.includes('<h4 class="item-name"'));
   assert(styles.includes('border: var(--border-width) solid var(--border)'));
   assert(!styles.includes('border-left'));
   assert(!styles.includes('border: var(--border-width) solid var(--item-card-colour)'));
   assert(/\.item-name\s*\{[^}]*color: var\(--item-card-colour\)/.test(styles));
+});
+
+test('rarity groups preserve every filtered entry and within-group build priorities', () => {
+  Object.values(SelectionType).slice(0, 3).forEach(type => {
+    const visible = utils.filterBySelectionType(
+      utils.showHiddenOperation(Object.keys(catalog), catalog, false), catalog, type,
+    );
+    const ordered = utils.sortOperation(visible.slice(), catalog, SortType.RARITY);
+    const groups = utils.groupByRarity(ordered, catalog);
+    assert.strictEqual(new Set(groups.map(group => group.rarity)).size, groups.length);
+    assert.deepStrictEqual(groups.flatMap(group => group.itemIds).slice().sort(),
+      visible.slice().sort());
+    groups.forEach((group, index) => {
+      assert(group.itemIds.length > 0);
+      assert(group.itemIds.every(id => catalog[id].itemRarity === group.rarity));
+      if (index) {
+        assert(ItemRaritySortValue[groups[index - 1].rarity] <= ItemRaritySortValue[group.rarity]);
+      }
+    });
+    const filtered = utils.searchOperation(
+      utils.filterOperation(ordered, catalog, { dlc: ['Hallowed Concepts'] }), catalog, 'damage',
+    );
+    const filteredGroups = utils.groupByRarity(filtered, catalog);
+    assert.deepStrictEqual(filteredGroups.flatMap(group => group.itemIds).slice().sort(),
+      filtered.slice().sort());
+  });
+  assert.deepStrictEqual(utils.groupByRarity([], catalog), []);
+  const ordered = utils.sortOperation(ids.slice(), items, SortType.RECOMMENDED, 'operator');
+  const original = ordered.slice();
+  utils.groupByRarity(ordered, items).forEach(group => {
+    assert.deepStrictEqual(group.itemIds,
+      ordered.filter(id => items[id].itemRarity === group.rarity));
+    const ranks = group.itemIds.map(id => {
+      const tier = getBuildTier(items[id].name, 'operator');
+      return tier ? buildTierOrder.indexOf(tier) : buildTierOrder.length;
+    });
+    assert(ranks.every((rank, index) => index === 0 || rank >= ranks[index - 1]));
+  });
+  assert.deepStrictEqual(ordered, original, 'Grouping must not reorder its input');
+});
+
+test('rarity subsection dividers share the section-heading pattern with subordinate headings', () => {
+  const source = fs.readFileSync(path.join(sourceRoot, 'components', 'ItemList.vue'), 'utf8');
+  const parsed = parseComponent(source);
+  assert.deepStrictEqual(compile(parsed.template.content).errors, []);
+  assert(parsed.template.content.includes('v-for="group in rarityGroups"'));
+  assert(parsed.template.content.includes('<h2 class="item-list-header">'));
+  assert(parsed.template.content.includes('<h3 class="item-list-header">'));
+  assert(parsed.template.content.includes('class="item-list-heading rarity-group-heading"'));
+  assert.strictEqual((parsed.template.content.match(/class="section-rule"/g) || []).length, 2);
+  assert(source.includes('font: var(--type-label)'));
+  assert(source.includes('ItemIdUtils.groupByRarity(this.itemIdList, itemsV2)'));
+});
+
+test('dropdown rows and trigger content use shared vertical centering', () => {
+  const source = fs.readFileSync(path.join(sourceRoot, 'components', 'AppSelect.vue'), 'utf8');
+  ['multiselect__tags', 'multiselect__option', 'multiselect__tag'].forEach(className => {
+    assert(new RegExp(`\\.${className}\\s*\\{[^}]*display: (?:inline-)?flex;[^}]*align-items: center;`)
+      .test(source), `${className} must centre its contents`);
+  });
+  assert(source.includes('transform: translateY(-50%) rotate(180deg)'));
+  assert(source.includes('white-space: normal; overflow-wrap: anywhere'));
+  assert(source.includes('.app-select.multiselect:not(.multiselect--active) >'));
+});
+
+test('Hex uses a yellow-green consumer alias shared by cards, dividers and details', () => {
+  const source = fs.readFileSync(path.join(sourceRoot, 'assets', 'site-tokens.css'), 'utf8');
+  assert(source.includes('--rarity-hex: var(--color-chartreuse-400)'));
+  const tokens = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
+  const hex = tokens.match(/--color-chartreuse-400:\s*#([0-9a-f]{6})/i)[1];
+  const [r, g, b] = hex.match(/../g).map(value => parseInt(value, 16));
+  assert(g > r && r > b);
 });
 
 test('typography has five sizes and shared semantic recipes instead of arbitrary local scales', () => {

@@ -43,11 +43,6 @@ const sortOperation = (itemIds, itemList, sortBy, role = '', builds) => {
       }
     }
 
-    // Sort by Name
-    if (sortBy === SortType.NAME) {
-      return (itemList[a].name < itemList[b].name ? -1 : 1);
-    }
-
     if (sortBy === SortType.ID) {
       if (!itemList[a].id && !itemList[b].id) {
         return (itemList[a].name < itemList[b].name ? -1 : 1);
@@ -70,6 +65,17 @@ const sortOperation = (itemIds, itemList, sortBy, role = '', builds) => {
     // default
     return a - b;
   });
+};
+
+const groupByRarity = (itemIds, itemList) => {
+  const groups = new Map();
+  itemIds.forEach(id => {
+    const rarity = itemList[id].itemRarity;
+    if (!groups.has(rarity)) groups.set(rarity, { rarity, itemIds: [] });
+    groups.get(rarity).itemIds.push(id);
+  });
+  return Array.from(groups.values())
+    .sort((a, b) => rarityValues[a.rarity] - rarityValues[b.rarity]);
 };
 
 const roleFilterOperation = (itemIds, itemList, role, recommendedOnly, builds) => {
@@ -190,6 +196,7 @@ export default {
   categoryLabel,
   roleFilterOperation,
   sortOperation,
+  groupByRarity,
   filterOperation,
   searchOperation,
   showHiddenOperation,

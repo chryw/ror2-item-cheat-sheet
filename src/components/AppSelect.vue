@@ -118,6 +118,7 @@ export default {
         window.addEventListener('resize', this.positionPopup);
         window.addEventListener('scroll', this.positionPopup, true);
         this.positionPopup();
+        this.$nextTick(this.$refs.control.scrollToHighlightedOption);
       });
     },
     closePopup() {
@@ -202,6 +203,10 @@ export default {
 }
 /* Keep detached controls rounded even when the library applies its joined-menu open state. */
 .app-select.multiselect .multiselect__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
   min-height: var(--control-height);
   padding: calc((var(--control-height) - var(--control-line-height) - 2px) / 2)
     calc(var(--control-height) + var(--space-2))
@@ -211,6 +216,7 @@ export default {
   background: var(--surface-raised);
   transition: border-color var(--motion-fast);
 }
+.app-select .multiselect__tags-wrap { display: contents; }
 .app-select:hover .multiselect__tags { border-color: var(--border-strong); }
 .app-select .multiselect__input, .app-select .multiselect__single {
   min-width: 0;
@@ -243,8 +249,14 @@ export default {
   justify-content: center;
   width: var(--control-height);
   height: calc(var(--control-height) - 2px);
+  top: 50%;
+  padding: 0;
+  transform: translateY(-50%);
   color: var(--text-muted);
   font-size: var(--text-sm);
+}
+.app-select.multiselect--active .multiselect__select {
+  transform: translateY(-50%) rotate(180deg);
 }
 .app-select .multiselect__select::before { display: none; }
 .app-select .app-icon { width: var(--icon-sm); height: var(--icon-sm); }
@@ -256,13 +268,22 @@ export default {
   background: var(--surface-raised);
   overflow-x: hidden;
 }
+.app-select.multiselect:not(.multiselect--active) > .multiselect__content-wrapper {
+  display: none;
+}
 .app-select .multiselect__content { background: var(--surface-raised); }
 .app-select .multiselect__option {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
   min-height: var(--control-height);
   padding: var(--control-padding-block) var(--space-3);
   white-space: normal; overflow-wrap: anywhere; line-height: var(--leading-label);
 }
 .app-select .multiselect__tag {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
   min-height: var(--target-size);
   box-sizing: border-box;
   padding: var(--space-1) calc(var(--target-size) + var(--space-2)) var(--space-1) var(--space-2);

@@ -7,15 +7,17 @@
       </span>
       <span class="section-rule" aria-hidden="true"></span>
     </header>
-    <div class="item-list" v-bind:class="[this.cardSize]">
-      <ItemCard
-        v-show="!isItemIdListEmpty"
-        v-for="itemId in itemIdList"
-        v-bind:key="itemId"
-        v-bind:itemId="itemId"
-        :itemType="itemListType"
-      />
-    </div>
+    <section v-for="group in rarityGroups" :key="group.rarity" class="rarity-group"
+      :aria-label="`${group.rarity} ${SelectionTypePluralization[itemListType]}`">
+      <header class="item-list-heading rarity-group-heading" :class="ItemRarityClass[group.rarity]">
+        <h3 class="item-list-header">{{ group.rarity }}</h3>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+      <div class="item-list" :class="cardSize">
+        <ItemCard v-for="itemId in group.itemIds" :key="itemId" :itemId="itemId"
+          :itemType="itemListType" />
+      </div>
+    </section>
     <div class="no-items-message" v-show="isItemIdListEmpty">
       No Matching {{ SelectionTypePluralization[itemListType] }} Found
     </div>
@@ -27,7 +29,7 @@ import { mapState } from "vuex";
 import ItemCard from "./ItemCard.vue";
 
 import itemsV2 from "../data/catalog";
-import { SelectionTypePluralization } from "../data/constants";
+import { SelectionTypePluralization, ItemRarityClass } from "../data/constants";
 import ItemIdUtils from "../helpers/ItemIdUtils";
 
 export default {
@@ -36,6 +38,7 @@ export default {
   data() {
     return {
       SelectionTypePluralization,
+      ItemRarityClass,
     };
   },
   components: {
@@ -75,6 +78,9 @@ export default {
     },
     isItemIdListEmpty() {
       return this.itemIdList.length <= 0;
+    },
+    rarityGroups() {
+      return ItemIdUtils.groupByRarity(this.itemIdList, itemsV2);
     },
   },
 };
@@ -125,4 +131,11 @@ export default {
   color: var(--text-muted); font: var(--type-code);
 }
 .section-rule { flex: 1; height: var(--border-width); background: var(--border); }
+.rarity-group + .rarity-group { margin-top: var(--space-5); }
+.rarity-group-heading { margin-bottom: var(--space-3); }
+.rarity-group-heading .item-list-header {
+  color: var(--item-card-colour);
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+}
 </style>

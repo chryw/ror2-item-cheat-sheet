@@ -15,12 +15,12 @@
       <img class="item-icon" :src="this.itemImageUrl" :alt="itemData.name" />
     </div>
     <div class="item-details" :class="{ 'has-build-tier': buildTier }">
-      <h3 class="item-name" :title="`${itemData.itemRarity} rarity`">
+      <h4 class="item-name" :title="`${itemData.itemRarity} rarity`">
         {{ itemData.name }}
         <span class="item-effective-max" v-if="effectiveMax > 0" unselectable="on">
           Max: {{ effectiveMax }}
         </span>
-      </h3>
+      </h4>
       <p class="item-short-description">{{ itemData.shortDescription }}</p>
       <span v-if="buildTier" class="build-tier build-badge"
         :class="`build-badge--${buildTier}`"

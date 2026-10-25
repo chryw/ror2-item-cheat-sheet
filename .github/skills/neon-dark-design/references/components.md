@@ -108,6 +108,9 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
 - Popup roots expose `data-select-owner` with the control ID. Consumer drawers use this
   to recognize their own detached menus when implementing outside-click dismissal.
 - Keep keyboard-highlighted wrapped options visible using rendered row bounds.
+  On reopening, restore visibility of the retained highlight even if its index has not changed.
+- Vertically centre trigger values, tags, carets and option labels with flex alignment,
+  not padding based on assumed font metrics. Keep wrapped option rows content-sized.
 - An open select consumes Escape before dismissing its menu, so enclosing dialogs
   do not close on the same keypress. A subsequent Escape can dismiss the dialog.
 
