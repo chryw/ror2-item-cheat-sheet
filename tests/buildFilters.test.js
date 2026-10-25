@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 const fs = require('fs');
 const { transformFileSync, transformSync } = require('@babel/core');
-const { parseComponent } = require('vue-template-compiler');
+const { parseComponent, compile } = require('vue-template-compiler');
 const items = require('../src/data/items.json');
 
 const cache = new Map();
@@ -488,7 +488,7 @@ const dropdownCode = transformSync(dropdownScript, {
 }).code;
 const dropdownModule = { exports: {} };
 vm.runInThisContext(`(function(require, module, exports) { ${dropdownCode}\n})`)(
-  request => (request.endsWith('.css') ? {} : require(request)),
+  request => (request.endsWith('.css') || request.startsWith('./') ? {} : require(request)),
   dropdownModule, dropdownModule.exports,
 );
 const dropdown = dropdownModule.exports.default;
@@ -513,7 +513,7 @@ test('shared dropdown maps single and multiple choices to stable store values', 
   assert.deepStrictEqual(events.pop(), ['input', []]);
 });
 
-test('in-flow dropdown menus retain a usable height near panel edges', () => {
+test('dropdown menus delegate edge placement to the shared popup layer', () => {
   [0, 28, -40, 240].forEach(previousHeight => {
     const menu = { maxHeight: 240, optimizedHeight: previousHeight, preferredOpenDirection: 'above' };
     dropdown.components.Multiselect.methods.adjustPosition.call(menu);
@@ -543,6 +543,160 @@ test('keyboard dropdown scrolling uses actual bounds for wrapped options', () =>
   dropdown.components.Multiselect.watch.pointer.call({
     scrollToHighlightedOption: callback,
     $nextTick: received => assert.strictEqual(received, callback),
+  });
+});
+
+test('popup placement flips at viewport edges and cleans up its detached list and listeners', () => {
+  const listeners = new Map();
+  const body = {
+    children: [],
+    appendChild(node) { this.children.push(node); },
+  };
+  const parent = {
+    appendChild(node) { Object.assign(node, { parentNode: this }); },
+  };
+  const list = { parentNode: parent, scrollHeight: 500 };
+  const document = {
+    body,
+    createElement() {
+      return {
+        style: {},
+        appendChild(node) { Object.assign(node, { parentNode: this }); },
+        remove() { body.children.splice(body.children.indexOf(this), 1); },
+      };
+    },
+  };
+  const window = {
+    innerHeight: 900,
+    innerWidth: 1280,
+    addEventListener(name, callback, capture) { listeners.set(name, { callback, capture }); },
+    removeEventListener(name, callback, capture) {
+      assert.deepStrictEqual(listeners.get(name), { callback, capture });
+      listeners.delete(name);
+    },
+  };
+  const module = { exports: {} };
+  vm.runInThisContext(
+    `(function(require, module, exports, document, window, getComputedStyle) { ${dropdownCode}\n})`,
+  )(
+    request => (request.startsWith('./') || request.endsWith('.css') ? {} : require(request)),
+    module, module.exports, document, window, () => ({ overflowY: 'auto' }),
+  );
+  let anchor = { top: 200, bottom: 232, left: 100, width: 200 };
+  const control = {
+    isOpen: true,
+    $el: { parentElement: body, getBoundingClientRect: () => anchor },
+    $refs: { list },
+  };
+  const context = { $refs: { control }, $nextTick: callback => callback() };
+  const component = module.exports.default;
+  Object.entries(component.methods).forEach(([name, method]) => {
+    context[name] = method.bind(context);
+  });
+  control.deactivate = () => { control.isOpen = false; context.closePopup(); };
+  context.openPopup();
+  context.openPopup();
+  assert.strictEqual(body.children.length, 1, 'One popup per open control');
+  assert.strictEqual(context.popup.style.top, '238px');
+  assert.strictEqual(control.optimizedHeight, 240);
+  assert.strictEqual(list.parentNode, context.popup);
+  anchor = { ...anchor, top: 850, bottom: 882 };
+  context.positionPopup();
+  assert.strictEqual(context.popup.style.top, '604px');
+  list.scrollHeight = 60;
+  context.positionPopup();
+  assert.strictEqual(context.popup.style.top, '782px', 'Short filtered menus stay anchored above');
+  window.innerWidth = 320;
+  anchor = { ...anchor, left: 280 };
+  context.positionPopup();
+  assert.strictEqual(context.popup.style.left, '112px');
+  control.$el.parentElement = {
+    parentElement: body,
+    getBoundingClientRect: () => ({ top: 0, bottom: 400 }),
+  };
+  context.positionPopup();
+  assert.strictEqual(control.isOpen, false, 'Off-screen anchors close their popup');
+  assert.strictEqual(list.parentNode, parent);
+  assert.strictEqual(body.children.length, 0);
+  assert.strictEqual(listeners.size, 0);
+  component.beforeDestroy.call(context);
+});
+
+test('base controls forward native behavior and keep IME text-entry and focus semantics', () => {
+  const loadComponent = filename => {
+    const source = fs.readFileSync(path.join(sourceRoot, 'components', 'base', filename), 'utf8');
+    const parsed = parseComponent(source);
+    assert.deepStrictEqual(compile(parsed.template.content).errors, []);
+    const { code } = transformSync(parsed.script.content, {
+      babelrc: false, configFile: false, plugins: ['@babel/plugin-transform-modules-commonjs'],
+    });
+    const module = { exports: {} };
+    vm.runInThisContext(`(function(module, exports) { ${code}\n})`)(module, module.exports);
+    return { component: module.exports.default, template: parsed.template.content };
+  };
+  const button = loadComponent('AppButton.vue');
+  assert.strictEqual(button.component.props.type.default, 'button');
+  assert.strictEqual(button.component.props.variant.default, 'secondary');
+  ['primary', 'secondary', 'ghost', 'danger'].forEach(value => {
+    assert(button.component.props.variant.validator(value));
+  });
+  assert(!button.component.props.variant.validator('unrecognized'));
+  assert(button.template.includes('v-bind="$attrs"'));
+  assert(button.template.includes('v-on="$listeners"'));
+  assert(button.template.includes(':type="type"'));
+  let focused = false;
+  button.component.methods.focus.call({ $el: { focus() { focused = true; } } });
+  assert(focused);
+
+  const input = loadComponent('AppInput.vue');
+  assert(input.template.includes('v-bind="$attrs"'));
+  assert(input.template.includes('v-on="listeners"'));
+  const events = [];
+  const context = {
+    ...input.component.data(),
+    $listeners: { blur() {} },
+    $emit(name, value) { events.push({ name, value }); },
+  };
+  Object.entries(input.component.methods).forEach(([name, method]) => {
+    context[name] = method.bind(context);
+  });
+  const listeners = input.component.computed.listeners.call(context);
+  assert.strictEqual(listeners.blur, context.$listeners.blur);
+  const event = { target: { value: 'a' } };
+  listeners.input(event);
+  assert.deepStrictEqual(events.pop(), { name: 'input', value: 'a' });
+  listeners.compositionstart(event);
+  event.target.value = 'composing';
+  listeners.input(event);
+  assert(!events.some(entry => entry.name === 'input'));
+  event.target.value = 'complete';
+  listeners.compositionend(event);
+  assert.deepStrictEqual(events.filter(entry => entry.name === 'input'),
+    [{ name: 'input', value: 'complete' }]);
+});
+
+test('portable base tokens are generic and product tokens only alias reusable primitives', () => {
+  const base = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
+  const consumer = fs.readFileSync(path.join(sourceRoot, 'assets', 'site-tokens.css'), 'utf8');
+  assert(!/--(?:rarity|rank|nav|details|card)-/.test(base));
+  assert(base.includes('--target-size: 24px'));
+  assert(base.includes('--control-height: 32px'));
+  assert(base.includes('@media (max-width: 600px), (any-pointer: coarse)'));
+  assert(base.includes('--target-size: 44px'));
+  assert(base.includes('--control-height-compact: var(--target-size)'));
+  const definitions = new Set(Array.from(base.matchAll(/(--[\w-]+):/g), match => match[1]));
+  Array.from(consumer.matchAll(/(--[\w-]+):\s*([^;]+);/g)).forEach(([, name, value]) => {
+    const alias = value.match(/^var\((--[\w-]+)\)$/);
+    assert(alias, `${name} must alias a primitive instead of duplicating a value`);
+    assert(definitions.has(alias[1]), `${name} must reference a generic base token`);
+  });
+  const role = fs.readFileSync(path.join(sourceRoot, 'components', 'NavBar', 'RoleFilter.vue'), 'utf8');
+  assert(role.includes('<AppButton class="custom-create" variant="ghost"'));
+  assert(!role.includes('variant="primary"'));
+  ['TopBar.vue', 'CustomBuildEditor.vue', 'HomePage.vue', 'SideBar.vue', 'Icons/CloseIcon.vue',
+    'NavBar/RoleFilter.vue'].forEach(filename => {
+    const source = fs.readFileSync(path.join(sourceRoot, 'components', filename), 'utf8');
+    assert(!/<button[\s>]/.test(source), `${filename} bypasses AppButton`);
   });
 });
 
@@ -606,10 +760,17 @@ test('panels share overlay scrollbars with native viewports and clean lifecycle 
 test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () => {
   const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
   const tokenSource = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
-  const tokens = Object.fromEntries(
-    Array.from(tokenSource.matchAll(/--([\w-]+):\s*(#[\da-f]{6})\s*;/gi),
+  const consumer = fs.readFileSync(path.join(sourceRoot, 'assets', 'site-tokens.css'), 'utf8');
+  const primitives = fs.readFileSync(path.join(sourceRoot, 'assets', 'primitives.css'), 'utf8');
+  const definitions = Object.fromEntries(
+    Array.from(`${tokenSource}\n${consumer}`.matchAll(/--([\w-]+):\s*([^;]+)\s*;/gi),
       match => [match[1], match[2]]),
   );
+  const resolve = name => {
+    assert(definitions[name], `Missing colour token: ${name}`);
+    return definitions[name].replace(/var\(--([\w-]+)\)/g, (match, alias) => resolve(alias));
+  };
+  const tokens = Object.fromEntries(Object.keys(definitions).map(name => [name, resolve(name)]));
   const luminance = hex => {
     const channels = hex.slice(1).match(/../g).map(channel => parseInt(channel, 16) / 255);
     const [r, g, b] = channels.map(c => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
@@ -648,14 +809,16 @@ test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () =>
     / (luminance(tokens['danger-surface']) + 0.05);
   assert(errorRatio >= 4.5, `Storage error contrast: ${errorRatio.toFixed(2)}:1`);
   assert(tokenSource.includes('color-scheme: dark'));
-  assert(theme.includes('@media (prefers-reduced-motion: reduce)'));
+  assert(primitives.includes('@media (prefers-reduced-motion: reduce)'));
 });
 
 test('design tokens resolve and shared component styles use the imported palette', () => {
   const tokenSource = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
   const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
   assert(theme.startsWith('@import "./design-tokens.css";'));
-  const styles = [tokenSource, theme];
+  const styles = fs.readdirSync(path.join(sourceRoot, 'assets'))
+    .filter(filename => filename.endsWith('.css'))
+    .map(filename => fs.readFileSync(path.join(sourceRoot, 'assets', filename), 'utf8'));
   const collectStyles = directory => {
     fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
       const filename = path.join(directory, entry.name);
@@ -674,7 +837,8 @@ test('design tokens resolve and shared component styles use the imported palette
       assert(definitions.has(name), `Undefined design token: ${name}`);
     });
   });
-  const tokens = new Map(Array.from(tokenSource.matchAll(/(--[\w-]+):\s*([^;]+);/g),
+  const consumer = fs.readFileSync(path.join(sourceRoot, 'assets', 'site-tokens.css'), 'utf8');
+  const tokens = new Map(Array.from(`${tokenSource}\n${consumer}`.matchAll(/(--[\w-]+):\s*([^;]+);/g),
     match => [match[1], match[2]]));
   const checkDependencies = (name, ancestors = []) => {
     assert(!ancestors.includes(name), `Cyclic design token: ${[...ancestors, name].join(' -> ')}`);
@@ -684,7 +848,7 @@ test('design tokens resolve and shared component styles use the imported palette
     });
   };
   tokens.forEach((value, name) => checkDependencies(name));
-  assert(theme.includes('stroke-width: var(--icon-stroke-width)'));
+  assert(styles.some(style => style.includes('stroke-width: var(--icon-stroke-width)')));
 });
 
 test('portable design skill has valid discovery metadata and a synchronized standalone starter', () => {
@@ -708,6 +872,41 @@ test('portable design skill has valid discovery metadata and a synchronized stan
   assert.strictEqual(starter.replace(/\r\n/g, '\n'), canonical.replace(/\r\n/g, '\n'),
     'Update the skill starter whenever the canonical design tokens change');
   assert(!starter.includes('@import'), 'Starter must work without repository dependencies');
+  const portableFiles = [
+    ['assets/primitives.css', 'assets/primitives.css'],
+    ['components/base/AppButton.vue', 'components/base/AppButton.vue'],
+    ['components/base/AppInput.vue', 'components/base/AppInput.vue'],
+    ['components/AppSelect.vue', 'components/AppSelect.vue'],
+    ['components/AppScrollArea.vue', 'components/AppScrollArea.vue'],
+    ['components/Icons/AppIcon.js', 'components/Icons/AppIcon.js'],
+  ];
+  portableFiles.forEach(([bundled, source]) => {
+    const relative = bundled.startsWith('assets/') ? bundled.slice(7) : bundled;
+    const actual = fs.readFileSync(path.join(skillRoot, 'assets', relative), 'utf8');
+    const expected = fs.readFileSync(path.join(sourceRoot, source), 'utf8');
+    assert.strictEqual(actual.replace(/\r\n/g, '\n'), expected.replace(/\r\n/g, '\n'),
+      `Stale portable component/style: ${bundled}`);
+    if (source.endsWith('.vue')) {
+      const parsed = parseComponent(actual);
+      assert.deepStrictEqual(compile(parsed.template.content).errors, [],
+        `Invalid starter template: ${source}`);
+      assert(!/var\(--(?:rarity|rank|nav|details|card)-/.test(actual),
+        `Product token leaked into portable component: ${source}`);
+      Array.from(parsed.script.content.matchAll(/from ['"](\.[^'"]+)['"]/g))
+        .forEach(([, dependency]) => {
+          const target = path.resolve(skillRoot, 'assets', path.dirname(relative), dependency);
+          assert(target.startsWith(`${path.join(skillRoot, 'assets')}${path.sep}`));
+          assert([target, `${target}.js`, `${target}.vue`].some(filename => fs.existsSync(filename)),
+            `Starter depends on a missing application module: ${dependency}`);
+        });
+    }
+  });
+  assert(fs.existsSync(path.join(skillRoot, 'references', 'components.md')));
+  ['lucide-license.txt', 'overlayscrollbars-license.txt'].forEach(filename => {
+    const bundled = fs.readFileSync(path.join(skillRoot, 'assets', 'licenses', filename), 'utf8');
+    const license = fs.readFileSync(path.join(sourceRoot, '..', 'public', filename), 'utf8');
+    assert.strictEqual(bundled.replace(/\r\n/g, '\n'), license.replace(/\r\n/g, '\n'));
+  });
 });
 
 test('shared Lucide icons render consistent decorative SVGs and preserve caller attributes', () => {

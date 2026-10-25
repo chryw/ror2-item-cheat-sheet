@@ -12,7 +12,7 @@
         </header>
         <div v-if="$store.state.customBuildError" class="build-error" role="alert">
           <p>{{ $store.state.customBuildError }}</p>
-          <button class="ui-button" type="button" @click="retryStorage">Retry storage</button>
+          <AppButton @click="retryStorage">Retry storage</AppButton>
         </div>
         <div v-if="build" class="build-summary" aria-live="polite">
           <div>

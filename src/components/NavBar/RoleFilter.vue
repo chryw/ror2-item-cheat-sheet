@@ -5,11 +5,11 @@
       <input v-model="recommendedOnly" type="checkbox">
       {{ isCustom ? 'Saved items only' : 'Recommended items only' }}
     </label>
-    <button class="ui-button ui-button--primary custom-create" type="button"
+    <AppButton class="custom-create" variant="ghost"
       :disabled="!$store.state.customBuildsLoaded"
       @click="$store.dispatch('createCustomBuild')">
       New custom build
-    </button>
+    </AppButton>
   </div>
 </template>
 
@@ -41,5 +41,5 @@ export default {
 </script>
 
 <style scoped>
-.custom-create { width: 100%; margin-top: var(--space-3); }
+.custom-create { margin-top: var(--space-2); color: var(--text-muted); }
 </style>

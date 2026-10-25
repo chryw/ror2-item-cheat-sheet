@@ -58,11 +58,13 @@
   --focus-ring: var(--border-width-emphasis) solid var(--accent);
   --focus-offset: 3px;
   --focus-offset-control: 2px;
-  --control-height: 44px;
-  --control-height-compact: 40px;
+  --target-size: 24px;
+  --control-height: 32px;
+  --control-height-compact: var(--target-size);
   --control-line-height: 20px;
-  --control-padding-block: 10px;
-  --control-padding-inline: 18px;
+  --control-padding-block: 4px;
+  --control-padding-inline: 12px;
+  --control-gap: var(--space-2);
   --icon-xs: 14px;
   --icon-sm: 16px;
   --icon-md: 18px;
@@ -72,34 +74,43 @@
   --opacity-subtle: 0.8;
   --motion-fast: 140ms ease;
   --shadow-panel: 0 16px 48px rgba(0, 0, 0, 0.3);
+  --layer-popup: 1000;
 
-  /* Optional catalogue extensions; adapt these to the target product. */
-  --nav-width: 272px;
-  --nav-width-collapsed: 64px;
-  --details-width: 340px;
-  --details-padding: 20px;
-  --details-image-size: 150px;
-  --card-width-compact: 280px;
-  --card-width-comfortable: 340px;
-  --card-height-compact: 82px;
-  --card-height-comfortable: 96px;
-  --card-image-compact: 52px;
-  --card-image-comfortable: 64px;
+  --layout-rail-width: 272px;
+  --layout-rail-collapsed-width: 64px;
+  --layout-aside-width: 340px;
+  --panel-padding: 20px;
+  --media-size-xl: 150px;
+  --tile-min-width-sm: 280px;
+  --tile-min-width-lg: 340px;
+  --tile-min-height-sm: 82px;
+  --tile-min-height-lg: 96px;
+  --media-size-sm: 52px;
+  --media-size-lg: 64px;
   --badge-size: 24px;
-  --rank-core-surface: #3b321b;
-  --rank-core-text: #f5cc62;
-  --rank-synergy-surface: #18352f;
-  --rank-synergy-text: #8cdbc5;
-  --rank-support-surface: #202e43;
-  --rank-support-text: #a8c9f1;
-  --rarity-common: #b8c1c7;
-  --rarity-uncommon: #91cb72;
-  --rarity-void: #e78ab7;
-  --rarity-hallowed: #b499ff;
-  --rarity-hex: #e08bab;
-  --rarity-page: #d2bd8b;
-  --rarity-legendary: #ff8a7b;
-  --rarity-boss: #d1d974;
-  --rarity-lunar: #78cde5;
-  --rarity-equipment: #edb66c;
+  --status-warning-surface: #3b321b;
+  --status-warning-text: #f5cc62;
+  --status-success-surface: #18352f;
+  --status-success-text: #8cdbc5;
+  --status-info-surface: #202e43;
+  --status-info-text: #a8c9f1;
+  --color-gray-400: #b8c1c7;
+  --color-green-400: #91cb72;
+  --color-pink-400: #e78ab7;
+  --color-violet-400: #b499ff;
+  --color-rose-400: #e08bab;
+  --color-sand-400: #d2bd8b;
+  --color-coral-400: #ff8a7b;
+  --color-lime-400: #d1d974;
+  --color-sky-400: #78cde5;
+  --color-amber-400: #edb66c;
+}
+
+@media (max-width: 600px), (any-pointer: coarse) {
+  :root {
+    --target-size: 44px;
+    --control-height: 44px;
+    --control-padding-block: 10px;
+    --control-padding-inline: 16px;
+  }
 }

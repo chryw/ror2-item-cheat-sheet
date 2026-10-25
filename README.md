@@ -20,7 +20,11 @@ do not change panel or content widths when overflow appears. Wheel, touch and ke
 scrolling continue to use the native scroll viewport.
 Its MIT notice is distributed in [overlayscrollbars-license.txt](public/overlayscrollbars-license.txt).
 
-All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, dark styling and in-flow option list. Role names are displayed without added suffixes.
+All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around
+vue-multiselect: survivor, sort, rarity, version and custom-build destination. Menus open
+in a fixed, z-indexed popup layer outside the scrolling panels, anchored to their control.
+They flip above near viewport edges and reposition on resize/scroll. Opening a menu never
+changes its container's height, scroll range or sibling positions. Role names have no added suffixes.
 
 UI icons use [Lucide](https://lucide.dev/) through the shared
 [AppIcon](src/components/Icons/AppIcon.js) renderer. Only six named icon definitions are
@@ -42,28 +46,56 @@ styles are original; no Electric artwork, fonts or source styles are bundled.
 
 [design-tokens.css](src/assets/design-tokens.css) is the canonical token-only stylesheet:
 semantic colours, typography, spacing, radii, borders, focus, icon sizes/stroke, control
-dimensions, motion, opacity and optional catalogue layout/rank/rarity values.
+dimensions, layout/media scales, status colours and a generic colour palette.
+It contains no game concepts.
+[site-tokens.css](src/assets/site-tokens.css) is the consumer layer: rarity, build ranks
+and site layout names alias the reusable primitives, without duplicating their values.
+For example, `--rarity-common: var(--color-gray-400)` and
+`--rank-core-text: var(--status-warning-text)`.
 [theme.css](src/assets/theme.css), loaded once by [App.vue](src/App.vue), imports these
-tokens and supplies reusable `.ui-button` / `.ui-button--primary` / `.ui-button--danger`
-and `.ui-eyebrow` primitives, build badges and shared rarity mappings.
-Component styles consume semantic tokens instead of maintaining separate palettes.
+layers plus [primitives.css](src/assets/primitives.css) for generic typography, focus,
+icons, technical labels and reduced motion. Only the consumer theme defines build badges
+and rarity class mappings.
+
+Reusable controls are actual components, not one-off button/input class recipes:
+
+| Component | Contract |
+| --- | --- |
+| [AppButton](src/components/base/AppButton.vue) | secondary/primary/danger/ghost, icon-only, native attrs/listeners, safe button default, focus() |
+| [AppInput](src/components/base/AppInput.vue) | v-model, native validation/attrs/listeners, IME composition, focus() |
+| [AppSelect](src/components/AppSelect.vue) | labeled single/multi selection, search, removable tags, elevated popup and keyboard scrolling |
+| [AppIcon](src/components/Icons/AppIcon.js) | named decorative Lucide SVGs, shared stroke and size |
+| [AppScrollArea](src/components/AppScrollArea.vue) | named native keyboard viewport, overlay handles, responsive measurements and cleanup |
+
+Buttons/fields/selects are 32px tall on fine-pointer desktop; icon controls use a
+24px minimum click target. At <=600px or with any coarse pointer, controls and icon targets
+are at least 44px. These are shared token changes, not separate per-page variants.
+**New custom build** uses the quiet ghost button variant rather than a primary accent fill.
+Consumer styles own composition/layout and game cues, not copies of base control styling.
 Change repeated visual values in the token file; keep isolated geometric adjustments local.
 The 900/600/480px media-query breakpoints remain literal because CSS custom properties
 cannot be used in media-query conditions.
 
 The portable [neon-dark-design skill](.github/skills/neon-dark-design/SKILL.md) captures
 the visual language, component contracts, accessibility checks, responsive layout guidance,
-and dropdown/scrollbar pitfalls. It includes a self-contained
-[starter token stylesheet](.github/skills/neon-dark-design/assets/design-tokens.css).
+and dropdown/scrollbar pitfalls. Its
+[component contract](.github/skills/neon-dark-design/references/components.md) includes
+API examples, dependencies and regression requirements. The skill bundles synchronized
+[tokens](.github/skills/neon-dark-design/assets/design-tokens.css),
+[base styles](.github/skills/neon-dark-design/assets/primitives.css),
+[working Vue 2 components](.github/skills/neon-dark-design/assets/components/), and licence notices.
 To reuse it for another site, copy the entire `neon-dark-design` folder into that
 repository's `.github/skills/` (or your supported personal skills directory), ask the agent
-to use the skill, and adapt its starter tokens to the new product. No game assets or
-application code are needed. Catalogue-specific extensions can be removed.
+to use the skill, and copy/adapt its starter into the new product as the contract describes.
+No game assets, site aliases, store, router or other application code are needed.
+For another framework, port the same API/behavior contracts rather than adding Vue.
 
-When updating this site's canonical tokens, update the bundled starter in the same change.
-`npm test` checks that the two copies match, validates skill discovery metadata and resource
-links, checks token references for missing definitions/cycles, and tests text/rank/rarity
-contrast. The application never imports runtime styles from the skill directory.
+When changing canonical tokens/styles/components, copy the changed source into the matching
+skill asset in the same change. Tokens/base styles live at the asset root; component paths
+mirror their paths under `src/components`. `npm test` checks exact starter synchronization,
+template validity, token boundaries/references/cycles, skill metadata, text/rank/rarity
+contrast, base control behavior and popup placement/cleanup.
+The application never imports runtime styles or components from the skill directory.
 Use [AppSelect.vue](src/components/AppSelect.vue) for every single- or multi-choice dropdown.
 Its detached trigger and menu retain the same corner radius in closed, open and focused states;
 the shared trigger selector overrides vue-multiselect's joined-menu corner reset.

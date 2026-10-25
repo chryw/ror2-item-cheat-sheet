@@ -3,37 +3,40 @@
     <form class="rename-form" @submit.prevent="rename">
       <label class="nav-field" for="custom-build-name">
         <span>Build name</span>
-        <input id="custom-build-name" v-model="name" type="text" maxlength="80" required>
+        <AppInput id="custom-build-name" v-model="name" maxlength="80" required />
       </label>
-      <button class="ui-button" type="submit" :disabled="!name.trim()">Rename</button>
+      <AppButton type="submit" :disabled="!name.trim()">Rename</AppButton>
     </form>
     <p v-if="!build.itemIds.length">
       Your list is empty. Pick an item in the gallery, then use Add to custom build in its details.
     </p>
     <ul v-else class="saved-items">
       <li v-for="id in build.itemIds" :key="id">
-        <button class="saved-item-link" type="button" @click="viewItem(id)">{{ id }}</button>
-        <button class="saved-item-remove" type="button" :aria-label="`Remove ${id} from build`"
+        <AppButton class="saved-item-link" variant="ghost" @click="viewItem(id)">
+          {{ id }}
+        </AppButton>
+        <AppButton class="saved-item-remove" variant="ghost" icon-only
+          :aria-label="`Remove ${id} from build`"
           @click="$store.dispatch('removeCustomBuildItem', { id: build.id, itemId: id })">
           <AppIcon name="close" />
-        </button>
+        </AppButton>
       </li>
     </ul>
     <div class="delete-build-actions">
       <template v-if="confirmingDelete">
         <p role="alert">Delete "{{ build.name }}"? This cannot be undone.</p>
         <div class="delete-build-buttons">
-          <button ref="cancelDelete" class="ui-button" type="button" @click="cancelDelete">
+          <AppButton ref="cancelDelete" @click="cancelDelete">
             Cancel
-          </button>
-          <button class="ui-button ui-button--danger" type="button"
-            @click="$emit('delete', build.id)">Confirm delete</button>
+          </AppButton>
+          <AppButton variant="danger"
+            @click="$emit('delete', build.id)">Confirm delete</AppButton>
         </div>
       </template>
-      <button v-else ref="deleteBuild" class="ui-button ui-button--danger" type="button"
+      <AppButton v-else ref="deleteBuild" variant="danger"
         :disabled="!$store.state.customBuildsLoaded" @click="requestDelete">
         Delete custom build
-      </button>
+      </AppButton>
     </div>
   </section>
 </template>
@@ -82,13 +85,11 @@ export default {
   border: var(--border-width) solid var(--border); border-radius: var(--radius-md);
   background: var(--surface-raised); overflow: hidden;
 }
-.saved-item-link, .saved-item-remove {
-  min-height: var(--control-height-compact); padding: var(--space-2) var(--space-3);
-  border: 0; background: none;
-  color: var(--text); cursor: pointer; font: inherit;
+.saved-item-link { text-align: left; border-radius: 0; }
+.saved-item-remove {
+  align-self: stretch; height: auto;
+  border: 0; border-left: var(--border-width) solid var(--border); border-radius: 0;
 }
-.saved-item-link { text-align: left; overflow-wrap: anywhere; }
-.saved-item-remove { align-self: stretch; border-left: var(--border-width) solid var(--border); }
 .saved-items button:hover { background: var(--surface-hover); color: var(--accent); }
 .delete-build-actions {
   margin-top: var(--space-4); padding-top: var(--space-4);

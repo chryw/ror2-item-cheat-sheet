@@ -2,6 +2,7 @@
   <div class="app-select-field">
     <label class="select-label" :for="id">{{ label }}</label>
     <multiselect
+      ref="control"
       :id="id"
       :aria-label="label"
       v-model="selected"
@@ -17,6 +18,9 @@
       :placeholder="placeholder"
       :max-height="240"
       open-direction="bottom"
+      @open="openPopup"
+      @close="closePopup"
+      @search-change="updatePopup"
     >
       <template slot="caret" slot-scope="{ toggle }">
         <span class="multiselect__select" @mousedown.prevent.stop="toggle">
@@ -26,26 +30,30 @@
       <template slot="tag" slot-scope="{ option, remove }">
         <span class="multiselect__tag">
           <span>{{ option.label }}</span>
-          <button type="button" class="select-remove"
+          <AppButton class="select-remove" variant="ghost" icon-only
             :aria-label="`Remove ${label.toLowerCase()} ${option.label}`"
             @mousedown.prevent @click.stop="remove(option)">
             <AppIcon name="close" />
-          </button>
+          </AppButton>
         </span>
       </template>
     </multiselect>
-    <button v-if="multiple && value.length" class="select-clear" type="button"
-      @click="$emit('input', [])">Clear {{ label.toLowerCase() }}</button>
+    <AppButton v-if="multiple && value.length" class="select-clear" variant="ghost"
+      @click="$emit('input', [])">Clear {{ label.toLowerCase() }}</AppButton>
   </div>
 </template>
 
 <script>
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import AppButton from './base/AppButton.vue';
+import AppIcon from './Icons/AppIcon';
 
 export default {
   name: 'AppSelect',
   components: {
+    AppButton,
+    AppIcon,
     Multiselect: {
       extends: Multiselect,
       watch: {
@@ -55,7 +63,7 @@ export default {
       },
       methods: {
         adjustPosition() {
-          // In-flow menus scroll with their panel, so viewport overlay limits do not apply.
+          // The shared popup layer handles placement outside clipped scroll panels.
           this.preferredOpenDirection = 'below';
           this.optimizedHeight = this.maxHeight;
         },
@@ -83,6 +91,70 @@ export default {
     multiple: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Choose an option' },
+  },
+  updated() {
+    this.updatePopup();
+  },
+  beforeDestroy() {
+    this.closePopup();
+  },
+  methods: {
+    openPopup() {
+      this.$nextTick(() => {
+        if (!this.$refs.control || !this.$refs.control.isOpen || this.popup) return;
+        const { list } = this.$refs.control.$refs;
+        this.popupParent = list.parentNode;
+        this.popup = document.createElement('div');
+        this.popup.className = 'app-select app-select-popup';
+        document.body.appendChild(this.popup);
+        this.popup.appendChild(list);
+        window.addEventListener('resize', this.positionPopup);
+        window.addEventListener('scroll', this.positionPopup, true);
+        this.positionPopup();
+      });
+    },
+    closePopup() {
+      if (!this.popup) return;
+      window.removeEventListener('resize', this.positionPopup);
+      window.removeEventListener('scroll', this.positionPopup, true);
+      this.popupParent.appendChild(this.$refs.control.$refs.list);
+      this.popup.remove();
+      this.popup = null;
+      this.popupParent = null;
+    },
+    updatePopup() {
+      if (this.popup) this.$nextTick(this.positionPopup);
+    },
+    positionPopup() {
+      if (!this.popup) return;
+      const { control } = this.$refs;
+      const anchor = control.$el.getBoundingClientRect();
+      let parent = control.$el.parentElement;
+      while (parent && parent !== document.body) {
+        const style = getComputedStyle(parent);
+        if (/(auto|scroll|hidden)/.test(style.overflowY)) {
+          const bounds = parent.getBoundingClientRect();
+          if (anchor.bottom <= bounds.top || anchor.top >= bounds.bottom) {
+            control.deactivate();
+            return;
+          }
+        }
+        parent = parent.parentElement;
+      }
+      const gap = 6;
+      const below = Math.max(0, window.innerHeight - anchor.bottom - gap);
+      const above = Math.max(0, anchor.top - gap);
+      const desiredHeight = Math.min(240, control.$refs.list.scrollHeight + 2);
+      const upwards = below < desiredHeight && above > below;
+      const height = Math.min(240, upwards ? above : below);
+      control.optimizedHeight = height;
+      const width = Math.min(anchor.width, window.innerWidth - 16);
+      this.popup.style.width = `${width}px`;
+      this.popup.style.left = `${Math.max(8, Math.min(anchor.left, window.innerWidth - width - 8))}px`;
+      this.popup.style.top = upwards
+        ? `${Math.max(gap, anchor.top - gap - Math.min(control.$refs.list.scrollHeight + 2, height))}px`
+        : `${anchor.bottom + gap}px`;
+    },
   },
   computed: {
     selected: {
@@ -112,7 +184,11 @@ export default {
   font: var(--text-label)/var(--leading-ui) var(--font-mono);
   letter-spacing: var(--tracking-label); color: var(--text-muted);
 }
-.app-select { font-size: var(--text-control); color: var(--text); }
+.app-select {
+  min-height: var(--control-height);
+  line-height: var(--control-line-height);
+  font-size: var(--text-control); color: var(--text);
+}
 .app-select.multiselect--disabled { background: transparent; opacity: var(--opacity-disabled); }
 .app-select.multiselect--disabled .multiselect__select {
   background: transparent; color: var(--text-muted);
@@ -120,7 +196,9 @@ export default {
 /* Keep detached controls rounded even when the library applies its joined-menu open state. */
 .app-select.multiselect .multiselect__tags {
   min-height: var(--control-height);
-  padding: 11px 36px 0 12px;
+  padding: calc((var(--control-height) - var(--control-line-height) - 2px) / 2)
+    calc(var(--control-height) + var(--space-2))
+    calc((var(--control-height) - var(--control-line-height) - 2px) / 2) var(--space-3);
   border: var(--border-width) solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
@@ -132,6 +210,7 @@ export default {
   min-height: var(--control-line-height);
   height: var(--control-line-height);
   padding: 0;
+  margin: 0;
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -148,21 +227,23 @@ export default {
   outline: var(--focus-ring);
   outline-offset: var(--focus-offset-control);
 }
-.app-select .multiselect__placeholder { color: var(--text-muted); padding: 0; margin-bottom: 10px; }
+.app-select .multiselect__placeholder {
+  color: var(--text-muted); padding: 0; margin: 0; line-height: var(--control-line-height);
+}
 .app-select .multiselect__select {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 42px;
+  width: var(--control-height);
+  height: calc(var(--control-height) - 2px);
   color: var(--text-muted);
   font-size: 12px;
 }
 .app-select .multiselect__select::before { display: none; }
 .app-select .app-icon { width: var(--icon-sm); height: var(--icon-sm); }
 .app-select .multiselect__content-wrapper {
-  position: relative;
-  margin-top: 6px;
+  position: absolute;
+  margin: 0;
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
@@ -171,10 +252,13 @@ export default {
 .app-select .multiselect__content { background: var(--surface-raised); }
 .app-select .multiselect__option {
   min-height: var(--control-height);
+  padding: var(--control-padding-block) var(--space-3);
   white-space: normal; overflow-wrap: anywhere; line-height: var(--leading-label);
 }
 .app-select .multiselect__tag {
-  padding-right: 26px;
+  min-height: var(--target-size);
+  box-sizing: border-box;
+  padding: var(--space-1) calc(var(--target-size) + var(--space-2)) var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
   background: var(--accent-soft);
   border: var(--border-width) solid var(--border-strong);
@@ -193,7 +277,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  width: var(--badge-size);
+  width: var(--target-size);
   height: 100%;
   border: 0;
   border-radius: var(--radius-sm);
@@ -204,12 +288,21 @@ export default {
 .select-remove:hover { background: var(--surface-hover); }
 .select-clear {
   align-self: flex-start;
-  padding: 0;
-  border: 0;
-  background: none;
   color: var(--text-muted);
   text-decoration: underline;
   cursor: pointer;
+}
+.app-select-popup {
+  position: fixed;
+  z-index: var(--layer-popup);
+  min-height: 0;
+}
+.app-select-popup .multiselect__content-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-panel);
 }
 .select-clear:focus-visible, .select-remove:focus-visible {
   outline: var(--focus-ring);

@@ -1,6 +1,6 @@
 ---
 name: neon-dark-design
-description: "Build or restyle static sites, galleries, dashboards and developer tools with a modern neon-yellow dark theme. Use for charcoal surfaces, reusable design tokens, outlined icons, consistent dropdowns, accessible focus states and responsive panels."
+description: "Build or restyle static sites, galleries, dashboards and developer tools with a modern neon-yellow dark design system. Use for semantic design tokens, reusable base components, compact desktop and touch controls, elevated dropdowns, outlined icons and accessible responsive panels."
 ---
 
 # Neon-dark design
@@ -13,8 +13,11 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 
 - [Design tokens](./assets/design-tokens.css): copy into the target project's style directory,
   import once before component styles, and adapt semantic values rather than repeating literals.
-- The final token group contains optional catalogue sizes, rank colours and rarity colours.
-  Keep only extensions relevant to the new product; do not introduce game-specific UI elsewhere.
+- [Base styles](./assets/primitives.css) and [component contract](./references/components.md):
+  bundled, working button, input, select, icon and scroll-area implementations, with API,
+  dependencies, examples and regression requirements. Load the contract before implementing controls.
+- Base tokens/components are product-independent. Keep game/product names in a separate
+  consumer alias stylesheet, never in the portable layer.
 - This entire skill folder can be copied to another repository's `.github/skills/` or a
   supported personal skills directory. It needs no files outside this folder.
 
@@ -25,8 +28,9 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 2. Identify the primary task and information hierarchy. For a static utility, keep the
    introduction compact and let the useful content occupy the viewport; do not add a
    full-screen marketing hero, carousel or animation merely to establish a visual style.
-3. Import the token stylesheet, then implement shared primitives for buttons, fields,
-   selects, cards and small technical labels. Reuse them across every surface.
+3. Import tokens and base styles, then use the bundled components (or API-compatible
+   framework ports). Reuse them across every surface; do not replace a base component
+   with a one-off styled native element. Keep product aliases in the consumer stylesheet.
 4. Apply the contracts below. Let components own layout and consume semantic tokens for
    colour, typography, spacing, radius, borders, focus, icons, disabled states and motion.
 5. Validate real controls and overflow transitions at desktop and mobile sizes. Measure
@@ -63,9 +67,11 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 
 ### Controls
 
-- Buttons: 44px minimum default height, raised neutral background, fine border,
-  semibold text; primary variant uses accent fill and on-accent text. Keep visible
-  hover, focus, disabled and destructive states.
+- Buttons: compact 32px regular desktop controls and a 24px minimum click target,
+  including icon buttons. Narrow/coarse-pointer devices use 44px minimum touch targets.
+  Target size is a floor, not a forced height for every control. Use raised neutral
+  surfaces, fine borders and semibold text. Primary accent fill is opt-in; creation/setup
+  actions should not compete with the primary task. Preserve hover/focus/disabled/danger states.
 - Fields: raised surface, medium radius, muted placeholder, persistent external label.
 - Selects: one shared implementation for single and multiple selection. Keep search,
   keyboard navigation, selected values, tags, removals and clear actions consistent.
@@ -74,8 +80,10 @@ Use this as a visual language, not a requirement to copy a particular layout or 
   specificity, without `!important` or per-page patches.
 - Keep hidden search inputs genuinely zero-width and borderless when inactive.
   Do not let generic input selectors accidentally style the select library's internals.
-- Menus must remain usable near viewport/panel edges. Choose overlay positioning or
-  in-flow expansion deliberately; do not apply overlay-space calculations to in-flow menus.
+- Menus use an anchored fixed popup with `--layer-popup` outside clipped scroll panels.
+  Opening must not change container height, scroll range, width or sibling positions.
+  Reposition on resize/scroll, flip above near viewport edges, and clean up on close/unmount.
+  A z-index alone cannot escape an ancestor's overflow clipping; use an elevated popup layer.
 - With wrapped options, keep the keyboard-highlighted option visible using actual row
   bounds, not a fixed-row-height assumption.
 - If scrollbars must not consume content width, use one shared overlay-scrollbar
@@ -97,28 +105,23 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 - Use inline confirmation for destructive actions with a clear cancel path. Preserve
   keyboard focus and report persistence failures rather than pretending changes were saved.
 
-## Example: compose primitives from tokens
+## Example: use the base component contract
+
+```vue
+<AppButton variant="ghost" @click="createList">New list</AppButton>
+<label for="list-name">List name</label>
+<AppInput id="list-name" v-model="name" required />
+<AppButton variant="primary" type="submit">Save</AppButton>
+<AppButton icon-only aria-label="Close panel" @click="close">
+  <AppIcon name="close" />
+</AppButton>
+```
 
 ```css
-.panel {
-  padding: var(--space-5);
-  border: var(--border-width) solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--text);
-}
-.action {
-  min-height: var(--control-height);
-  padding: var(--control-padding-block) var(--control-padding-inline);
-  border: var(--border-width) solid var(--accent);
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  color: var(--on-accent);
-  font: var(--weight-semibold) var(--text-body)/var(--leading-ui) var(--font-family);
-}
-.action:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-offset);
+/* Consumer aliases describe product meaning; base tokens stay reusable. */
+:root {
+  --task-priority-high: var(--status-warning-text);
+  --task-category-review: var(--color-violet-400);
 }
 ```
 
@@ -132,9 +135,13 @@ inside components, or decorative chrome that hides the site's actual content.
 - Verify 320px, 390px, tablet and desktop widths; check long names and empty states.
 - Exercise search, single/multi-select, keyboard scrolling, tag removal and details panels.
 - Check all four corners and the focus ring with a dropdown open, not only closed.
+- Measure desktop targets >=24px, touch targets >=44px, and unchanged panel geometry
+  before/open/closed. Verify popup edge placement, clipping, anchoring and cleanup.
 - Measure field widths before/during/after scrollbar appearance; ensure zero width shift.
 - Check contrast for text, muted labels, filled buttons, errors and category/rank badges.
 - Respect `prefers-reduced-motion` and use native dark `color-scheme`.
 - Inspect screenshots, but also assert computed styles and geometry. For a token-only
   extraction, compare before/after values so the refactor does not silently restyle the UI.
 - Do not add a framework, theme switcher or animation dependency just for this language.
+- Keep the bundled token, style and component starters synchronized with their canonical
+  implementations. Validate the contract, not just example screenshots.

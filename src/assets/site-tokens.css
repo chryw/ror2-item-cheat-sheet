@@ -1,0 +1,33 @@
+:root {
+  --panel-background: var(--surface);
+  --panel-border: var(--border);
+  --text-colour: var(--text);
+  --muted-colour: var(--text-muted);
+  --nav-width: var(--layout-rail-width);
+  --nav-width-collapsed: var(--layout-rail-collapsed-width);
+  --details-width: var(--layout-aside-width);
+  --details-padding: var(--panel-padding);
+  --details-image-size: var(--media-size-xl);
+  --card-width-compact: var(--tile-min-width-sm);
+  --card-width-comfortable: var(--tile-min-width-lg);
+  --card-height-compact: var(--tile-min-height-sm);
+  --card-height-comfortable: var(--tile-min-height-lg);
+  --card-image-compact: var(--media-size-sm);
+  --card-image-comfortable: var(--media-size-lg);
+  --rank-core-surface: var(--status-warning-surface);
+  --rank-core-text: var(--status-warning-text);
+  --rank-synergy-surface: var(--status-success-surface);
+  --rank-synergy-text: var(--status-success-text);
+  --rank-support-surface: var(--status-info-surface);
+  --rank-support-text: var(--status-info-text);
+  --rarity-common: var(--color-gray-400);
+  --rarity-uncommon: var(--color-green-400);
+  --rarity-void: var(--color-pink-400);
+  --rarity-hallowed: var(--color-violet-400);
+  --rarity-hex: var(--color-rose-400);
+  --rarity-page: var(--color-sand-400);
+  --rarity-legendary: var(--color-coral-400);
+  --rarity-boss: var(--color-lime-400);
+  --rarity-lunar: var(--color-sky-400);
+  --rarity-equipment: var(--color-amber-400);
+}

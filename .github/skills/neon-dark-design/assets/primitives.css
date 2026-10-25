@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+button, input { font-family: inherit; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+.app-icon {
+  display: inline-block;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  stroke-width: var(--icon-stroke-width);
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+a { color: var(--accent); text-underline-offset: var(--focus-offset); }
+a:hover { color: var(--accent-hover); }
+::selection { background: var(--accent); color: var(--on-accent); }
+:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+
+.ui-eyebrow {
+  color: var(--text-muted);
+  font: var(--text-label)/var(--leading-ui) var(--font-mono);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

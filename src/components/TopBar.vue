@@ -2,9 +2,9 @@
   <AppScrollArea tag="nav" class="navigation" label="Filter controls"
     :class="{ 'is-collapsed': collapsed }" aria-label="Item filters">
     <header class="nav-header">
-      <button
-        class="nav-toggle ui-button"
-        type="button"
+      <AppButton
+        class="nav-toggle"
+        icon-only
         :aria-expanded="String(!collapsed)"
         aria-controls="nav-controls"
         :aria-label="collapsed ? 'Expand navigation' : 'Collapse navigation'"
@@ -12,7 +12,7 @@
         @click="collapsed = !collapsed"
       >
         <AppIcon name="menu" />
-      </button>
+      </AppButton>
       <div v-show="!collapsed" class="nav-brand">
         <strong>Risk of Rain 2</strong>
         <small class="ui-eyebrow">Field guide / 02</small>
@@ -24,10 +24,10 @@
       <SortBySelector />
       <RarityFilter />
       <VersionFilter />
-      <button class="nav-reset ui-button" type="button" @click="resetFilters">
+      <AppButton class="nav-reset" @click="resetFilters">
         <AppIcon name="reset" />
         Reset filters
-      </button>
+      </AppButton>
       <p class="nav-hint">Your run, your rules.<br>Combine filters to find your next pickup.</p>
     </div>
   </AppScrollArea>
@@ -89,16 +89,7 @@ export default {
 .nav-brand small { display: block; font-size: var(--text-xs); margin-top: 5px; }
 
 .nav-toggle {
-  display: flex;
   flex: 0 0 var(--control-height-compact);
-  justify-content: center;
-  align-items: center;
-  width: var(--control-height-compact);
-  height: var(--control-height-compact);
-  padding: 0;
-  min-height: var(--control-height-compact);
-  border-radius: var(--radius-md);
-  font-size: var(--text-base);
 }
 
 .nav-controls { display: flex; flex-direction: column; gap: var(--space-5); }
@@ -107,21 +98,6 @@ export default {
   color: var(--muted-colour);
   font: var(--text-label)/var(--leading-ui) var(--font-mono);
   letter-spacing: var(--tracking-label);
-}
-
-.nav-field input[type="search"], .nav-field input[type="text"] {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  height: var(--control-height);
-  padding: 0 var(--space-3);
-  font-family: var(--font-family);
-  font-size: var(--text-control);
-  font-weight: var(--weight-regular);
-  color: var(--text-colour);
-  background: var(--surface-raised);
-  border: var(--border-width) solid var(--panel-border);
-  border-radius: var(--radius-md);
 }
 
 .nav-search { position: relative; display: flex; align-items: center; }
@@ -134,7 +110,6 @@ export default {
 }
 .nav-search > svg { left: 12px; right: auto; }
 .nav-search input[type="search"] { padding-left: 34px; }
-.nav-field input::placeholder { color: var(--muted-colour); }
 .navigation button:focus-visible,
 .nav-field input:focus-visible, .nav-checkbox input:focus-visible {
   outline: var(--focus-ring);
@@ -148,6 +123,8 @@ export default {
   margin-top: var(--space-3);
   font-size: var(--text-sm);
   line-height: var(--leading-ui);
+  min-height: var(--target-size);
+  cursor: pointer;
 }
 
 .nav-checkbox input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }

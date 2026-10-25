@@ -68,10 +68,10 @@
 
       <div class="item-category-section">
         <h4 class="item-rarity-label">Rarity</h4>
-        <button class="item-rarity" type="button" @click="clickRarityPill(itemData.itemRarity)"
+        <AppButton class="item-rarity" @click="clickRarityPill(itemData.itemRarity)"
           :aria-label="`Filter by ${itemData.itemRarity} rarity`">
           {{ itemData.itemRarity }}
-        </button>
+        </AppButton>
         <h4 v-if="itemCategories.length" class="item-category-label">Category</h4>
         <div v-if="itemCategories.length" class="item-category-list">
           <p
@@ -104,23 +104,23 @@
       <section class="custom-build-actions" aria-label="Custom build actions">
         <AppSelect id="custom-build-target" v-model="customBuildTarget" label="Custom build"
           :options="customBuildOptions" :disabled="!$store.state.customBuildsLoaded" />
-        <button class="ui-button ui-button--primary" type="button"
+        <AppButton variant="primary"
           :disabled="!$store.state.customBuildsLoaded || itemIsSaved"
           @click="$store.dispatch('addCustomBuildItem', selectedItem.id)">
           {{ itemIsSaved ? 'Item already in build' : 'Add to custom build' }}
-        </button>
+        </AppButton>
         <template v-if="targetBuild">
           <p v-if="itemIsSaved" role="status">
             {{ itemData.name }} is in {{ targetBuild.name }}.
           </p>
-          <button v-if="itemIsSaved" class="ui-button" type="button"
+          <AppButton v-if="itemIsSaved"
             @click="$store.dispatch('removeCustomBuildItem',
               { id: targetBuild.id, itemId: selectedItem.id })">
             Remove from custom build
-          </button>
-          <button class="ui-button" type="button" @click="viewCustomBuild">
+          </AppButton>
+          <AppButton @click="viewCustomBuild">
             View {{ targetBuild.name }}
-          </button>
+          </AppButton>
         </template>
       </section>
     </div>

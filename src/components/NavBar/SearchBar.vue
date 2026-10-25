@@ -3,12 +3,12 @@
     <span>Search items</span>
     <span class="nav-search">
       <SearchIcon />
-      <input
+      <AppInput
         id="search-bar-input"
         v-model="searchTerm"
         type="search"
         placeholder="Name or description..."
-      >
+      />
     </span>
   </label>
 </template>
