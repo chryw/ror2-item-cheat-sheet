@@ -1,5 +1,5 @@
 <template>
-  <div class="side-bar-wrapper">
+  <AppScrollArea class="side-bar-wrapper" label="Item details">
     <div class="side-bar" v-if="selectedItem != null" v-bind:class="[this.rarityClass]">
       <div class="top-section">
         <a class="wiki-link" v-bind:href="itemData.wikiLink"
@@ -124,7 +124,7 @@
         </template>
       </section>
     </div>
-  </div>
+  </AppScrollArea>
 </template>
 
 <script>
@@ -132,6 +132,7 @@ import { mapState, mapMutations } from "vuex";
 
 import CloseIcon from "./Icons/CloseIcon.vue";
 import AppSelect from "./AppSelect.vue";
+import AppScrollArea from "./AppScrollArea.vue";
 import items from "../data/catalog";
 import getItemImageUrl from "../helpers/ItemImageUtils";
 import ItemIdUtils from "../helpers/ItemIdUtils";
@@ -142,6 +143,7 @@ import { bus } from "../main";
 export default {
   name: "SideBar",
   components: {
+    AppScrollArea,
     CloseIcon,
     AppSelect,
   },
@@ -244,7 +246,6 @@ export default {
 
   --top-bar-height: 60px;
 
-  overflow-y: auto;
 }
 
 @media (max-width: 600px) {

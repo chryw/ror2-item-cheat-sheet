@@ -1,5 +1,6 @@
 <template>
-  <nav class="navigation" :class="{ 'is-collapsed': collapsed }" aria-label="Item filters">
+  <AppScrollArea tag="nav" class="navigation" label="Filter controls"
+    :class="{ 'is-collapsed': collapsed }" aria-label="Item filters">
     <header class="nav-header">
       <button
         class="nav-toggle ui-button"
@@ -29,11 +30,12 @@
       </button>
       <p class="nav-hint">Your run, your rules.<br>Combine filters to find your next pickup.</p>
     </div>
-  </nav>
+  </AppScrollArea>
 </template>
 
 <script>
 import SearchBar from './NavBar/SearchBar.vue';
+import AppScrollArea from './AppScrollArea.vue';
 import RoleFilter from './NavBar/RoleFilter.vue';
 import SortBySelector from './NavBar/SortBySelector.vue';
 import RarityFilter from './NavBar/RarityFilter.vue';
@@ -42,7 +44,7 @@ import { SortType } from '../data/constants';
 
 export default {
   name: 'TopBar',
-  components: { SearchBar, RoleFilter, SortBySelector, RarityFilter, VersionFilter },
+  components: { AppScrollArea, SearchBar, RoleFilter, SortBySelector, RarityFilter, VersionFilter },
   data() { return { collapsed: false }; },
   methods: {
     resetFilters() {
@@ -65,9 +67,6 @@ export default {
   background: var(--panel-background);
   color: var(--text-colour);
   border-right: var(--border-width) solid var(--panel-border);
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
 }
 
 .navigation.is-collapsed {
@@ -75,10 +74,6 @@ export default {
   width: var(--nav-width-collapsed);
   padding-left: var(--space-2);
   padding-right: var(--space-2);
-}
-
-@supports not (scrollbar-gutter: stable) {
-  .navigation { overflow-y: scroll; }
 }
 
 .nav-header {

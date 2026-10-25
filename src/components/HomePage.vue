@@ -2,7 +2,7 @@
   <div class="home-page">
     <TopBar />
     <div class="info-section">
-      <div class="item-list-section">
+      <AppScrollArea class="item-list-section" label="Pickup gallery">
         <header class="gallery-header">
           <p class="ui-eyebrow">
             <span class="status-dot" aria-hidden="true"></span> The pickup index
@@ -49,7 +49,7 @@
         <ItemList style="flex: 1;" :itemListType="SelectionType.ITEM" />
         <ItemList style="flex: 1;" :itemListType="SelectionType.EQUIPMENT" />
         <ItemList style="flex: 1;" :itemListType="SelectionType.DRONE" />
-      </div>
+      </AppScrollArea>
       <SideBar />
     </div>
   </div>
@@ -57,6 +57,7 @@
 
 <script>
 import ItemList from './ItemList.vue';
+import AppScrollArea from './AppScrollArea.vue';
 import TopBar from './TopBar.vue';
 import SideBar from './SideBar.vue';
 import CustomBuildEditor from './CustomBuildEditor.vue';
@@ -65,6 +66,7 @@ import { SelectionType } from '../data/constants';
 export default {
   name: "HomePage",
   components: {
+    AppScrollArea,
     ItemList,
     TopBar,
     SideBar,
@@ -118,7 +120,6 @@ export default {
 .item-list-section {
   flex: 1;
   min-width: 0;
-  overflow-y: auto;
   padding: var(--space-6);
 }
 

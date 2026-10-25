@@ -78,9 +78,11 @@ Use this as a visual language, not a requirement to copy a particular layout or 
   in-flow expansion deliberately; do not apply overlay-space calculations to in-flow menus.
 - With wrapped options, keep the keyboard-highlighted option visible using actual row
   bounds, not a fixed-row-height assumption.
-- Reserve scroll space (`scrollbar-gutter: stable` with an appropriate older-browser
-  fallback) so overflow does not change field widths. Test the complete
-  non-overflow -> overflow -> non-overflow transition.
+- If scrollbars must not consume content width, use one shared overlay-scrollbar
+  component with native wheel/touch/keyboard scrolling and draggable handles.
+  `scrollbar-gutter: stable` prevents shifts but still reserves space; it is not an
+  overlay solution. Do not simply hide scrollbars or rely on deprecated `overflow: overlay`.
+  Test the complete non-overflow -> overflow -> non-overflow transition.
 
 ### Icons and content
 

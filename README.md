@@ -13,8 +13,12 @@ There are 3 sections on the website. The navbar, the item list, and the sidebar.
 The navbar alters the item list to make it easier for the user to navigate the item list. It has functionality like searching for specific items, sorting the items, and filtering out specific types of items. 
 
 On desktop (above 900px), navigation is a left sidebar. At narrower widths it moves to the top. The hamburger button collapses or expands the controls without clearing your selections. Search, sort, rarity and version controls narrow the catalogue; **Reset filters** restores the full catalogue.
-Navigation reserves a stable scrollbar gutter so opening a dropdown does not resize the controls.
-Browsers without scrollbar-gutter support keep a scroll track reserved instead.
+Navigation, gallery and details use [AppScrollArea.vue](src/components/AppScrollArea.vue),
+a shared [OverlayScrollbars](https://github.com/KingSora/OverlayScrollbars) wrapper.
+The themed, draggable scrollbars overlay the content edge: they reserve no gutter and
+do not change panel or content widths when overflow appears. Wheel, touch and keyboard
+scrolling continue to use the native scroll viewport.
+Its MIT notice is distributed in [overlayscrollbars-license.txt](public/overlayscrollbars-license.txt).
 
 All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around the existing vue-multiselect component: survivor, sort, rarity, version and custom-build destination. They share the same searchable control, keyboard support, dark styling and in-flow option list. Role names are displayed without added suffixes.
 

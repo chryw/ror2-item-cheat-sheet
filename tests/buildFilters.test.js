@@ -546,6 +546,63 @@ test('keyboard dropdown scrolling uses actual bounds for wrapped options', () =>
   });
 });
 
+test('panels share overlay scrollbars with native viewports and clean lifecycle handling', () => {
+  const source = fs.readFileSync(path.join(sourceRoot, 'components', 'AppScrollArea.vue'), 'utf8');
+  const component = parseComponent(source);
+  const { code } = transformSync(component.script.content, {
+    babelrc: false,
+    configFile: false,
+    plugins: ['@babel/plugin-transform-modules-commonjs'],
+  });
+  let initialization;
+  let options;
+  let updates = 0;
+  let destroyed = false;
+  const listeners = new Map();
+  const module = { exports: {} };
+  const instance = {
+    update(force) { assert.strictEqual(force, true); updates += 1; },
+    destroy() { destroyed = true; },
+  };
+  const browser = {
+    addEventListener(event, callback) { listeners.set(event, callback); },
+    removeEventListener(event, callback) {
+      assert.strictEqual(listeners.get(event), callback);
+      listeners.delete(event);
+    },
+  };
+  vm.runInThisContext(`(function(require, module, exports, window) { ${code}\n})`)(
+    request => (request.endsWith('.css') ? {} : {
+      OverlayScrollbars(target, settings) {
+        initialization = target;
+        options = settings;
+        return instance;
+      },
+    }), module, module.exports, browser,
+  );
+  const area = module.exports.default;
+  const context = { $el: {}, $refs: { viewport: {} } };
+  context.updateScrollArea = area.methods.updateScrollArea.bind(context);
+  area.mounted.call(context);
+  assert.strictEqual(initialization.target, context.$el);
+  assert.strictEqual(initialization.elements.viewport, context.$refs.viewport);
+  assert.deepStrictEqual(options.overflow, { x: 'hidden', y: 'scroll' });
+  assert.deepStrictEqual(options.scrollbars, { theme: 'os-theme-neon', autoHide: 'never' });
+  area.updated.call(context);
+  listeners.get('resize')();
+  assert.strictEqual(updates, 2);
+  area.beforeDestroy.call(context);
+  assert.strictEqual(destroyed, true);
+  assert.strictEqual(listeners.size, 0);
+  ['TopBar.vue', 'HomePage.vue', 'SideBar.vue'].forEach(filename => {
+    const panel = fs.readFileSync(path.join(sourceRoot, 'components', filename), 'utf8');
+    assert(panel.includes('<AppScrollArea'), `${filename} must use shared overlay scrolling`);
+    assert(!panel.includes('scrollbar-gutter: stable'), 'Overlay panels must not reserve a gutter');
+  });
+  assert(component.template.content.includes('<slot />'));
+  assert(fs.existsSync(path.join(sourceRoot, '..', 'public', 'overlayscrollbars-license.txt')));
+});
+
 test('dark theme text and accent pairs meet WCAG AA normal-text contrast', () => {
   const theme = fs.readFileSync(path.join(sourceRoot, 'assets', 'theme.css'), 'utf8');
   const tokenSource = fs.readFileSync(path.join(sourceRoot, 'assets', 'design-tokens.css'), 'utf8');
