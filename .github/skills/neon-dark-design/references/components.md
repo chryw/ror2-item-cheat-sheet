@@ -96,7 +96,23 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
 - Options are `{ value, label }` records. Model value is a string for single selection,
   an array of strings for multiple selection. Emits `input` with stable values, not records.
 - Optional: `multiple=false`, `disabled=false`, `placeholder="Choose an option"`.
-- One implementation for single/multiple, search, removable tags and clear action.
+- One public API for single/multiple selection, with responsive presentation.
+- At <=900px or with a coarse pointer, use a native modal-dialog bottom sheet, not an
+  anchored flyout. The trigger is a stable one-line button with a selection summary,
+  labelled by its external label/value and exposing aria-haspopup="dialog".
+- The mobile sheet uses native radios or checkboxes. Changes, including Clear, are drafts
+  until Apply; Cancel, Close, Escape and backdrop dismissal discard them. Lists longer than
+  eight options have a labelled search field. Preserve selected values hidden by search.
+- Focus the title, not the search field, to avoid opening the keyboard unnecessarily.
+  Native showModal() provides top-layer painting, background inertness and modal focus.
+  Stop keyboard events from reaching enclosing navigation/dialog traps. Restore focus
+  without scrolling before emitting an applied value, so consumer navigation can then
+  move focus to its next destination.
+- Keep actions visible and scroll only the choice area, using AppScrollArea. Use
+  visualViewport to fit above the on-screen keyboard, and remove viewport/media listeners
+  on close/unmount. Switching presentation cancels unapplied choices and cleans up overlays.
+- Mobile controls meet --target-size-touch even on narrow fine-pointer windows.
+- Desktop uses vue-multiselect search, removable tags and clear action:
 - The trigger uses the same control tokens as inputs/buttons and retains all four radii
   while open. Inactive internal search inputs stay borderless and zero-width.
 - The menu lives in a fixed, token-elevated popup layer outside clipped scroll panels.
@@ -111,7 +127,7 @@ Preserve and distribute the [third-party notices](../assets/licenses/).
   On reopening, restore visibility of the retained highlight even if its index has not changed.
 - Vertically centre trigger values, tags, carets and option labels with flex alignment,
   not padding based on assumed font metrics. Keep wrapped option rows content-sized.
-- An open select consumes Escape before dismissing its menu, so enclosing dialogs
+- An open picker/menu consumes Escape before dismissing itself, so enclosing dialogs
   do not close on the same keypress. A subsequent Escape can dismiss the dialog.
 
 ```vue

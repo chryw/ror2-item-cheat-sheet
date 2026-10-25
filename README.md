@@ -53,13 +53,32 @@ do not change panel or content widths when overflow appears. Wheel, touch and ke
 scrolling continue to use the native scroll viewport.
 Its MIT notice is distributed in [overlayscrollbars-license.txt](public/overlayscrollbars-license.txt).
 
-All dropdowns use [AppSelect.vue](src/components/AppSelect.vue), a shared wrapper around
-vue-multiselect: survivor, rarity, version and custom-build destination. Menus open
+All choice inputs use [AppSelect.vue](src/components/AppSelect.vue): survivor, rarity,
+version and custom-build destination. On fine-pointer desktop, vue-multiselect menus open
 in a fixed, z-indexed popup layer outside the scrolling panels, anchored to their control.
 They flip above near viewport edges and reposition on resize/scroll. Opening a menu never
 changes its container's height, scroll range or sibling positions. Role names have no added suffixes.
 Trigger values, tags, carets and option labels use shared flex alignment to stay vertically
-centred at desktop and touch sizes, including wrapped labels.
+centred, including wrapped labels.
+
+At <=900px or with a coarse pointer, the same component uses a native modal-dialog
+bottom sheet instead of a flyout. The trigger stays one row tall and shows the current
+selection as a text summary. Radio buttons choose one value; checkboxes choose multiple.
+Selections are drafts until **Apply**; **Cancel**, Close, Escape and backdrop dismissal
+discard drafts. **Clear** clears the draft, not the saved filter until Apply.
+Lists longer than eight options have a labelled search field, without automatically
+focusing it or opening the on-screen keyboard. The heading receives initial focus.
+The sheet has an independently scrolling choice area, persistent actions, 44px minimum
+targets, and visual-viewport sizing for the on-screen keyboard. Opening and closing it
+does not change page/panel height or scroll position. Native modal semantics contain
+focus and make the background inert. Closing returns focus without scrolling; applying
+a survivor still returns mobile users to the gallery. Crossing the picker breakpoint
+cancels uncommitted choices and cleans up listeners.
+
+This interaction follows [WAI modal-dialog guidance](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+and [native dialog semantics](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog).
+[GOV.UK's select guidance](https://design-system.service.gov.uk/components/select/) also
+recommends considering simpler radio choices rather than defaulting to a select.
 
 UI icons use [Lucide](https://lucide.dev/) through the shared
 [AppIcon](src/components/Icons/AppIcon.js) renderer. Only eight named icon definitions are
@@ -78,8 +97,9 @@ present in the game artwork. The name's tooltip, card's accessible rarity descri
 details keep the information available without relying on colour alone.
 Hover and selected-card outlines remain interaction cues, not rarity colours.
 Each catalogue section is divided into rarity groups in the game's existing rarity order.
-Small rarity headings and neutral hairline dividers reuse the main section-heading layout
-without competing with the larger **Items**, **Equipments** and **Drones** headings/counts.
+Small rarity headings and vertical spacing distinguish groups without decorative rules.
+The larger **Items**, **Equipments** and **Drones** headings/counts remain the primary
+section landmarks; rarity headings are subordinate, not a second row of line dividers.
 Only groups with matching entries appear. Build priorities apply within each rarity group.
 Hex uses a soft yellow-green alias consistently across names, group headings and details.
 

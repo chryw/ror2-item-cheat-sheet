@@ -128,7 +128,7 @@ export default {
     updateLayout() {
       const mobile = window.matchMedia('(max-width: 900px)').matches;
       if (this.mobileLayout !== mobile) {
-        this.closeNavigation(false);
+        this.closeNavigation(!this.navCollapsed);
         if (mobile && this.selectedItem) this.$nextTick(() => this.$refs.details.focusClose());
       }
       this.mobileLayout = mobile;
@@ -141,6 +141,7 @@ export default {
       this.navCollapsed = false;
     },
     closeNavigation(restoreFocus = true) {
+      this.$refs.navigation.$el.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
       if (this.$refs.navigation.$el.contains(document.activeElement)) document.activeElement.blur();
       this.navCollapsed = true;
       if (restoreFocus) {

@@ -5,13 +5,11 @@
       <span class="item-count" :aria-label="`${itemIdList.length} matching entries`">
         {{ itemIdList.length }}
       </span>
-      <span class="section-rule" aria-hidden="true"></span>
     </header>
     <section v-for="group in rarityGroups" :key="group.rarity" class="rarity-group"
       :aria-label="`${group.rarity} ${SelectionTypePluralization[itemListType]}`">
       <header class="item-list-heading rarity-group-heading" :class="ItemRarityClass[group.rarity]">
         <h3 class="item-list-header">{{ group.rarity }}</h3>
-        <span class="section-rule" aria-hidden="true"></span>
       </header>
       <div class="item-list" :class="cardSize">
         <ItemCard v-for="itemId in group.itemIds" :key="itemId" :itemId="itemId"
@@ -130,7 +128,6 @@ export default {
   border: var(--border-width) solid var(--border); border-radius: var(--radius-pill);
   color: var(--text-muted); font: var(--type-code);
 }
-.section-rule { flex: 1; height: var(--border-width); background: var(--border); }
 .rarity-group + .rarity-group { margin-top: var(--space-5); }
 .rarity-group-heading { margin-bottom: var(--space-3); }
 .rarity-group-heading .item-list-header {

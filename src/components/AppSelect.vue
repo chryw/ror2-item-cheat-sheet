@@ -1,7 +1,8 @@
 <template>
   <div class="app-select-field" @keydown.esc.capture="closeOnEscape">
-    <label class="select-label" :for="id">{{ label }}</label>
+    <label :id="`${id}-label`" class="select-label" :for="id">{{ label }}</label>
     <multiselect
+      v-if="!usePicker"
       ref="control"
       :id="id"
       :aria-label="label"
@@ -38,8 +39,66 @@
         </span>
       </template>
     </multiselect>
-    <AppButton v-if="multiple && value.length" class="select-clear" variant="ghost"
+    <AppButton v-else :id="id" ref="pickerTrigger" class="picker-trigger"
+      :disabled="disabled" aria-haspopup="dialog" :aria-expanded="String(pickerOpen)"
+      :aria-controls="`${id}-picker`" :aria-labelledby="`${id}-label ${id}-value`"
+      @click="openPicker">
+      <span :id="`${id}-value`" class="picker-value" :class="{ 'is-placeholder': !selectionLabel }">
+        {{ selectionLabel || placeholder }}
+      </span>
+      <AppIcon name="chevron-down" />
+    </AppButton>
+    <AppButton v-if="!usePicker && multiple && value.length" class="select-clear" variant="ghost"
       @click="$emit('input', [])">Clear {{ label.toLowerCase() }}</AppButton>
+    <dialog :id="`${id}-picker`" ref="pickerDialog" class="picker-dialog"
+      :aria-labelledby="`${id}-picker-title`" @keydown.stop
+      @cancel.prevent="closePicker" @close="handlePickerClose" @click="dismissPickerBackdrop">
+      <header class="picker-header">
+        <div>
+          <h2 :id="`${id}-picker-title`" ref="pickerTitle" tabindex="-1">{{ label }}</h2>
+          <p :aria-live="multiple ? 'polite' : null">
+            {{ multiple ? `${pickerDraft.length} selected. Choose any that apply.` :
+              'Choose one option.' }}
+          </p>
+        </div>
+        <AppButton icon-only variant="ghost" :aria-label="`Close ${label.toLowerCase()} picker`"
+          @click="closePicker"><AppIcon name="close" /></AppButton>
+      </header>
+      <AppScrollArea ref="pickerList" class="picker-body" :label="`${label} choices`">
+        <div v-if="options.length > 8" class="picker-search">
+          <label class="select-label" :for="`${id}-picker-search`">
+            Search {{ label.toLowerCase() }}
+          </label>
+          <AppInput :id="`${id}-picker-search`" v-model="pickerQuery" type="search"
+            autocomplete="off" />
+        </div>
+        <fieldset class="picker-options">
+          <legend class="ui-visually-hidden">
+            {{ multiple ? 'Choose any that apply' : 'Choose one option' }}
+          </legend>
+          <label v-for="option in pickerOptions" :key="option.value" class="picker-choice"
+            :class="{ 'is-checked': isDraftSelected(option.value) }">
+            <input :type="multiple ? 'checkbox' : 'radio'" :name="`${id}-choice`"
+              :value="option.value" :checked="isDraftSelected(option.value)"
+              @change="toggleDraft(option.value)" />
+            <span>{{ option.label }}</span>
+          </label>
+        </fieldset>
+        <p v-if="!pickerOptions.length" class="picker-empty" role="status">No matching options.</p>
+      </AppScrollArea>
+      <footer class="picker-footer">
+        <AppButton v-if="multiple" variant="ghost" aria-label="Clear selection"
+          @click="pickerDraft = []">
+          Clear
+        </AppButton>
+        <div class="picker-actions">
+          <AppButton @click="closePicker">Cancel</AppButton>
+          <AppButton variant="primary" :disabled="!canApplyPicker" @click="applyPicker">
+            Apply
+          </AppButton>
+        </div>
+      </footer>
+    </dialog>
   </div>
 </template>
 
@@ -48,12 +107,16 @@ import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import AppButton from './base/AppButton.vue';
 import AppIcon from './Icons/AppIcon';
+import AppInput from './base/AppInput.vue';
+import AppScrollArea from './AppScrollArea.vue';
 
 export default {
   name: 'AppSelect',
   components: {
     AppButton,
     AppIcon,
+    AppInput,
+    AppScrollArea,
     Multiselect: {
       extends: Multiselect,
       watch: {
@@ -92,15 +155,109 @@ export default {
     disabled: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Choose an option' },
   },
+  data() {
+    return {
+      usePicker: false,
+      pickerOpen: false,
+      pickerQuery: '',
+      pickerDraft: '',
+    };
+  },
+  mounted() {
+    this.pickerMedia = window.matchMedia('(max-width: 900px), (any-pointer: coarse)');
+    this.pickerMedia.addEventListener('change', this.updatePickerMode);
+    this.updatePickerMode();
+  },
   updated() {
     this.updatePopup();
   },
   beforeDestroy() {
+    if (this.pickerMedia) this.pickerMedia.removeEventListener('change', this.updatePickerMode);
+    this.closePicker(false);
     this.closePopup();
   },
   methods: {
+    updatePickerMode() {
+      const usePicker = this.pickerMedia.matches;
+      if (usePicker === this.usePicker) return;
+      const wasOpen = this.pickerOpen || (this.$refs.control && this.$refs.control.isOpen);
+      this.closePicker(false);
+      if (this.$refs.control && this.$refs.control.isOpen) this.$refs.control.deactivate();
+      this.usePicker = usePicker;
+      if (wasOpen) {
+        this.$nextTick(() => {
+          const control = this.usePicker ? this.$refs.pickerTrigger : this.$refs.control;
+          if (control && control.$el.getBoundingClientRect().width > 0) {
+            control.$el.focus({ preventScroll: true });
+          }
+        });
+      }
+    },
+    openPicker() {
+      if (this.disabled || this.pickerOpen) return;
+      this.pickerDraft = this.multiple ? this.value.slice() : this.value;
+      this.pickerQuery = '';
+      this.pickerOpen = true;
+      this.$refs.pickerDialog.showModal();
+      window.addEventListener('resize', this.updatePickerViewport);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', this.updatePickerViewport);
+        window.visualViewport.addEventListener('scroll', this.updatePickerViewport);
+      }
+      this.updatePickerViewport();
+      this.$nextTick(() => {
+        if (!this.pickerOpen) return;
+        this.$refs.pickerTitle.focus({ preventScroll: true });
+        this.$refs.pickerList.$refs.viewport.scrollTop = 0;
+        this.$refs.pickerList.updateScrollArea();
+      });
+    },
+    closePicker(restoreFocus = true) {
+      if (!this.pickerOpen) return;
+      this.pickerOpen = false;
+      this.$refs.pickerDialog.close();
+      window.removeEventListener('resize', this.updatePickerViewport);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', this.updatePickerViewport);
+        window.visualViewport.removeEventListener('scroll', this.updatePickerViewport);
+      }
+      if (restoreFocus && this.$refs.pickerTrigger) {
+        this.$refs.pickerTrigger.$el.focus({ preventScroll: true });
+      }
+    },
+    handlePickerClose() {
+      if (this.pickerOpen && !this.$refs.pickerDialog.open) this.closePicker();
+    },
+    updatePickerViewport() {
+      if (!this.pickerOpen) return;
+      const viewport = window.visualViewport;
+      const height = viewport ? viewport.height : window.innerHeight;
+      const bottom = viewport ? Math.max(0, window.innerHeight - height - viewport.offsetTop) : 0;
+      this.$refs.pickerDialog.style.setProperty('--picker-viewport-height', `${height}px`);
+      this.$refs.pickerDialog.style.setProperty('--picker-viewport-bottom', `${bottom}px`);
+    },
+    dismissPickerBackdrop(event) {
+      if (event.target !== this.$refs.pickerDialog) return;
+      const bounds = event.target.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right
+        || event.clientY < bounds.top || event.clientY > bounds.bottom) this.closePicker();
+    },
+    isDraftSelected(value) {
+      return this.multiple ? this.pickerDraft.includes(value) : this.pickerDraft === value;
+    },
+    toggleDraft(value) {
+      if (!this.multiple) this.pickerDraft = value;
+      else if (this.pickerDraft.includes(value)) {
+        this.pickerDraft = this.pickerDraft.filter(selected => selected !== value);
+      } else this.pickerDraft = [...this.pickerDraft, value];
+    },
+    applyPicker() {
+      const value = this.multiple ? this.pickerDraft.slice() : this.pickerDraft;
+      this.closePicker();
+      this.$emit('input', value);
+    },
     closeOnEscape(event) {
-      if (!this.$refs.control.isOpen) return;
+      if (!this.$refs.control || !this.$refs.control.isOpen) return;
       event.preventDefault();
       event.stopPropagation();
       this.$refs.control.deactivate();
@@ -165,6 +322,19 @@ export default {
     },
   },
   computed: {
+    selectionLabel() {
+      return this.multiple
+        ? this.options.filter(option => this.value.includes(option.value))
+          .map(option => option.label).join(', ')
+        : (this.options.find(option => option.value === this.value) || {}).label || '';
+    },
+    pickerOptions() {
+      const query = this.pickerQuery.trim().toLowerCase();
+      return this.options.filter(option => option.label.toLowerCase().includes(query));
+    },
+    canApplyPicker() {
+      return this.multiple || this.options.some(option => option.value === this.pickerDraft);
+    },
     selected: {
       get() {
         return this.multiple
@@ -331,4 +501,92 @@ export default {
   outline: var(--focus-ring);
   outline-offset: var(--focus-offset-control);
 }
+.picker-trigger, .picker-dialog {
+  --target-size: var(--target-size-touch);
+  --control-height: var(--target-size-touch);
+  --control-height-compact: var(--target-size-touch);
+}
+.picker-trigger { width: 100%; justify-content: space-between; font-weight: var(--weight-regular); }
+.picker-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.picker-value.is-placeholder { color: var(--text-muted); }
+.picker-dialog {
+  --picker-viewport-height: 100dvh;
+  --picker-viewport-bottom: 0px;
+  box-sizing: border-box;
+  position: fixed;
+  inset: auto 0 var(--picker-viewport-bottom);
+  width: 100%;
+  max-width: none;
+  height: min(80dvh, 640px);
+  max-height: calc(var(--picker-viewport-height) - var(--space-5));
+  margin: 0;
+  padding: 0;
+  border: var(--border-width) solid var(--border-strong);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  color: var(--text);
+  overscroll-behavior: contain;
+}
+.picker-dialog:not([open]) { display: none; }
+.picker-dialog[open] { display: flex; flex-direction: column; }
+.picker-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+.picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-shrink: 0;
+  padding: var(--space-4);
+}
+.picker-header > div { min-width: 0; }
+.picker-header h2 { margin: 0; font: var(--type-title); overflow-wrap: anywhere; }
+.picker-header p {
+  margin: var(--space-1) 0 0;
+  font: var(--type-caption);
+  color: var(--text-muted);
+}
+.picker-body { flex: 1; min-height: 0; padding: 0 var(--space-4); }
+.picker-body .app-scroll-viewport { overscroll-behavior: contain; }
+.picker-search { display: grid; gap: var(--space-2); margin-bottom: var(--space-4); }
+.picker-options {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.picker-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  box-sizing: border-box;
+  min-height: var(--target-size);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font: var(--type-body);
+  cursor: pointer;
+}
+.picker-choice:hover { background: var(--surface-hover); }
+.picker-choice.is-checked { background: var(--accent-soft); }
+.picker-choice input {
+  flex-shrink: 0;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  margin: 0;
+  accent-color: var(--accent);
+}
+.picker-choice span { min-width: 0; overflow-wrap: anywhere; }
+.picker-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4)
+    max(var(--space-4), env(safe-area-inset-bottom));
+}
+.picker-actions { display: flex; gap: var(--space-2); margin-left: auto; }
+.picker-empty { font: var(--type-body); color: var(--text-muted); }
 </style>

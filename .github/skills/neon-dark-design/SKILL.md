@@ -80,6 +80,11 @@ Use this as a visual language, not a requirement to copy a particular layout or 
 - Fields: raised surface, medium radius, muted placeholder, persistent external label.
 - Selects: one shared implementation for single and multiple selection. Keep search,
   keyboard navigation, selected values, tags, removals and clear actions consistent.
+- On mobile/coarse pointers, prefer a modal picker sheet with native radio/checkbox
+  choices over a cramped flyout. Use explicit Apply/Cancel drafts, a one-line trigger,
+  optional search for long lists, fixed actions and an independently scrolling choice area.
+  Focus the title rather than opening the keyboard. Use native modal focus/inertness,
+  fit the visual viewport, restore focus without scrolling and isolate enclosing panel traps.
 - If the option list is detached by a gap, round all four trigger corners and the menu.
   Override any upstream library's *open-state* joined-menu corner resets at sufficient
   specificity, without `!important` or per-page patches.
@@ -107,6 +112,8 @@ Use this as a visual language, not a requirement to copy a particular layout or 
   still need accessible button/link names. Preserve library licence notices.
 - Keep primary information first. Put ancillary save/list-management controls after
   descriptions, stats and other essential detail content.
+- Establish nested content groups with semantic headings, restrained type and spacing.
+  A group boundary does not require a rule; avoid repeating lines at adjacent hierarchy levels.
 - Use inline confirmation for destructive actions with a clear cancel path. Preserve
   keyboard focus and report persistence failures rather than pretending changes were saved.
 

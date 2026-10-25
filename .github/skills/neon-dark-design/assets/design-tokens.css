@@ -73,6 +73,7 @@
   --focus-offset: 3px;
   --focus-offset-control: 2px;
   --target-size: 24px;
+  --target-size-touch: 44px;
   --control-height: 32px;
   --control-height-compact: var(--target-size);
   --control-line-height: 20px;

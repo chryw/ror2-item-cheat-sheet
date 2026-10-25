@@ -527,6 +527,133 @@ test('shared dropdown maps single and multiple choices to stable store values', 
   assert.deepStrictEqual(events.pop(), ['input', []]);
 });
 
+test('mobile picker stages choices, discards cancellation and cleans up modal viewport listeners', () => {
+  const listeners = new Map();
+  const viewportListeners = new Map();
+  const mediaListeners = new Map();
+  const events = [];
+  const styles = new Map();
+  let triggerFocus = 0;
+  let desktopFocus = 0;
+  const record = map => ({
+    addEventListener(name, callback) { map.set(name, callback); },
+    removeEventListener(name, callback) {
+      assert.strictEqual(map.get(name), callback);
+      map.delete(name);
+    },
+  });
+  const media = { ...record(mediaListeners), matches: true };
+  const browser = {
+    ...record(listeners),
+    innerHeight: 844,
+    visualViewport: { ...record(viewportListeners), height: 500, offsetTop: 20 },
+    matchMedia(query) {
+      assert.strictEqual(query, '(max-width: 900px), (any-pointer: coarse)');
+      return media;
+    },
+  };
+  const component = loadUIComponent('AppSelect.vue', browser);
+  const options = [
+    { value: '', label: 'All choices' }, { value: 'a', label: 'Alpha' },
+    { value: 'b', label: 'Beta' },
+  ];
+  const dialog = {
+    open: false,
+    showModal() { this.open = true; },
+    close() { this.open = false; },
+    style: { setProperty(name, value) { styles.set(name, value); } },
+  };
+  const context = {
+    ...component.data(),
+    multiple: true,
+    value: ['a'],
+    options,
+    disabled: false,
+    $nextTick: callback => callback(),
+    $emit: (...args) => events.push(args),
+    $refs: {
+      pickerDialog: dialog,
+      pickerTitle: { focus: settings => assert.deepStrictEqual(settings, { preventScroll: true }) },
+      pickerList: { $refs: { viewport: { scrollTop: 100 } }, updateScrollArea() {} },
+      pickerTrigger: { $el: { focus() { triggerFocus += 1; } } },
+    },
+  };
+  Object.entries(component.methods).forEach(([name, method]) => {
+    context[name] = method.bind(context);
+  });
+  component.mounted.call(context);
+  assert.strictEqual(context.usePicker, true);
+  context.openPicker();
+  assert.strictEqual(dialog.open, true);
+  assert.strictEqual(context.$refs.pickerList.$refs.viewport.scrollTop, 0);
+  assert.strictEqual(styles.get('--picker-viewport-height'), '500px');
+  assert.strictEqual(styles.get('--picker-viewport-bottom'), '324px');
+  context.toggleDraft('b');
+  assert.deepStrictEqual(context.value, ['a'], 'Checking an option must not change the model');
+  context.closePicker();
+  assert.strictEqual(events.length, 0, 'Cancel must not emit a selection');
+  assert.strictEqual(triggerFocus, 1);
+  assert.strictEqual(listeners.size + viewportListeners.size, 0);
+  context.openPicker();
+  assert.deepStrictEqual(context.pickerDraft, ['a'], 'Reopening discards the cancelled draft');
+  context.pickerQuery = '  BETA ';
+  assert.deepStrictEqual(component.computed.pickerOptions.call(context), [options[2]]);
+  context.toggleDraft('b');
+  assert.deepStrictEqual(context.pickerDraft, ['a', 'b'], 'Search must preserve hidden selections');
+  context.applyPicker();
+  assert.deepStrictEqual(events.pop(), ['input', ['a', 'b']]);
+  assert.deepStrictEqual(context.value, ['a']);
+  assert.strictEqual(dialog.open, false);
+  context.multiple = false;
+  context.value = '';
+  context.openPicker();
+  assert(component.computed.canApplyPicker.call(context), 'An empty-string option is valid');
+  context.toggleDraft('b');
+  context.applyPicker();
+  assert.deepStrictEqual(events.pop(), ['input', 'b']);
+  context.disabled = true;
+  context.openPicker();
+  assert.strictEqual(dialog.open, false);
+  context.disabled = false;
+  context.openPicker();
+  context.toggleDraft('a');
+  context.$refs.control = {
+    isOpen: false,
+    $el: { getBoundingClientRect: () => ({ width: 200 }), focus() { desktopFocus += 1; } },
+  };
+  media.matches = false;
+  context.updatePickerMode();
+  assert.strictEqual(context.usePicker, false);
+  assert.strictEqual(dialog.open, false);
+  assert.strictEqual(events.length, 0, 'Presentation changes cancel uncommitted choices');
+  assert.strictEqual(desktopFocus, 1);
+  const pending = [];
+  context.$nextTick = callback => pending.push(callback);
+  context.openPicker();
+  component.beforeDestroy.call(context);
+  context.$refs = {};
+  assert.doesNotThrow(() => pending.forEach(callback => callback()));
+  assert.doesNotThrow(() => context.handlePickerClose());
+  assert.strictEqual(listeners.size + viewportListeners.size + mediaListeners.size, 0);
+});
+
+test('mobile picker uses native modal and choice semantics without triggering a search keyboard', () => {
+  const parsed = parseComponent(dropdownSource);
+  assert.deepStrictEqual(compile(parsed.template.content).errors, []);
+  assert(parsed.template.content.includes('aria-haspopup="dialog"'));
+  assert(parsed.template.content.includes('<dialog '));
+  assert(parsed.template.content.includes('@keydown.stop'));
+  assert(parsed.template.content.includes('@cancel.prevent="closePicker"'));
+  assert(parsed.template.content.includes('options.length > 8'));
+  assert(parsed.template.content.includes('\'checkbox\' : \'radio\''));
+  assert(parsed.template.content.includes('<fieldset class="picker-options">'));
+  assert(!parsed.template.content.includes('autofocus'));
+  assert(dropdownSource.includes('this.$refs.pickerDialog.showModal()'));
+  assert(dropdownSource.includes('this.$refs.pickerTitle.focus({ preventScroll: true })'));
+  assert(/this\.closePicker\(\);\s*this\.\$emit\('input', value\)/.test(dropdownSource));
+  assert(dropdownSource.includes('--control-height: var(--target-size-touch)'));
+});
+
 test('dropdown menus delegate edge placement to the shared popup layer', () => {
   [0, 28, -40, 240].forEach(previousHeight => {
     const menu = { maxHeight: 240, optimizedHeight: previousHeight, preferredOpenDirection: 'above' };
@@ -751,8 +878,12 @@ test('mobile navigation defaults closed and dismisses outside without treating o
   let mobile = true;
   let mobileFocus = 0;
   let navFocus = 0;
+  let pickerOpen = false;
   const input = {};
-  const nav = { contains: node => node === input };
+  const nav = {
+    contains: node => node === input,
+    querySelectorAll: () => (pickerOpen ? [{ close() { pickerOpen = false; } }] : []),
+  };
   const document = {
     ...record,
     activeElement: { blur() {} },
@@ -788,10 +919,13 @@ test('mobile navigation defaults closed and dismisses outside without treating o
   assert.strictEqual(context.navCollapsed, true);
   assert.strictEqual(mobileFocus, 1);
   context.toggleNavigation();
+  pickerOpen = true;
   mobile = false;
   context.updateLayout();
   assert.strictEqual(context.navCollapsed, true, 'Breakpoint transitions close the drawer');
   assert.strictEqual(context.mobileLayout, false);
+  assert.strictEqual(pickerOpen, false, 'Close native picker before hiding its parent navigation');
+  assert.strictEqual(mobileFocus, 2, 'Closing navigation on resize restores visible trigger focus');
   context.navCollapsed = false;
   context.dismissNavigation({ target: { closest: () => null } });
   assert.strictEqual(context.navCollapsed, false, 'Desktop navigation is not outside-dismissed');
@@ -842,7 +976,7 @@ test('desktop filters use a header trigger, preserve state and do not trap keybo
     $store: { state },
     $nextTick: callback => callback(),
     $refs: {
-      navigation: { $el: { contains: () => false } },
+      navigation: { $el: { contains: () => false, querySelectorAll: () => [] } },
       navigationToggle: { focus() { triggerFocus += 1; } },
     },
   };
@@ -888,7 +1022,7 @@ test('mobile details return to the build, restore focus and contain keyboard nav
     $store: { commit(...args) { commits.push(args); } },
     $nextTick: callback => callback(),
     $refs: {
-      navigation: { $el: { contains: () => false } },
+      navigation: { $el: { contains: () => false, querySelectorAll: () => [] } },
       details: {
         $el: { querySelectorAll: () => [first, last] },
         focusClose() { closeFocus += 1; },
@@ -1096,7 +1230,7 @@ test('rarity groups preserve every filtered entry and within-group build priorit
   assert.deepStrictEqual(ordered, original, 'Grouping must not reorder its input');
 });
 
-test('rarity subsection dividers share the section-heading pattern with subordinate headings', () => {
+test('rarity subsections use subordinate headings and spacing without decorative rules', () => {
   const source = fs.readFileSync(path.join(sourceRoot, 'components', 'ItemList.vue'), 'utf8');
   const parsed = parseComponent(source);
   assert.deepStrictEqual(compile(parsed.template.content).errors, []);
@@ -1104,7 +1238,7 @@ test('rarity subsection dividers share the section-heading pattern with subordin
   assert(parsed.template.content.includes('<h2 class="item-list-header">'));
   assert(parsed.template.content.includes('<h3 class="item-list-header">'));
   assert(parsed.template.content.includes('class="item-list-heading rarity-group-heading"'));
-  assert.strictEqual((parsed.template.content.match(/class="section-rule"/g) || []).length, 2);
+  assert(!source.includes('section-rule'));
   assert(source.includes('font: var(--type-label)'));
   assert(source.includes('ItemIdUtils.groupByRarity(this.itemIdList, itemsV2)'));
 });
