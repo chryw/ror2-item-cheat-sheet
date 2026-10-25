@@ -114,7 +114,8 @@ export default {
 .app-select.multiselect--disabled .multiselect__select {
   background: transparent; color: var(--text-muted);
 }
-.app-select .multiselect__tags {
+/* Keep detached controls rounded even when the library applies its joined-menu open state. */
+.app-select.multiselect .multiselect__tags {
   min-height: var(--control-height);
   padding: 11px 36px 0 12px;
   border: 1px solid var(--border);
@@ -161,6 +162,7 @@ export default {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
+  overflow-x: hidden;
 }
 .app-select .multiselect__content { background: var(--surface-raised); }
 .app-select .multiselect__option {

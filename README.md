@@ -29,6 +29,8 @@ tokens. It also supplies reusable `.ui-button` / `.ui-button--primary` and `.ui-
 primitives, build badges and the single rarity palette used by cards and details.
 Component styles consume those tokens instead of maintaining separate light/dark palettes.
 Use [AppSelect.vue](src/components/AppSelect.vue) for every single- or multi-choice dropdown.
+Its detached trigger and menu retain the same corner radius in closed, open and focused states;
+the shared trigger selector overrides vue-multiselect's joined-menu corner reset.
 Rarity is a secondary cue on cards; neon yellow marks actions, selection and keyboard focus.
 Native controls use dark colour-scheme, reduced-motion preferences are respected, and no
 external font or styling requests are needed. The compact gallery header leaves browsing
