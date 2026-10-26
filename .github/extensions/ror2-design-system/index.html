@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design System Explorer</title>
+  <link rel="stylesheet" href="/canvas.css">
+  <script type="module" src="/canvas.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to reference</a>
+  <header>
+    <div class="identity"><h1>Design System Explorer</h1><p id="subtitle">Loading worktree contracts...</p></div>
+    <div class="toolbar"><a href="/source" target="_blank" rel="noopener noreferrer" aria-label="View design.md source (opens in a new tab)">View source</a><button id="reload" type="button">Reload files</button></div>
+  </header>
+  <div class="reference-shell">
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <button id="reference-navigation" type="button" aria-controls="sections" aria-expanded="false">Browse reference</button>
+      <nav id="sections" aria-label="Design system sections"></nav>
+    </div>
+  </aside>
+  <main>
+    <p id="source-status" class="source-warning" role="status" aria-live="polite" hidden></p>
+    <div class="page-heading"><h2 id="page-title">Tokens</h2><p id="page-description" class="muted"></p></div>
+    <nav id="token-categories" class="token-categories" aria-label="Token categories"></nav>
+    <div class="filters">
+      <label id="query-label" class="sr-only" for="query">Search tokens</label><input id="query" type="search" maxlength="200" placeholder="Search token names, values, or aliases...">
+      <div id="theme-filter"><label for="theme">Token values for</label><select id="theme"></select></div>
+    </div>
+    <div class="status-line">
+      <p id="status" role="status" aria-live="polite"></p>
+      <p id="live-status" role="status" aria-live="polite">Live: connecting...</p>
+    </div>
+    <section id="content" aria-label="Design system content" tabindex="-1"></section>
+    <details class="notes">
+      <summary>Design documentation (source)</summary>
+      <p>The repository's <a href="/source" target="_blank" rel="noopener noreferrer" aria-label="View design.md source (opens in a new tab)">design.md</a> is the authored specification. Its readable tables and structured component sections compile into the contracts shown here; JSON is generated output. This is the raw Markdown, not another canvas section.</p>
+      <pre id="guide-source" class="guide"></pre>
+    </details>
+  </main>
+  </div>
+  <footer>Live worktree · Read-only contract, not product UI adoption · View state lasts for this canvas instance</footer>
+</body>
+</html>

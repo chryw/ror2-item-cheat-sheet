@@ -7,7 +7,13 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "node tests/buildFilters.test.js",
-    "test:catalog": "node --test tests/catalog.test.cjs"
+    "test:catalog": "node --test tests/catalog.test.cjs",
+    "design:generate": "node scripts/design-generate.cjs",
+    "design:check": "node scripts/design-tokens.cjs --check && node scripts/design-preview.cjs --check",
+    "design:test": "node --test scripts/design-source.test.cjs scripts/design-tokens.test.cjs scripts/design-preview.test.cjs scripts/design-components.test.cjs scripts/design-content.test.cjs",
+    "design:export": "node scripts/design-tokens.cjs --export",
+    "design:catalog": "node scripts/design-preview.cjs --catalog",
+    "design:preview": "node scripts/design-preview.cjs"
   },
   "dependencies": {
     "core-js": "^3.6.4",
@@ -28,6 +34,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
+    "js-yaml": "^4.1.1",
     "mini-css-extract-plugin": "^0.9.0",
     "vue-template-compiler": "^2.6.11"
   },
@@ -44,6 +51,21 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
+    "overrides": [
+      {
+        "files": ["scripts/design-source.cjs"],
+        "rules": {
+          "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+        }
+      },
+      {
+        "files": ["scripts/design-preview.js", "scripts/*.mjs"],
+        "rules": {
+          "import/extensions": ["error", "ignorePackages", { "mjs": "always" }],
+          "no-use-before-define": ["error", { "functions": false }]
+        }
+      }
+    ],
     "rules": {
       "comma-dangle": "warn",
       "linebreak-style": "off",
