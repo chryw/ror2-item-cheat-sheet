@@ -74,8 +74,9 @@ browser-console probe command for both tenants and responsive modes.
 
 The workspace-scoped [canvas extension](.github/extensions/ror2-design-system/extension.mjs)
 registers `ror2-design-system` with Copilot. Reload extensions after changing its
-files, then ask Copilot to open the design-system canvas. No package installation
-or separate preview server is required.
+files, then ask Copilot to open the design-system canvas. Install the repository's
+normal dependencies first; no additional extension package or separate preview
+server is required. Copilot supplies the canvas SDK at runtime.
 
 The read-only atlas displays live worktree tokens in compact comparison tables:
 token name, small contextual preview, resolved value, and source alias. Expand a
@@ -128,7 +129,7 @@ variants, states, and clickable token bindings. The illustrative canvas control
 sample is not a product component implementation. Composition and acceptance
 contracts have their own **Patterns** page instead of being buried in Components.
 **Design documentation (source)** is a
-collapsed disclosure containing the raw `design.md` guidance, not a separate
+collapsed disclosure containing the concatenated authored Markdown, not a separate
 Guide section.
 This presentation draws on [Carbon's token/role/value tables](https://carbondesignsystem.com/elements/color/tokens/),
 [Primer's token reference](https://primer.style/product/primitives/color/), and
@@ -140,10 +141,36 @@ The reference architecture also draws on
 and [GOV.UK's contribution criteria](https://design-system.service.gov.uk/community/contribution-criteria/).
 These inform the viewer structure, not repository design policy.
 
-The viewer and its source bindings live in
-[reference.mjs](.github/extensions/ror2-design-system/reference.mjs). Its navigation,
-token taxonomy, and optional documentation slots are shared by the client and
-server. Guidelines use exact heading bindings from `design.md`; Patterns also
+The explorer is a checked-in workspace extension, not a session-generated page.
+Its server locates the current checkout relative to the extension; another
+worktree uses its own saved specification. No absolute worktree path or generated
+snapshot is committed.
+
+The data boundary is **compiled specification → repository adapter → versioned
+Explorer view model → renderer**. [view-model.mjs](.github/extensions/ror2-design-system/view-model.mjs)
+owns source bindings, token categorization, grouping policy, component fields,
+and normalized glyphs. [contract.mjs](.github/extensions/ror2-design-system/contract.mjs)
+defines and validates `ror2.design-system.explorer` schema version `1`, independently
+of the design system's revision. Additive fields can remain compatible; breaking
+payload changes require a schema-version change. The browser validates each snapshot before
+replacing its last valid model. Unsupported versions or malformed payloads produce
+an explicit live-update error; unsupported token/glyph previews retain inspectable
+data and emit diagnostics.
+
+The renderer consumes supplied group IDs/labels/hierarchy, categories, preview
+kinds, capabilities, and actual module/line references. It does not parse token
+names or Markdown headings to reconstruct those decisions. Authored token groups
+provide defaults; the repository adapter preserves whole-control/status grouping.
+Adapter inputs may supply explicit groups, categories, usage, and provenance for
+different source shapes. New component fields remain visible through generic data
+inspection. New semantic visualizations still require an intentional renderer;
+arbitrary shapes are not silently treated as supported specimens.
+Run `node --test .github/extensions/ror2-design-system/*.test.mjs` for the
+contract, alternate-shape, source-route, and live-update regression tests.
+
+[reference.mjs](.github/extensions/ror2-design-system/reference.mjs) supplies the
+navigation and repository-specific binding helpers used by the adapter.
+Guidelines currently use exact heading bindings from the modular specification; Patterns also
 supports `workspace`, `controlRecipes`, `interactionAlgorithms`, and `acceptance`
 contracts, and Iconography supports `iconography`, compiled directly from
 `design.md`. Missing optional guidance fields remain explicit gaps.
