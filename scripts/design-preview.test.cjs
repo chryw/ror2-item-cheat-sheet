@@ -91,6 +91,10 @@ test('preview serves both games, compiled breakpoints and real fork image assets
     const css = await (await fetch(`${origin}/preview.css`)).text();
     assert.match(css, /max-width: 56.25rem/);
     assert.doesNotMatch(css, /__breakpoint/);
+    assert.match(css, /--pattern-scrollbar-width:none;/);
+    assert.match(css, /scrollbar-width: var\(--pattern-scrollbar-width\)/);
+    assert.match(css, /font-size: calc\(var\(--ds-component-data-table-typography-fontSize\)/);
+    assert.match(css, /padding: var\(--ds-component-data-table-spacing-padding-block\) var\(--ds-component-data-table-spacing-padding-inline\)/);
     Object.keys(base.context.density).filter(name => !name.startsWith('$')).forEach(name => {
       assert.ok(css.includes(`:root[data-density="${name}"]{--density-spacing:var(--ds-context-density-${name}-spacing);`));
     });

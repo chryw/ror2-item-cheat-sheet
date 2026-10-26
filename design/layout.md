@@ -78,6 +78,8 @@ protected interaction and structural dimensions.
 | `gap.section` | `{primitive.spacing.extra-large}` |  |
 | `inset.control-inline` | `{primitive.spacing.medium}` |  |
 | `inset.control-block` | `{primitive.spacing.small}` |  |
+| `inset.cell-block` | `{primitive.spacing.extra-small}` | Dense tabular content may wrap and grow. |
+| `inset.cell-inline` | `{primitive.spacing.small}` | Independent from control hit-target geometry. |
 | `inset.card` | `{primitive.spacing.medium}` |  |
 | `gap.row` | `{primitive.spacing.medium}` |  |
 | `inset.panel` | `{primitive.spacing.extra-large}` |  |

@@ -9,6 +9,7 @@ specified observable behavior.
 compactMax: '{primitive.layout.breakpoint.medium}'
 navigationWidth: '{component.navigation.size.inline}'
 detailsWidth: '{component.panel.size.inline}'
+scrollbarWidth: none
 stack:
   - base
   - header
@@ -46,6 +47,10 @@ transitions:
   Compose one header and one min-size-zero workspace containing navigation, gallery and details
   in reading order. Gallery, navigation and details own independent scroll bodies; the document
   does not own catalog scrolling.
+- >-
+  Apply workspace scrollbarWidth to those scrollports, without reserving an extra gutter.
+  Retain wheel, touch and keyboard scrolling and named focusable regions. In forced-colors
+  mode restore native automatic scrollbars; never hide a scroll region itself.
 - >-
   Resolve workspace widths and compact presentation from workspace token aliases. Reuse one
   detail-content instance across presentations; do not retain hidden focusable copies.
@@ -196,7 +201,8 @@ an alternative configuration source.
   mode: all
   then: >-
     Role-mapped SVG icons, localized icon-action names, reserved icon space, compound
-    multi-select pills, and correctly grouped picker actions reproduce the control recipes.
+    multi-select pills, grouped picker actions, expansion artwork/labels, read-only category
+    chips and readable source statistics reproduce the control recipes.
 - id: definitive-content
   mode: build
   then: >-

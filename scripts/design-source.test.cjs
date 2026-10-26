@@ -32,7 +32,7 @@ test('Markdown compiles deterministically without a lossy flattened projection o
   assert.deepEqual(withoutGuide(parseDesign(`${guide}\nAdditional rationale.\n`)), withoutGuide(source));
   assert.deepEqual(generatedArtifacts(source), generatedArtifacts(parseDesign(guide)));
   const model = validateTokens(source.tokens);
-  assert.equal(model.tokens.size, 341);
+  assert.equal(model.tokens.size, 344);
   assert.equal(source.tokens.semantic.typography.body.medium.$value.fontSize, '{primitive.typography.font-size.small}');
   assert.equal(source.tokens.component.searchbox.size['min-block'].$value, '{component.control.size.min-block}');
   assert.deepEqual(source.tokens.primitive.typography['font-family']['sans-serif'].$value.slice(0, 2), ['Segoe UI', 'Inter']);

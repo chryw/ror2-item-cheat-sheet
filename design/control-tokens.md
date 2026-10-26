@@ -125,8 +125,9 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | --- | --- | --- |
 | `color.background` | `{semantic.color.neutral.background.panel}` |  |
 | `color.foreground` | `{semantic.color.neutral.foreground.primary}` |  |
-| `typography` | `{semantic.typography.body.small}` |  |
-| `spacing.padding` | `{semantic.spacing.inset.control-block}` |  |
+| `typography` | `{semantic.typography.body.medium}` | Readable source facts, independent of compact header labels. |
+| `spacing.padding-block` | `{semantic.spacing.inset.cell-block}` | Compact rows grow with wrapping content. |
+| `spacing.padding-inline` | `{semantic.spacing.inset.cell-inline}` |  |
 | `part.header.typography` | `{semantic.typography.label}` |  |
 | `part.row.variant.alternate.color.background` | `{semantic.color.neutral.background.canvas}` |  |
 

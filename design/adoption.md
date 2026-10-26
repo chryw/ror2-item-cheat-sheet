@@ -42,3 +42,20 @@ Framework adapters remain reviewed, tested implementations of these contracts.
 An on-demand UI generator must consume both the specification and definitive
 catalog inputs, then pass the acceptance scenarios rather than treating a
 plausible-looking screenshot as proof of equivalence.
+
+### Reconstruction comparison
+
+Compare against [the deployed fork](https://chryw.github.io/ror2-item-cheat-sheet/),
+not the original upstream site. At matching mobile, tablet, desktop and wide
+viewports, compare header and grid geometry, filter disclosure/commit behavior,
+detail selection/close behavior and source-backed content. Check breakpoint
+edges too. Disable animation only for geometry measurements, not interaction tests.
+
+The modular split preserves generated manifests, runtime configuration and all
+theme CSS exactly before intentional design changes. Deployment comparison then
+identified and closed the extra scrollbar gutter, missing expansion artwork and
+label placement, oversized summary text, comma-joined public categories and
+undersized statistical values. Those corrections belong to the workspace,
+detail and table contracts, not copied deployment CSS. Shared label typography
+and spacing ramps remain deliberate system choices rather than exact copies
+of every historical pixel. The declared survivor/build exclusions still apply.

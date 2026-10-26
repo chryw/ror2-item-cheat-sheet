@@ -186,6 +186,47 @@ export default async function verifyCurrentMode() {
   if (nav.hidden) toggle.click();
   reset.click();
   toggle.click();
+  if (!matchMedia('(forced-colors: active)').matches) {
+    check(getComputedStyle(gallery).scrollbarWidth === contract.workspace.scrollbarWidth, 'source-owned workspace scrollbar policy');
+    check(gallery.clientWidth === Math.round(gallery.getBoundingClientRect().width), 'gallery does not reserve a scrollbar gutter');
+  }
+  const detailEntry = fixture.entries.find(entry => entry.dlcIcon) || fixture.entries[0];
+  const detailCard = [...document.querySelectorAll('.item-card')].find(node => node.dataset.entryId === detailEntry.id);
+  detailCard.click();
+  const overview = details.querySelector('.detail-overview');
+  await Promise.all([...overview.querySelectorAll('img')].map(image => image.decode()));
+  check(overview.querySelector('.detail-summary').textContent === detailEntry.shortDescription, 'source-owned short effect');
+  check(overview.querySelector('.detail-image'), 'featured artwork belongs to overview');
+  const classification = details.querySelector('.classification-action');
+  const actionBounds = classification.getBoundingClientRect();
+  const bodyBounds = details.querySelector('.panel-body').getBoundingClientRect();
+  const actionCenter = actionBounds.left + actionBounds.width / 2;
+  const bodyCenter = bodyBounds.left + bodyBounds.width / 2;
+  check(parseFloat(getComputedStyle(classification).borderRadius) >= actionBounds.height / 2
+    && Math.abs(actionCenter - bodyCenter) < 1,
+  'classification action is centered and pill-shaped without shrinking its target');
+  if (detailEntry.dlcIcon) {
+    const expansion = overview.querySelector('.detail-dlc');
+    const art = expansion.querySelector('img');
+    check(expansion.textContent === detailEntry.dlc && art.getAttribute('src') === detailEntry.dlcIcon
+      && art.alt === '', 'expansion uses definitive source artwork beside its label');
+    const identity = overview.querySelector('.detail-identity');
+    check(identity.children[0].tagName === 'H2' && identity.children[1] === expansion
+      && identity.nextElementSibling.classList.contains('detail-image'), 'expansion precedes featured artwork');
+  }
+  if (detailEntry.displayCategories && detailEntry.displayCategories.length) {
+    const categories = details.querySelector('.detail-categories');
+    const labels = [...categories.children].map(node => node.textContent);
+    check(JSON.stringify(labels) === JSON.stringify(detailEntry.displayCategories)
+      && !categories.querySelector('button,a'), 'public categories are separate read-only metadata');
+  }
+  if (detailEntry.stackingStats && detailEntry.stackingStats.length) {
+    const table = details.querySelector('.ds-table');
+    check(table.querySelectorAll('tbody tr').length === detailEntry.stackingStats.length
+      && table.querySelectorAll('th[scope="col"]').length === 4, 'complete source statistics with scoped headers');
+    check(getComputedStyle(table.querySelector('td')).fontSize === getComputedStyle(document.body).fontSize, 'statistics use readable body typography');
+  }
+  closeDetail();
   check(document.documentElement.scrollWidth <= window.innerWidth + 1, 'no horizontal overflow');
   return { tenant, width: window.innerWidth, compact, picker, passed: true, events: 'DOM events; physical keyboard not certified' };
 }

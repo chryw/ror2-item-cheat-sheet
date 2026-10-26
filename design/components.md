@@ -315,4 +315,22 @@ detailActions: >-
   External reference and close use small role icons in full-sized hit targets; catalog ID
   remains text metadata. No textual Close replacing the close icon, and no decorative art used
   as a control glyph.
+catalogDetail: >-
+  After persistent reference/ID/close actions, present title, optional expansion label with its
+  source artwork, featured artwork, short effect and full description, in that order. Expansion
+  artwork beside its label is decorative. Use caption typography for the short effect, preserve
+  authored line breaks in full prose, and visually separate overview from metadata. Applicable
+  contextual facts precede classification and statistics. Public categories are wrapping
+  read-only chips, not filter buttons or one comma-joined sentence. Omit absent fields.
+  Center the identity, artwork, short effect and classification; keep full prose start-aligned.
+  Separate identity and overview with subtle rules. Frame featured art on the canvas surface
+  using card radius and subtle stroke. The classification action is pill-shaped but retains
+  the protected interaction-target minimum.
+dataTable: >-
+  Use a real table with scoped column headers and complete source rows; never abbreviate
+  statistical formulas. Bind body/header typography and separate block/inline cell padding to
+  data-table aliases. Allow wrapping without fixed row heights; a named focusable overflow
+  region contains wide tables rather than widening the panel or document.
+  Use subtle cell boundaries and the alternate-row alias on odd body rows. Header labels use
+  the shared label style, while source values retain readable body typography.
 ```

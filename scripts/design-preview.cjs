@@ -70,6 +70,7 @@ function componentContract(base, specification = readDesignSource().components) 
     throw new Error('Invalid workspace stacking order');
   }
   ['compactMax', 'navigationWidth', 'detailsWidth'].forEach(key => dimension(workspace[key]));
+  if (!['auto', 'thin', 'none'].includes(workspace.scrollbarWidth)) throw new Error('Unsupported workspace scrollbar policy');
   const breakpoint = dimension(workspace.compactMax);
   const compactQuery = `(max-width: ${breakpoint.value}${breakpoint.unit})`;
   const ids = specification.acceptance.map(item => item.id);
@@ -306,7 +307,7 @@ function createServer(ref) {
     const mode = name || contract.runtime.defaultDensity;
     return `${selector}{${['spacing', 'size', 'radius', 'typography'].map(axis => `--density-${axis}:var(--ds-context-density-${mode}-${axis});`).join('')}}\n`;
   }).join('');
-  const patternCss = `:root{${contract.workspace.stack.map((name, index) => `--pattern-layer-${name}:${index};`).join('')}--pattern-picker-height:${contract.selection.pickerViewportFraction * 100}dvh;--pattern-picker-max-height:${cssValue(contract.selection.pickerMaxBlockSize)};--pattern-navigation-width:${cssValue(contract.workspace.navigationWidth)};--pattern-details-width:${cssValue(contract.workspace.detailsWidth)};}\n`;
+  const patternCss = `:root{${contract.workspace.stack.map((name, index) => `--pattern-layer-${name}:${index};`).join('')}--pattern-scrollbar-width:${contract.workspace.scrollbarWidth};--pattern-picker-height:${contract.selection.pickerViewportFraction * 100}dvh;--pattern-picker-max-height:${cssValue(contract.selection.pickerMaxBlockSize)};--pattern-navigation-width:${cssValue(contract.workspace.navigationWidth)};--pattern-details-width:${cssValue(contract.workspace.detailsWidth)};}\n`;
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Design-system validation</title><link id="tokens" rel="stylesheet"><link rel="stylesheet" href="/preview.css"><script type="module" src="/preview.js"></script></head><body data-default-tenant="${Object.keys(fixtures)[0]}"><p role="status">Loading design-system preview...</p></body></html>`;
   const routes = new Map([
     ['/', ['text/html', html]],

@@ -95,6 +95,7 @@ test('component recipes cover shared controls, consume valid aliases and compile
     'button', 'label', 'searchbox', 'select', 'card', 'hyperlink', 'navigation', 'icon', 'filter-chip', 'panel',
   ]);
   assert.equal(contract.runtime.compactQuery, '(max-width: 56.25rem)');
+  assert.equal(contract.workspace.scrollbarWidth, 'none');
   assert.equal(contract.runtime.pickerQuery, '(max-width: 56.25rem), (any-pointer: coarse)');
   assert.deepEqual(contract.runtime.popupMaxBlockSize, { value: 15, unit: 'rem' });
   assert.deepEqual(contract.tenants.ror2.readOnlyMetadata, ['category']);
@@ -111,6 +112,9 @@ test('broken recipe bindings, unsupported policies and duplicate acceptance IDs 
   assert.throws(() => componentContract(base, {
     ...spec, workspace: { ...spec.workspace, compactMax: '{semantic.color.neutral.foreground.primary}' },
   }), /Invalid layout/);
+  assert.throws(() => componentContract(base, {
+    ...spec, workspace: { ...spec.workspace, scrollbarWidth: 'overlay' },
+  }), /Unsupported workspace scrollbar/);
   assert.throws(() => componentContract(base, {
     ...spec, selection: { ...spec.selection, pickerCommit: 'immediate' },
   }), /Unsupported selection/);

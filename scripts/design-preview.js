@@ -161,6 +161,13 @@ async function startPreview() {
     return glyph;
   };
 
+  function dlcIcon(entry, className, decorative = false) {
+    const icon = element('img', className);
+    icon.src = entry.dlcIcon;
+    icon.alt = decorative ? '' : entry.dlc;
+    return icon;
+  }
+
   function showDetail(entry, origin) {
     selectedEntry = entry;
     origin.focus({ preventScroll: true });
@@ -180,27 +187,40 @@ async function startPreview() {
       details.header.append(element('span', 'entry-id', `#${entry.catalogId}`));
     }
     details.header.append(closeDetails);
-    details.body.replaceChildren(detailHeading, artwork, element('p', '', entry.shortDescription));
-    if (entry.description) details.body.append(element('p', 'detail-description', entry.description));
-    if (entry.dlc) details.body.append(element('p', '', entry.dlc));
+    const overview = element('section', 'detail-overview');
+    const detailIdentity = element('div', 'detail-identity');
+    detailIdentity.append(detailHeading);
+    if (entry.dlc) {
+      const expansion = element('div', 'detail-dlc');
+      if (entry.dlcIcon) expansion.append(dlcIcon(entry, 'detail-dlc-icon', true));
+      expansion.append(element('span', '', entry.dlc));
+      detailIdentity.append(expansion);
+    }
+    overview.append(detailIdentity);
+    overview.append(artwork, element('p', 'detail-summary', entry.shortDescription));
+    if (entry.description) overview.append(element('p', 'detail-description', entry.description));
+    details.body.replaceChildren(overview);
+    ['cooldown', 'unlock', 'dropsFrom'].forEach(key => {
+      if (!entry[key]) return;
+      const value = entry[key];
+      details.body.append(element('h3', '', messages[key]), element('p', 'detail-fact', typeof value === 'string' ? value : [value.name, value.source, value.description].filter(Boolean).join('\n')));
+      if (value.link || value.url) {
+        details.body.append(hyperlink(messages.wiki, value.link || value.url, true));
+      }
+    });
     const groupFilter = button(entry.group, () => {
       selections.group.set([entry.group]);
       render();
       if (compact.matches) closeDetail();
     });
+    groupFilter.classList.add('classification-action');
     groupFilter.setAttribute('aria-label', format(messages.filterByGroup, { value: entry.group }));
     details.body.append(element('h3', '', messages.rarity), groupFilter);
     if (entry.displayCategories && entry.displayCategories.length) {
-      details.body.append(element('h3', '', messages.category), element('p', '', entry.displayCategories.join(', ')));
+      const categories = element('ul', 'detail-categories');
+      entry.displayCategories.forEach(category => categories.append(element('li', '', category)));
+      details.body.append(element('h3', '', messages.category), categories);
     }
-    ['cooldown', 'unlock', 'dropsFrom'].forEach(key => {
-      if (!entry[key]) return;
-      const value = entry[key];
-      details.body.append(element('h3', '', messages[key]), element('p', '', typeof value === 'string' ? value : [value.name, value.source, value.description].filter(Boolean).join('\n')));
-      if (value.link || value.url) {
-        details.body.append(hyperlink(messages.wiki, value.link || value.url, true));
-      }
-    });
     if (entry.attributes && entry.attributes.length) {
       const attributes = element('dl', 'detail-attributes');
       entry.attributes.forEach(attribute => {
@@ -290,10 +310,7 @@ async function startPreview() {
           text.append(element('h4', 'item-name', entry.name), element('p', 'item-short-description', entry.shortDescription));
           node.append(image(entry), text);
           if (entry.dlcIcon) {
-            const icon = element('img', 'dlc-icon');
-            icon.src = entry.dlcIcon;
-            icon.alt = entry.dlc;
-            node.append(icon);
+            node.append(dlcIcon(entry, 'dlc-icon'));
           }
           cards.set(entry.id, node);
           list.append(node);
