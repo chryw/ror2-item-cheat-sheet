@@ -1,0 +1,24 @@
+{
+  "authority": "illustrative-only",
+  "description": "Authored design-system sample, not authoritative Minecraft gameplay information.",
+  "materials": ["Wood", "Stone", "Iron", "Gold", "Diamond", "Netherite"],
+  "uses": ["Mining", "Combat"],
+  "artwork": {
+    "pickaxe": "m12 9 29 6M30 12 14 43M12 9 7 18",
+    "sword": "m12 41 25-25 3-9-9 3-25 25m3-11 12 12"
+  },
+  "entries": [
+    { "id": "Wood-Pickaxe", "name": "Wood Pickaxe", "section": "Tools", "group": "Wood", "category": ["Mining"], "artwork": "pickaxe", "shortDescription": "Illustrative mining-tool entry; not gameplay guidance." },
+    { "id": "Wood-Sword", "name": "Wood Sword", "section": "Weapons", "group": "Wood", "category": ["Combat"], "artwork": "sword", "shortDescription": "Illustrative close-range weapon entry; not gameplay guidance." },
+    { "id": "Stone-Pickaxe", "name": "Stone Pickaxe", "section": "Tools", "group": "Stone", "category": ["Mining"], "artwork": "pickaxe", "shortDescription": "Illustrative mining-tool entry; not gameplay guidance." },
+    { "id": "Stone-Sword", "name": "Stone Sword", "section": "Weapons", "group": "Stone", "category": ["Combat"], "artwork": "sword", "shortDescription": "Illustrative close-range weapon entry; not gameplay guidance." },
+    { "id": "Iron-Pickaxe", "name": "Iron Pickaxe", "section": "Tools", "group": "Iron", "category": ["Mining"], "artwork": "pickaxe", "shortDescription": "Illustrative mining-tool entry; not gameplay guidance." },
+    { "id": "Iron-Sword", "name": "Iron Sword", "section": "Weapons", "group": "Iron", "category": ["Combat"], "artwork": "sword", "shortDescription": "Illustrative close-range weapon entry; not gameplay guidance." },
+    { "id": "Gold-Pickaxe", "name": "Gold Pickaxe", "section": "Tools", "group": "Gold", "category": ["Mining"], "artwork": "pickaxe", "shortDescription": "Illustrative mining-tool entry; not gameplay guidance." },
+    { "id": "Gold-Sword", "name": "Gold Sword", "section": "Weapons", "group": "Gold", "category": ["Combat"], "artwork": "sword", "shortDescription": "Illustrative close-range weapon entry; not gameplay guidance." },
+    { "id": "Diamond-Pickaxe", "name": "Diamond Pickaxe", "section": "Tools", "group": "Diamond", "category": ["Mining"], "artwork": "pickaxe", "shortDescription": "Illustrative mining-tool entry; not gameplay guidance." },
+    { "id": "Diamond-Sword", "name": "Diamond Sword", "section": "Weapons", "group": "Diamond", "category": ["Combat"], "artwork": "sword", "shortDescription": "Illustrative close-range weapon entry; not gameplay guidance." },
+    { "id": "Netherite-Pickaxe", "name": "Netherite Pickaxe", "section": "Tools", "group": "Netherite", "category": ["Mining"], "artwork": "pickaxe", "shortDescription": "Illustrative mining-tool entry; not gameplay guidance." },
+    { "id": "Netherite-Sword", "name": "Netherite Sword", "section": "Weapons", "group": "Netherite", "category": ["Combat"], "artwork": "sword", "shortDescription": "Illustrative close-range weapon entry; not gameplay guidance." }
+  ]
+}

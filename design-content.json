@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "description": "Tenant content plug-in contract. Catalog facts and assets are authored source data, not design tokens or generated UI copy.",
+  "policy": {
+    "generation": "forbidden",
+    "networkEnrichment": "forbidden",
+    "missingRequiredData": "fail-build",
+    "optionalFields": "omit-without-invention",
+    "identity": "Preserve canonical source keys; catalogId is separate display metadata. Never derive identity from translated labels or list positions.",
+    "derivations": ["join declared sources", "exclude hidden records", "classify sections", "resolve local artwork", "map taxonomy to tenant tokens", "build search/filter indexes"],
+    "presentationBoundary": "Components receive normalized records and callbacks. They do not scrape, fetch wiki facts, guess filenames, synthesize records, or interpret source modules.",
+    "localization": "UI messages and translated content are separate from canonical records. Join translations by stable record ID and locale; never overwrite source facts with generated text."
+  },
+  "record": {
+    "required": ["id", "name", "section", "group", "shortDescription", "colorToken"],
+    "optional": ["catalogId", "description", "image", "dlc", "wikiLink", "unlock", "dropsFrom", "cooldown", "stackingStats", "attributes"],
+    "sourcePreservation": "Keep raw gameplay fields and precision. Add presentation projections without rewriting descriptions, units, statistical formulas or source ordering.",
+    "artwork": "Use declared asset mappings from the same revision. Explicit null is allowed only for sample artwork; a missing authoritative asset is an error.",
+    "filters": "Options come from declared taxonomies or authored tenant definitions, not guessed labels. Unknown taxonomy values fail validation."
+  },
+  "tenants": {
+    "ror2": {
+      "authority": "authoritative",
+      "repository": "https://github.com/chryw/ror2-item-cheat-sheet",
+      "revision": "3e51d23ca73111bc1f35f3955b91216c122d1392",
+      "trackingBranch": "main",
+      "adapter": "scripts/design-preview.cjs#createFixtures",
+      "composition": "src/data/catalog.js",
+      "files": {
+        "items": "src/data/items.json",
+        "itemImages": "src/data/itemImages.json",
+        "drones": "src/data/drones.js",
+        "taxonomies": "src/data/constants.js"
+      },
+      "assets": {
+        "items": "public/items",
+        "drones": "public/drones"
+      },
+      "extensions": {
+        "survivorRecommendations": "src/data/survivorBuilds.js",
+        "userBuilds": "User-owned application persistence; never part of the authoritative game catalog."
+      },
+      "joins": [
+        "items key -> itemImages key -> public/items/<mapped filename>",
+        "drones default export -> public/drones/<record.image>",
+        "constants DlcIconUrl -> imported local DLC artwork",
+        "ItemRarity / ItemRaritySortValue -> tenant rarity tokens / stable group ordering",
+        "Category -> public display categories; preserve internal category flags separately"
+      ],
+      "revisionPolicy": "Default builds use this exact revision. An explicitly supplied ref is resolved once to a commit and recorded in output. Change the pin deliberately after validating catalog and visual compatibility."
+    },
+    "minecraft": {
+      "authority": "illustrative-only",
+      "repository": null,
+      "adapter": "scripts/design-preview.cjs#createFixtures",
+      "file": "content/minecraft-sample.json",
+      "tokenExtension": "content/minecraft-tokens.json",
+      "revisionPolicy": "Checked-in authored sample, never a gameplay authority or production fallback. Replace with a reviewed authoritative adapter before publishing a real Minecraft catalog."
+    }
+  }
+}
