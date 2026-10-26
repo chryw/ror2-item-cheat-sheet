@@ -7,6 +7,17 @@ const key = (node, value, type = 'keydown', shiftKey = false) => node.dispatchEv
   key: value, bubbles: true, cancelable: true, shiftKey,
 }));
 const namedButton = (scope, name) => [...scope.querySelectorAll('button')].find(node => node.textContent === name);
+const checkColorBinding = (node, token, property) => {
+  if (matchMedia('(forced-colors: active)').matches) return;
+  const original = node.getAttribute('style');
+  try {
+    node.style.setProperty(`--ds-${token.replace(/\./g, '-')}`, 'rgb(1, 2, 3)');
+    check(getComputedStyle(node)[property] === 'rgb(1, 2, 3)', `live component binding: ${token}`);
+  } finally {
+    if (original === null) node.removeAttribute('style');
+    else node.setAttribute('style', original);
+  }
+};
 
 export default async function verifyCurrentMode() {
   const tenant = new URLSearchParams(window.location.search).get('tenant') || document.body.dataset.defaultTenant;
@@ -23,6 +34,21 @@ export default async function verifyCurrentMode() {
   const compact = matchMedia(contract.runtime.compactQuery).matches;
   const picker = matchMedia(contract.runtime.pickerQuery).matches;
   const toggle = document.querySelector('.filter-toggle');
+  const pressed = toggle.getAttribute('aria-pressed');
+  try {
+    toggle.disabled = true;
+    checkColorBinding(toggle, 'component.button.state.disabled.color.background', 'backgroundColor');
+    checkColorBinding(toggle, 'component.button.state.disabled.color.foreground', 'color');
+    toggle.disabled = false;
+    toggle.setAttribute('aria-pressed', 'true');
+    checkColorBinding(toggle, 'component.button.state.selected.color.background', 'backgroundColor');
+    checkColorBinding(toggle, 'component.button.state.selected.color.foreground', 'color');
+    checkColorBinding(toggle, 'component.button.state.selected.color.stroke', 'borderColor');
+  } finally {
+    toggle.disabled = false;
+    if (pressed === null) toggle.removeAttribute('aria-pressed');
+    else toggle.setAttribute('aria-pressed', pressed);
+  }
   const nav = document.querySelector('#filters');
   const details = document.querySelector('#details');
   const gallery = document.querySelector('.gallery');
@@ -61,6 +87,8 @@ export default async function verifyCurrentMode() {
       && dialog.querySelector('.picker-actions .primary')
       && dialog.querySelector('.picker-header [data-icon="close"]'), 'picker action/header anatomy');
     dialog.querySelector('input[type=checkbox]').click();
+    checkColorBinding(dialog.querySelector('input:checked').closest('.picker-choice'),
+      'component.select.part.option.state.selected.color.foreground', 'color');
     check(count() === fixture.entries.length, 'draft does not filter');
     namedButton(dialog, messages.cancel).click();
     check(count() === fixture.entries.length && document.activeElement === trigger, 'cancel discards and restores focus');
@@ -84,6 +112,8 @@ export default async function verifyCurrentMode() {
     check(bounds.left >= 0 && bounds.right <= window.innerWidth + 1
       && bounds.top >= 0 && bounds.bottom <= window.innerHeight + 1, 'popup avoids viewport clipping');
     popup.querySelector('[role=option]').click();
+    checkColorBinding(popup.querySelector('[aria-selected="true"]'),
+      'component.select.part.option.state.selected.color.foreground', 'color');
     check(count() === expected && !popup.hidden, 'desktop multi commits and remains open');
     const second = fixture.filters[0].options[1].value;
     popup.querySelectorAll('[role=option]')[1].click();
@@ -194,7 +224,21 @@ export default async function verifyCurrentMode() {
   const detailCard = [...document.querySelectorAll('.item-card')].find(node => node.dataset.entryId === detailEntry.id);
   detailCard.click();
   const overview = details.querySelector('.detail-overview');
-  await Promise.all([...overview.querySelectorAll('img')].map(image => image.decode()));
+  await Promise.all([...overview.querySelectorAll('img')].map(async image => {
+    // decode() can wait for presentation indefinitely in a background tab.
+    if (!image.complete) {
+      await new Promise(resolve => {
+        const finish = () => {
+          image.removeEventListener('load', finish);
+          image.removeEventListener('error', finish);
+          resolve();
+        };
+        image.addEventListener('load', finish);
+        image.addEventListener('error', finish);
+      });
+    }
+    check(image.naturalWidth > 0, `source artwork loaded: ${image.getAttribute('src')}`);
+  }));
   check(overview.querySelector('.detail-summary').textContent === detailEntry.shortDescription, 'source-owned short effect');
   check(overview.querySelector('.detail-image'), 'featured artwork belongs to overview');
   const classification = details.querySelector('.classification-action');

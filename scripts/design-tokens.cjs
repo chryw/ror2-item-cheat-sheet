@@ -23,6 +23,15 @@ const componentTypes = {
 };
 const colorApplications = ['foreground', 'background', 'stroke', 'shadow'];
 const colorStates = ['rest', 'hover', 'pressed', 'selected', 'disabled'];
+const ambiguousSizeRoles = [
+  'inline', 'block', 'min-inline', 'min-block', 'max-inline', 'max-block',
+  'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', 'min-column',
+];
+
+function logicalSizeAxis(name) {
+  const match = name.match(/(?:^|\.)(?:(?:min|max)-)?(inline|block)-size(?:\.|$)/);
+  return match ? match[1] : null;
+}
 
 function colorRole(parts, name) {
   const [intent, second, third, fourth, fifth] = parts;
@@ -55,6 +64,9 @@ function componentProperty(parts, name) {
   const tail = ['color', 'spacing', 'size'].includes(property) ? 2 : 1;
   if (!componentTypes[property] || parts.length !== index + tail) {
     throw new Error(`Invalid component property/axis order: ${name}`);
+  }
+  if (property === 'size' && ambiguousSizeRoles.includes(parts[index + 1])) {
+    throw new Error(`Use a complete logical size property: ${name}`);
   }
   return componentTypes[property];
 }
@@ -215,17 +227,30 @@ function createTokenModel(source, requestedTheme, { allowPlanned = false } = {})
     )) {
       throw new Error(`Product concept in primitive token: ${name}`);
     }
+    if (layer === 'primitive' && parts.includes('double-extra-large')) {
+      throw new Error(`Use the shared extra-extra-large magnitude spelling: ${name}`);
+    }
+    if (layer === 'semantic' && ['size', 'layout'].includes(category)
+      && (ambiguousSizeRoles.includes(parts[parts.length - 1])
+        || (parts[parts.length - 1] === 'minimum' && parts[2] !== 'target'))) {
+      throw new Error(`Use a complete logical size property: ${name}`);
+    }
     if (layer === 'primitive' && category === 'color'
       && (parts.length !== 4 || !['neutral', 'shared', 'alpha'].includes(parts[2])
         || (parts[2] === 'neutral' && !/^step-\d+$/.test(parts[3])))) {
       throw new Error(`Invalid global color palette: ${name}`);
     }
     const dependencies = references(token.value);
+    const axis = logicalSizeAxis(name);
     dependencies.forEach(dependency => {
       const permitted = layer === 'context' && category === 'density'
         ? ['primitive'] : allowedLayers[layer];
       if (!permitted.includes(dependency.split('.')[0])) {
         throw new Error(`Forbidden dependency: ${name} -> ${dependency}`);
+      }
+      const dependencyAxis = logicalSizeAxis(dependency);
+      if (axis && dependencyAxis && axis !== dependencyAxis) {
+        throw new Error(`Logical size axis mismatch: ${name} -> ${dependency}`);
       }
     });
     const semanticName = name.replace(/^context\.theme\.[^.]+\./, 'semantic.');

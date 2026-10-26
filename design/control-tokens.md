@@ -21,7 +21,7 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `radius` | `{semantic.radius.card}` |  |
 | `spacing.padding` | `{semantic.spacing.inset.card}` |  |
 | `size.artwork` | `{semantic.size.artwork.thumbnail}` |  |
-| `size.min-block` | `{semantic.size.card.minimum}` |  |
+| `size.min-block-size` | `{semantic.size.card.min-block-size}` |  |
 
 ### Token group: tokens.component.control (alias)
 
@@ -32,7 +32,7 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `typography` | `{semantic.typography.body.medium}` |  |
 | `radius` | `{semantic.radius.control}` |  |
 | `spacing.padding-inline` | `{semantic.spacing.inset.control-inline}` |  |
-| `size.min-block` | `{semantic.size.control.minimum}` |  |
+| `size.min-block-size` | `{semantic.size.control.min-block-size}` |  |
 | `state.hover.color.background` | `{semantic.color.neutral.background.control.hover}` |  |
 | `state.pressed.color.background` | `{semantic.color.neutral.background.control.pressed}` |  |
 | `state.selected.color.background` | `{semantic.color.neutral.background.control.selected}` |  |
@@ -52,10 +52,18 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `variant.primary.color.foreground` | `{semantic.color.neutral.foreground.on-brand}` |  |
 | `color.background` | `{component.control.color.background}` |  |
 | `color.foreground` | `{component.control.color.foreground}` |  |
+| `color.stroke` | `{semantic.color.neutral.stroke.subtle}` |  |
 | `typography` | `{semantic.typography.label}` |  |
 | `radius` | `{component.control.radius}` |  |
 | `spacing.padding-inline` | `{component.control.spacing.padding-inline}` |  |
-| `size.min-block` | `{component.control.size.min-block}` |  |
+| `size.min-block-size` | `{component.control.size.min-block-size}` |  |
+| `state.hover.color.background` | `{component.control.state.hover.color.background}` |  |
+| `state.pressed.color.background` | `{component.control.state.pressed.color.background}` |  |
+| `state.selected.color.background` | `{component.control.state.selected.color.background}` |  |
+| `state.selected.color.foreground` | `{component.control.state.selected.color.foreground}` |  |
+| `state.selected.color.stroke` | `{semantic.color.brand.stroke.control.selected}` |  |
+| `state.disabled.color.background` | `{component.control.state.disabled.color.background}` |  |
+| `state.disabled.color.foreground` | `{component.control.state.disabled.color.foreground}` |  |
 
 
 ### Token group: tokens.component.icon-button (alias)
@@ -65,8 +73,8 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `color.background` | `{component.button.color.background}` |  |
 | `color.foreground` | `{component.button.color.foreground}` |  |
 | `radius` | `{semantic.radius.chip}` |  |
-| `size.inline` | `{semantic.size.target.minimum}` |  |
-| `size.min-block` | `{semantic.size.target.minimum}` |  |
+| `size.inline-size` | `{semantic.size.target.minimum}` |  |
+| `size.min-block-size` | `{semantic.size.target.minimum}` |  |
 | `size.icon` | `{semantic.size.icon.medium}` |  |
 
 ### Token group: tokens.component.searchbox (alias)
@@ -78,7 +86,7 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `typography` | `{component.control.typography}` |  |
 | `radius` | `{component.control.radius}` |  |
 | `spacing.padding-inline` | `{component.control.spacing.padding-inline}` |  |
-| `size.min-block` | `{component.control.size.min-block}` |  |
+| `size.min-block-size` | `{component.control.size.min-block-size}` |  |
 
 ### Token group: tokens.component.select (alias)
 
@@ -89,9 +97,9 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `typography` | `{component.control.typography}` |  |
 | `radius` | `{component.control.radius}` |  |
 | `spacing.padding-inline` | `{component.control.spacing.padding-inline}` |  |
-| `size.min-block` | `{component.control.size.min-block}` |  |
+| `size.min-block-size` | `{component.control.size.min-block-size}` |  |
 | `part.option.state.selected.color.background` | `{component.control.state.selected.color.background}` |  |
-| `part.option.state.selected.color.foreground` | `{component.control.state.selected.color.foreground}` |  |
+| `part.option.state.selected.color.foreground` | `{semantic.color.neutral.foreground.primary}` | Option selection preserves readable neutral text; it is not a selected disclosure. |
 
 
 ### Token group: tokens.component.filter-chip (alias)
@@ -114,7 +122,7 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `color.background` | `{component.control.color.background}` |  |
 | `color.foreground` | `{component.control.color.foreground}` |  |
 | `radius` | `{component.control.radius}` |  |
-| `size.min-block` | `{semantic.size.target.minimum}` |  |
+| `size.min-block-size` | `{semantic.size.target.minimum}` |  |
 | `state.selected.color.background` | `{component.control.state.selected.color.background}` |  |
 | `state.selected.color.foreground` | `{component.control.state.selected.color.foreground}` |  |
 
@@ -153,7 +161,7 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | `color.background` | `{semantic.color.neutral.background.panel}` |  |
 | `color.foreground` | `{semantic.color.neutral.foreground.primary}` |  |
 | `spacing.padding` | `{semantic.spacing.inset.panel}` |  |
-| `size.inline` | `{semantic.layout.panel.inline-size}` |  |
+| `size.inline-size` | `{semantic.layout.panel.inline-size}` |  |
 
 ### Token group: tokens.component.navigation (alias)
 
@@ -161,7 +169,7 @@ screenshots. Component aliases keep visual decisions out of control logic.
 | --- | --- | --- |
 | `color.background` | `{component.panel.color.background}` |  |
 | `color.foreground` | `{component.panel.color.foreground}` |  |
-| `size.inline` | `{semantic.layout.navigation.inline-size}` |  |
+| `size.inline-size` | `{semantic.layout.navigation.inline-size}` |  |
 
 
 ### Token group: tokens.component.dialog (alias)

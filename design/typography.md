@@ -21,7 +21,7 @@ tokens.
 | `medium` | `1rem` |  |
 | `large` | `1.25rem` |  |
 | `extra-large` | `1.5rem` |  |
-| `double-extra-large` | `2rem` |  |
+| `extra-extra-large` | `2rem` | Same magnitude vocabulary as the other foundation ramps. |
 
 ### Token group: tokens.primitive.typography.font-weight (fontWeight)
 

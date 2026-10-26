@@ -237,7 +237,7 @@ test('density and independent scale axes derive dimensions exactly once', () => 
 test('hit targets, pill geometry, strokes, breakpoints and layout measures do not scale', () => {
   [
     ['semantic.size.target.minimum', 'size'],
-    ['component.icon-button.size.min-block', 'size'],
+    ['component.icon-button.size.min-block-size', 'size'],
     ['semantic.radius.chip', 'radius'],
     ['semantic.stroke-width.control', 'size'],
     ['primitive.layout.breakpoint.medium', 'size'],
@@ -448,4 +448,47 @@ test('color aliases require intent, application and role rather than interchange
     target[parts[parts.length - 1]] = value;
     assert.throws(() => createTokenModel(input), expected);
   });
+});
+
+test('logical size properties retain their axes and separate control height from target floors', () => {
+  const before = createTokenModel(source);
+  assert.deepEqual(before.resolve('component.panel.size.inline-size').value, { value: 21.25, unit: 'rem' });
+  assert.deepEqual(before.resolve('component.button.size.min-block-size'), before.resolve('semantic.size.control.min-block-size'));
+  assert.equal(source.semantic.layout.select['max-block-size'].$value, '{primitive.layout.block-size.small}');
+  const changed = copy();
+  changed.semantic.size.control['min-block-size'].$value = '{primitive.size.control.small}';
+  const after = createTokenModel(changed);
+  assert.notDeepEqual(after.resolve('component.button.size.min-block-size'), before.resolve('component.button.size.min-block-size'));
+  assert.deepEqual(after.resolve('semantic.size.target.minimum'), before.resolve('semantic.size.target.minimum'));
+});
+
+test('abbreviated size properties, cross-axis aliases and inconsistent magnitude synonyms fail', () => {
+  ['inline', 'min-block', 'width', 'min-height'].forEach(name => {
+    const input = copy();
+    input.component.panel.size[name] = { $value: '{semantic.layout.panel.inline-size}' };
+    assert.throws(() => createTokenModel(input), /complete logical size property/);
+  });
+  const block = copy();
+  block.semantic.layout.select['max-block-size'].$value = '{primitive.layout.inline-size.extra-small}';
+  assert.throws(() => createTokenModel(block), /Logical size axis mismatch/);
+  const inline = copy();
+  inline.component.panel.size['inline-size'].$value = '{semantic.layout.select.max-block-size}';
+  assert.throws(() => createTokenModel(inline), /Logical size axis mismatch/);
+  const magnitude = copy();
+  magnitude.primitive.typography['font-size']['double-extra-large'] = { $type: 'dimension', $value: { value: 2, unit: 'rem' } };
+  assert.throws(() => createTokenModel(magnitude), /extra-extra-large magnitude spelling/);
+});
+
+test('concrete button states can change without changing shared control or semantic defaults', () => {
+  const before = createTokenModel(source);
+  const changed = copy();
+  changed.component.button.state.hover.color.background.$value = '{semantic.color.neutral.background.control.pressed}';
+  const after = createTokenModel(changed);
+  assert.notDeepEqual(after.resolve('component.button.state.hover.color.background'), before.resolve('component.button.state.hover.color.background'));
+  ['component.control.state.hover.color.background', 'component.button.color.background',
+    'semantic.color.neutral.background.control.hover'].forEach(name => {
+    assert.deepEqual(after.resolve(name), before.resolve(name), name);
+  });
+  assert.deepEqual(after.resolve('component.select.part.option.state.selected.color.foreground'),
+    after.resolve('semantic.color.neutral.foreground.primary'));
 });

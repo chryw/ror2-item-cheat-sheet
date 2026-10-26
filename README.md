@@ -32,6 +32,10 @@ Spacing and element sizes are separate categories. With Node.js 18 or newer, run
 `npm run design:check` to validate Markdown and detect stale generated artifacts,
 and `npm run design:test` to validate the compiler and contracts.
 Token tables and labeled YAML sections are authored once in Markdown.
+The [token API and migration rules](design/system.md) require complete logical
+size properties and reject cross-axis aliases. Concrete control states have
+component-local bindings; browser probes verify real overrides, not just that
+an alias exists in a manifest.
 `design-tokens.json`, `design-components.json`, and `content/minecraft-tokens.json`
 are generated, marked non-editable, and ignored by Git. Consumers compile Markdown
 in memory; a clean checkout does not require these files. Checks never regenerate

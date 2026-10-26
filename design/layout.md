@@ -53,6 +53,7 @@ protected interaction and structural dimensions.
 | `inline-size.medium` | `17.5rem` |  |
 | `inline-size.large` | `21.25rem` |  |
 | `inline-size.extra-large` | `28rem` |  |
+| `block-size.small` | `15rem` | Independent block-axis limit, not a reused inline-width decision. |
 | `block-size.large` | `40rem` |  |
 | `inline-size.maximum` | `90rem` |  |
 | `breakpoint.small` | `40rem` |  |
@@ -91,9 +92,9 @@ protected interaction and structural dimensions.
 | Token | Value | Description |
 | --- | --- | --- |
 | `target.minimum` | `{primitive.size.control.medium}` |  |
-| `control.minimum` | `{primitive.size.control.medium}` |  |
+| `control.min-block-size` | `{primitive.size.control.medium}` | Control height; independent of the two-axis interaction-target floor. |
 | `artwork.thumbnail` | `{primitive.size.artwork.small}` |  |
-| `card.minimum` | `{primitive.size.tile.small}` |  |
+| `card.min-block-size` | `{primitive.size.tile.small}` |  |
 | `artwork.featured` | `{primitive.size.artwork.large}` |  |
 | `icon.small` | `{primitive.size.icon.small}` |  |
 | `icon.medium` | `{primitive.size.icon.medium}` |  |
@@ -103,9 +104,9 @@ protected interaction and structural dimensions.
 
 | Token | Value | Description |
 | --- | --- | --- |
-| `grid.min-column` | `{primitive.layout.inline-size.medium}` |  |
+| `grid.min-inline-size` | `{primitive.layout.inline-size.medium}` | Minimum track width, not a column count. |
 | `navigation.inline-size` | `{primitive.layout.inline-size.small}` |  |
-| `select.max-block-size` | `{primitive.layout.inline-size.extra-small}` |  |
+| `select.max-block-size` | `{primitive.layout.block-size.small}` |  |
 | `picker.max-block-size` | `{primitive.layout.block-size.large}` |  |
 | `panel.inline-size` | `{primitive.layout.inline-size.large}` |  |
 | `panel.max-inline-size` | `{primitive.layout.inline-size.extra-large}` |  |

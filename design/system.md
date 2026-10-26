@@ -41,7 +41,7 @@ $description: >-
 $extensions:
   ror2.design-system:
     name: Reference UI Design System
-    revision: 7.0.0
+    revision: 8.0.0
     colorFormat: hex8-srgb
     defaultTheme: dark
     defaultDensity: comfortable
@@ -81,6 +81,13 @@ Primitive spacing is an ordered magnitude ramp, not a density vocabulary.
 Element sizes remain a different category with local icon/control/artwork/tile
 ramps. Layout uses logical `inline-size`, `block-size` and `breakpoint` groups;
 labels such as `compact`, `short` and `tall` do not stand in for an axis.
+Use complete logical property names consistently: `inline-size`, `min-block-size`
+and `max-block-size`, not `inline`, `min-block`, physical `width`/`height` or
+`min-column`. A logical size must not alias the opposite axis, even when values
+happen to match. `target.minimum` is a deliberately two-axis protected hit-target
+floor; it is not the owner of a control's minimum block size.
+Magnitude ramps use the same `extra-extra-large` spelling rather than a mixture
+of `double-extra-large` and `extra-extra-large`.
 Typography foundations stay under `primitive.typography`; named text styles
 stay under `semantic.typography`. Equal values in different categories do not
 make them interchangeable: a stroke width is not a spacing definition.
@@ -96,6 +103,14 @@ For example, primary is a button variant, selected is an interaction state, and
 a table header is a part, not three new sibling components. `control` is an
 abstract shared styling recipe, not a claim that a widget is implemented.
 
+An unqualified component property is its resting value; use named state axes only
+for actual deviations. Shared recipes supply defaults, but concrete component
+state aliases own their consumption boundary. Renderers must not bypass a
+button's state alias to read its backing semantic color directly. Distinct
+controls may intentionally choose different foregrounds for selection: an option
+row is not a selected disclosure. Variants retain their explicitly specified
+precedence rather than gaining an invented state matrix.
+
 This token API revision intentionally replaces the former mixed paths:
 
 | Former path | Current path |
@@ -108,6 +123,11 @@ This token API revision intentionally replaces the former mixed paths:
 | `component.data-table-header.text-style` | `component.data-table.part.header.typography` |
 | `theme.light.color.text-primary` | `context.theme.light.color.neutral.foreground.primary` |
 | `density.compact.spacing` | `context.density.compact.spacing` |
+| `component.button.size.min-block` | `component.button.size.min-block-size` |
+| `component.panel.size.inline` | `component.panel.size.inline-size` |
+| `semantic.layout.grid.min-column` | `semantic.layout.grid.min-inline-size` |
+| `semantic.size.control.minimum` | `semantic.size.control.min-block-size` |
+| `primitive.typography.font-size.double-extra-large` | `primitive.typography.font-size.extra-extra-large` |
 
 Update consumer bindings and regenerate outputs; do not preserve a parallel
 legacy alias tree. Naming validation rejects obsolete root categories, encoded

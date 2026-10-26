@@ -36,6 +36,14 @@ Keep rationale only when it adds information rather than repeating a value.
 Update implementations and acceptance tests for intentional behavior changes.
 Do not change the specification merely to preserve an accidental code literal.
 
+For token-API migrations, compare resolved values for every theme before and
+after translating the renamed paths. Compare rendered controls as well: an
+unconsumed alias can disagree with approved UI without a token-resolution test
+noticing. Exercise component-local state overrides to prove that aliases are
+actually wired. Preserve approved geometry, content and interaction when
+improving ownership; correcting an unused definition is not permission to
+redesign its consumer.
+
 Compilation produces tokens, component configuration, icon data, UI messages
 and CSS; it does not synthesize arbitrary event-handling code from prose.
 Framework adapters remain reviewed, tested implementations of these contracts.

@@ -27,7 +27,16 @@ tokens:
   - component.button.color.background
   - component.button.color.foreground
   - component.button.radius
-  - component.button.size.min-block
+  - component.button.size.min-block-size
+  - semantic.size.target.minimum
+  - component.button.color.stroke
+  - component.button.state.hover.color.background
+  - component.button.state.pressed.color.background
+  - component.button.state.selected.color.background
+  - component.button.state.selected.color.foreground
+  - component.button.state.selected.color.stroke
+  - component.button.state.disabled.color.background
+  - component.button.state.disabled.color.foreground
   - component.button.variant.primary.color.background
   - component.button.variant.primary.color.foreground
 rules: >-
@@ -150,7 +159,7 @@ states:
 tokens:
   - component.card.color.background
   - component.card.spacing.padding
-  - component.card.size.min-block
+  - component.card.size.min-block-size
 rules: >-
   One action and one tab stop; no nested controls. Enter/Space select; repeated activation does
   not toggle details off. Selection is keyed by data identity, survives rerender, and clears
@@ -200,7 +209,7 @@ states:
   - compact-overlay
 tokens:
   - component.navigation.color.background
-  - component.navigation.size.inline
+  - component.navigation.size.inline-size
 rules: >-
   Desktop participates in layout without trapping focus. Compact overlays the workspace below
   the header; gallery is inert and the header trigger participates in the focus loop. Closing
@@ -283,7 +292,7 @@ tokens:
   - component.panel.color.background
   - component.panel.color.foreground
   - component.panel.spacing.padding
-  - component.panel.size.inline
+  - component.panel.size.inline-size
 rules: >-
   Reuse one content instance across presentations. Docked details do not steal or trap focus.
   Compact details cover the viewport, make the background inert and contain focus; close returns

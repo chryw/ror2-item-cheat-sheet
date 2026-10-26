@@ -7,8 +7,8 @@ specified observable behavior.
 
 ```yaml design:components.workspace
 compactMax: '{primitive.layout.breakpoint.medium}'
-navigationWidth: '{component.navigation.size.inline}'
-detailsWidth: '{component.panel.size.inline}'
+navigationWidth: '{component.navigation.size.inline-size}'
+detailsWidth: '{component.panel.size.inline-size}'
 scrollbarWidth: none
 stack:
   - base

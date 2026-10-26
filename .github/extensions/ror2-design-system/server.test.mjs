@@ -53,6 +53,13 @@ test('inventory reuses canonical aliases and separates active and planned themes
   const primary = snapshot.tokens.find(token => token.name === 'semantic.color.brand.foreground.primary');
   assert.equal(primary.value, '#98bffeff');
   assert.equal(primary.raw, '{primitive.color.shared.blue-bright}');
+  const logicalSize = snapshot.tokens.find(token => token.name === 'component.panel.size.inline-size');
+  assert.deepEqual(logicalSize.value, { value: 21.25, unit: 'rem' });
+  assert.equal(logicalSize.raw, '{semantic.layout.panel.inline-size}');
+  const hover = snapshot.tokens.find(token => token.name === 'component.button.state.hover.color.background');
+  assert.equal(hover.raw, '{component.control.state.hover.color.background}');
+  assert.ok(snapshot.components.find(component => component.id === 'button').fields
+    .find(field => field.key === 'tokens').value.includes(hover.name));
   const tenant = loadSnapshot(root, 'dark-ror2');
   assert.notEqual(tenant.tokens.find(token => token.name === primary.name).value, primary.value);
   assert.throws(() => loadSnapshot(root, 'light'), /planned/);

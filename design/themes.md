@@ -32,7 +32,7 @@ not the meanings of shared primitives.
 | `radius` | `{component.card.radius}` |  |
 | `spacing.padding` | `{component.card.spacing.padding}` |  |
 | `size.artwork` | `{component.card.size.artwork}` |  |
-| `size.min-block` | `{component.card.size.min-block}` |  |
+| `size.min-block-size` | `{component.card.size.min-block-size}` |  |
 | `part.title.typography` | `{semantic.typography.heading.small}` |  |
 | `part.title.color.foreground` | `{semantic.color.neutral.foreground.primary}` |  |
 | `part.description.typography` | `{semantic.typography.body.small}` |  |
@@ -54,7 +54,7 @@ not the meanings of shared primitives.
 | `color.foreground` | `{semantic.color.neutral.foreground.primary}` |  |
 | `typography` | `{semantic.typography.body.medium}` |  |
 | `spacing.padding` | `{semantic.spacing.inset.panel}` |  |
-| `size.inline` | `{semantic.layout.panel.inline-size}` |  |
+| `size.inline-size` | `{semantic.layout.panel.inline-size}` |  |
 | `size.artwork` | `{semantic.size.artwork.featured}` |  |
 | `part.title.typography` | `{semantic.typography.heading.medium}` |  |
 
